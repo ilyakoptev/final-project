@@ -1,0 +1,19 @@
+[
+
+    {
+        "type": "table",
+        "name": "employees",
+        "database": "dbo",
+        "data": [
+            { "Password": "123", "EmployeeId": "1", "Name": "Office", "Position": "1", "Telephone": "+97236792348", "Email": "info@pag.co.il" },
+            { "Password": "123", "EmployeeId": "2", "Name": "Sergey", "Position": "2", "Telephone": "+79103432233", "Email": "sergey@pag.co.il" },
+            { "Password": "123", "EmployeeId": "3", "Name": "Olga", "Position": "2", "Telephone": "+79163720918", "Email": "olga@pag.co.il" },
+            { "Password": "123", "EmployeeId": "4", "Name": "Andrey", "Position": "2", "Telephone": "+790350030020", "Email": "andrey@pag.co.il" },
+            { "Password": "123", "EmployeeId": "5", "Name": "Alena", "Position": "1", "Telephone": "+972506771209", "Email": "alena@pag.co.il" },
+            { "Password": "123", "EmployeeId": "6", "Name": "Vasya", "Position": "1", "Telephone": "+972543807456", "Email": "vasya@pag.co.il" },
+            { "Password": "123", "EmployeeId": "10", "Name": "Anatoly", "Position": "4", "Telephone": "+972543807447", "Email": "" },
+            { "Password": "123", "EmployeeId": "20", "Name": "Larisa", "Position": "3", "Telephone": "+972548213409", "Email": "larisa@pag.co.il" },
+            { "Password": "123", "EmployeeId": "99", "Name": "Philip", "Position": "5", "Telephone": "+972543373000", "Email": "ceo@pag.co.il" }
+        ]
+    }
+]
