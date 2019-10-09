@@ -1,4 +1,5 @@
 import React from 'react'
+import '../App.css';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 
@@ -7,10 +8,17 @@ class MainNavbar extends React.Component {
         super(props);
         this.state = {
             redirectToHome: false,
-            permission: null,
-            permissionRead: false,
-            permissionWrite: false,
-            permissonView: false,
+            currentUser: null,
+            createNewOrder: false,
+            customersEdit: false,
+            customersRead: false,
+            suppliersRead: false,
+            suppliersEdit: false,
+            productsRead: false,
+            productsEdit: false,
+            accountsRead: false,
+            accountsEdit: false,
+            adminAccess: false,
             show: false,
         }
 
@@ -31,55 +39,181 @@ class MainNavbar extends React.Component {
     // }
 
     componentDidMount(){
-       const {activeUser} = this.props;
-        switch(activeUser) {
+      // const {activeUser} = this.props;
+       const { activeUser , employees } = this.props;
+       const currectUser = employees[0].data.find( (item)=> {if (item.EmployeeId == activeUser) return item.Name} ) //get all data of currect user 
+       this.setState({currectUser: currectUser.Name})
+       console.log(currectUser)
+        switch(currectUser.Position) {
             case "1":
-              // code block
+                this.setState({ createNewOrder: true})
+            this.setState({ customersRead: true})
+                this.setState({ customersEdit: true})
+                    this.setState({ suppliersRead: true})
+                        this.setState({ suppliersEdit: true})
+                            this.setState({  productsRead: true})
+                                this.setState({ productsEdit: true})
+                                    this.setState({ accountsRead: true})
+                                        this.setState({   accountsEdit: true})
               break;
             case "2":
-              // code block
+                this.setState({ createNewOrder: true})
+                this.setState({ customersRead: true})
+                    this.setState({ customersEdit: false})
+                        this.setState({ suppliersRead: true})
+                            this.setState({ suppliersEdit: false})
+                                this.setState({  productsRead: true})
+                                    this.setState({ productsEdit: false})
+                                        this.setState({ accountsRead: false})
+                                            this.setState({   accountsEdit: false})
               break;
-              case "3":
-              // code block
+              case "3":  // permission for position "3"
+              this.setState({ createNewOrder: false})
+              this.setState({ customersRead: true})
+                  this.setState({ customersEdit: false})
+                      this.setState({ suppliersRead: true})
+                          this.setState({ suppliersEdit: false})
+                              this.setState({  productsRead: true})
+                                  this.setState({ productsEdit: false})
+                                      this.setState({ accountsRead: true})
+                                          this.setState({   accountsEdit: true})
               break;
               case "4":
-              // code block
+                this.setState({ createNewOrder: false})
+                this.setState({ customersRead: false})
+                    this.setState({ customersEdit: false})
+                        this.setState({ suppliersRead: false})
+                            this.setState({ suppliersEdit: false})
+                                this.setState({  productsRead: false})
+                                    this.setState({ productsEdit: false})
+                                        this.setState({ accountsRead: false})
+                                            this.setState({   accountsEdit: false})
               break;
-             
-            default:  // admin - full access 
-              this.setState({permisson: "full"})
-              this.setState({permissionRead: true})
-              this.setState({permissionWrite: true})
-              this.setState({permissonView: true})
+              case "5": // admin accesss 
+                this.setState({ createNewOrder: true})
+            this.setState({ customersRead: true})
+                this.setState({ customersEdit: true})
+                    this.setState({ suppliersRead: true})
+                        this.setState({ suppliersEdit: true})
+                            this.setState({  productsRead: true})
+                                this.setState({ productsEdit: true})
+                                    this.setState({ accountsRead: true})
+                                        this.setState({   accountsEdit: true})
+                                        this.setState({   adminAccess: true})
+                                        
+              break;
+            default:  
+            this.setState({ createNewOrder: false})
+            this.setState({ customersRead: false})
+                this.setState({ customersEdit: false})
+                    this.setState({ suppliersRead: false})
+                        this.setState({ suppliersEdit: false})
+                            this.setState({  productsRead: false})
+                                this.setState({ productsEdit: false})
+                                    this.setState({ accountsRead: false})
+                                        this.setState({   accountsEdit: false})
           }
     }
 
     render() {
         const { activeUser , employees } = this.props;
-        const { redirectToHome } = this.state;
+        const {createNewOrder,redirectToHome, customersEdit, customersRead, suppliersEdit, suppliersRead, productsEdit, productsRead, accountsEdit,accountsRead,adminAccess} = this.state;
 
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
-        const currectUser = employees[0].data.find( (item)=> {if (item.EmployeeId == activeUser) return item.Name} ) //get all data of currect user 
-        console.log(currectUser)
-      
-        let navCustomers = <NavDropdown  title="Customers" id="basic-nav-dropdown"> 
-                             <NavDropdown.Item expanded={this.state.show} href="#action/3.1">Create New Order</NavDropdown.Item>
-                             <NavDropdown.Item href="#action/3.2">Add New Customer</NavDropdown.Item>
-                             <NavDropdown.Item href="#action/3.3">Edit Exist Customer</NavDropdown.Item>
+       
+        
+        let navCustomers 
+        if (!customersEdit&&!customersRead)  
+            navCustomers = ""
+        else  {
+            let newCustomerOrder = createNewOrder ? <NavDropdown.Item expanded={this.state.show} href="#action/3.1">Create New Order</NavDropdown.Item> : ""
+            let addNewCustomer = customersEdit ? <NavDropdown.Item href="#action/3.2">Add New Customer</NavDropdown.Item> : ""
+            let editCustomer = customersEdit ?  <NavDropdown.Item href="#action/3.3">Edit Exist Customer</NavDropdown.Item>: ""
+            let showCustomers = customersRead ?  <NavDropdown.Item href="#action/3.4">Show Customers</NavDropdown.Item> : ""
+            navCustomers=  <Nav className="mr-auto">
+                            <NavDropdown  title="Customers" id="navCustomers"> 
+                            {newCustomerOrder}
+                            {addNewCustomer}
+                            {editCustomer}
                              <NavDropdown.Divider />
-                             <NavDropdown.Item href="#action/3.4">Show Customers</NavDropdown.Item>
-                          </NavDropdown>
-      
-        return (
+                            {showCustomers}
+                          </NavDropdown> </Nav>}
+        let navSuppliers
+        if (!suppliersEdit&&!suppliersRead)  
+             navSuppliers = ""
+        else {
+            let createSuppOrder = suppliersEdit ?  <NavDropdown.Item href="#action/3.1">Create New Order from Supliers</NavDropdown.Item> : "" 
+            let addNewSupplier = suppliersEdit ?  <NavDropdown.Item href="#action/3.2">Add New Supplier</NavDropdown.Item> : ""
+            let editSupplier = suppliersEdit ?  <NavDropdown.Item href="#action/3.3">Edit Exist Supplier</NavDropdown.Item> : ""
+            let showSuppliers = suppliersRead ?  <NavDropdown.Item href="#action/3.4">Show suppliers</NavDropdown.Item> : ""
+            navSuppliers = <Nav className="mr-auto">
+                            <NavDropdown title="Suppliers" id="basic-nav-dropdown">  
+                            {createSuppOrder}
+                            {addNewSupplier}
+                            {editSupplier}
+                            <NavDropdown.Divider />
+                            {showSuppliers}
+                             </NavDropdown> </Nav> }
+         let navProducts
+         if (!productsEdit&&!productsRead)  
+             navProducts = ""
+         else {
+             let addProduct = productsEdit ?  <NavDropdown.Item href="#action/3.1">Add New Product</NavDropdown.Item> : "" 
+             let editProduct = productsEdit ?   <NavDropdown.Item href="#action/3.2">Edit Exist Product</NavDropdown.Item> : ""
+             let deleteProduct = productsEdit ?  <NavDropdown.Item href="#action/3.3">Delete Product</NavDropdown.Item> : ""
+             let showProducts = productsRead ?   <NavDropdown.Item href="#action/3.4">Show Products</NavDropdown.Item> : ""
+             navProducts = <Nav className="mr-auto">
+                             <NavDropdown title="Products" id="basic-nav-dropdown">
+                                  {addProduct}
+                                  {editProduct}
+                                  {deleteProduct}
+                                  <NavDropdown.Divider />
+                                  {showProducts}
+                             </NavDropdown>
+                             </Nav> }
+        let navAccounts
+        if (!accountsEdit&&!accountsRead)  
+            navAccounts = ""
+        else {
+            let createReciept = accountsEdit ?  <NavDropdown.Item href="#action/3.1">New Reciept from Customer</NavDropdown.Item> : "" 
+            let createPayment = accountsEdit ?   <NavDropdown.Item href="#action/3.2">New Payment to Supplier</NavDropdown.Item> : ""
+            let customerBalance = accountsRead?   <NavDropdown.Item href="#action/3.3">Customers balance</NavDropdown.Item> : ""
+            let SupplierBalance = accountsRead ?    <NavDropdown.Item href="#action/3.3">Supplier balance</NavDropdown.Item> : ""
+            let showSaldo = accountsEdit ?     <NavDropdown.Item href="#action/3.4">Show Final Saldo</NavDropdown.Item> : ""
            
-
-            <Navbar bg="light" expand="lg">
+           navAccounts = <Nav className="mr-auto">
+                            <NavDropdown title="Accounts" id="navAccounts">
+                                 {createReciept}
+                                {createPayment}
+                                {customerBalance}
+                                {SupplierBalance}
+                                 <NavDropdown.Divider />
+                                {showSaldo}
+                            </NavDropdown>
+                            </Nav>  }
+           let navEmployees 
+           if (!adminAccess)
+               navEmployees = ""
+           else {
+               navEmployees = <Nav className="mr-auto">
+                             <NavDropdown title="Employees" id="basic-nav-dropdown">
+                                      <NavDropdown.Item href="#action/3.1">Add new Employee</NavDropdown.Item>
+                                      <NavDropdown.Item href="#action/3.2">Edit exists Employee</NavDropdown.Item>
+                                      <NavDropdown.Item href="#action/3.3">Delete Employee</NavDropdown.Item>
+                                      <NavDropdown.Divider />
+                                      <NavDropdown.Item href="#action/3.4">Show All Employees</NavDropdown.Item>
+                                 </NavDropdown>
+                              </Nav>
+           }    
+        
+       return (
+                   <Navbar bg="light" expand="lg">
                <Navbar.Brand href="#home">Flower Company</Navbar.Brand>
                <Navbar.Toggle aria-controls="basic-navbar-nav" />
                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="mr-auto">
+                    
                         {navCustomers}
                          {/* <NavDropdown  title="Customers" id="basic-nav-dropdown"> 
                             <NavDropdown.Item expanded={this.state.show} href="#action/3.1">Create New Order</NavDropdown.Item>
@@ -88,17 +222,18 @@ class MainNavbar extends React.Component {
                             <NavDropdown.Divider />
                             <NavDropdown.Item href="#action/3.4">Show Customers</NavDropdown.Item>
                         </NavDropdown> */}
-                    </Nav>
-                    <Nav className="mr-auto">
-                        <NavDropdown title="Suppliers" id="basic-nav-dropdown">
+                    
+                    
+                        {navSuppliers}
+                        {/* <NavDropdown title="Suppliers" id="basic-nav-dropdown">
                             <NavDropdown.Item href="#action/3.1">Create New Order from Supliers</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">Add New Supplier</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.3">Edit Exist Supplier</NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item href="#action/3.4">Show suppliers</NavDropdown.Item>
-                       </NavDropdown>
-                    </Nav>
-                    <Nav className="mr-auto">
+                       </NavDropdown> */}
+                       {navProducts}
+                    {/* <Nav className="mr-auto">
                        <NavDropdown title="Products" id="basic-nav-dropdown">
                             <NavDropdown.Item href="#action/3.1">Add New Product</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">Edit Exist Product</NavDropdown.Item>
@@ -106,8 +241,9 @@ class MainNavbar extends React.Component {
                             <NavDropdown.Divider />
                             <NavDropdown.Item href="#action/3.4">Show Products</NavDropdown.Item>
                        </NavDropdown>
-                    </Nav>
-                    <Nav className="mr-auto">
+                    </Nav> */}
+                    {navAccounts}
+                    {/* <Nav className="mr-auto">
                        <NavDropdown title="Accounts" id="basic-nav-dropdown">
                             <NavDropdown.Item href="#action/3.1">New Reciept from Customer</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">New Payment to Supplier</NavDropdown.Item>
@@ -117,8 +253,9 @@ class MainNavbar extends React.Component {
                             <NavDropdown.Item href="#action/3.4">Show Final Saldo</NavDropdown.Item>
                        </NavDropdown>
                        
-                   </Nav>
-                   <Nav className="mr-auto">
+                   </Nav> */}
+                   {navEmployees}
+                   {/* <Nav className="mr-auto">
                    <NavDropdown title="Employees" id="basic-nav-dropdown">
                             <NavDropdown.Item href="#action/3.1">Add new Employee</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">Edit exists Employee</NavDropdown.Item>
@@ -126,9 +263,9 @@ class MainNavbar extends React.Component {
                             <NavDropdown.Divider />
                             <NavDropdown.Item href="#action/3.4">Show All Employees</NavDropdown.Item>
                        </NavDropdown>
-                    </Nav>
+                    </Nav> */}
                     <Nav className="ml-auto">
-                       <Nav.Link onClick={this.logout} ><span class="text-danger">   Logout {currectUser.Name} </span></Nav.Link>
+                       <Nav.Link onClick={this.logout} ><span class="text-danger">   Logout {this.state.currectUser} </span></Nav.Link>
                     </Nav>
             {/* <Form inline>
                 <FormControl type="text" placeholder="Search" className="mr-sm-2" />
