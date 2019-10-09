@@ -1,7 +1,10 @@
 import React from 'react'
 import MainNavbar from '../components/MainNavbar'
+import MainWindow from '../components/MainWindow'
 import { Container, Row, Col, Button, Modal, Form, Image } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
+import customers from '../data/customers'
+import customerorders from '../data/customerorders'
 //import RecipeCard from '../components/RecipeCard'
 
 
@@ -35,7 +38,7 @@ class DashBoard extends React.Component {
 
     
     render() {
-       
+        const {activeUser,handleLogout, employees} = this.props;
 
         if (!activeUser) {
             return <Redirect to="/" />
@@ -44,13 +47,16 @@ class DashBoard extends React.Component {
         // const recipesCards = recipes.map(recipe => <Col key={recipe.id} lg="3" md="6"><RecipeCard recipe={recipe} /></Col>)
 
         return (
-            <div>
-                <MainNavbar activeUser={activeUser} handleLogout={handleLogout} />
-                <Container>
+            
+               
+               <Container>
+                  <MainNavbar activeUser={activeUser}  employees={employees} handleLogout={handleLogout} />
+                
+                  <MainWindow activeUser={activeUser} employees={employees}/>
                    
-                </Container>
 
 
+                    {/* 
                 <Modal show={showModal} onHide={this.closeModal} size="lg">
                     <Modal.Header closeButton>
                         <Modal.Title>New Recipe</Modal.Title>
@@ -97,11 +103,14 @@ class DashBoard extends React.Component {
                             Create Recipe
                         </Button>
                     </Modal.Footer>
-                </Modal>
+                </Modal> */}
 
-            </div>
-        );
-    }
+            
+        
+                </Container>
+
+               
+          )  }
 }
 
-export default RecipesPage;
+export default DashBoard;
