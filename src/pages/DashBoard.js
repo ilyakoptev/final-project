@@ -13,21 +13,20 @@ class DashBoard extends React.Component {
         super(props);
         this.state = {
             showModal: false,
-            newRecipeImg: {
-                file: null,
-                URL: ""
-            }
+            menuChoose: null,
         }
 
         // this.openModal = this.openModal.bind(this);
         // this.closeModal = this.closeModal.bind(this);
         // this.createRecipe = this.createRecipe.bind(this);
-        // this.imgChange = this.imgChange.bind(this);
+         this.setMenuChooseState = this.setMenuChooseState.bind(this);
 
 
     }
 
-
+    setMenuChooseState(item){   // set what was choosed in main menu 
+        this.setState({menuChoose:item})
+    }
     // openModal() {
     //     this.setState({ showModal: true })
     // }
@@ -39,6 +38,7 @@ class DashBoard extends React.Component {
     
     render() {
         const {activeUser,handleLogout, employees} = this.props;
+        const {menuChoose} = this.state;
 
         if (!activeUser) {
             return <Redirect to="/" />
@@ -50,9 +50,9 @@ class DashBoard extends React.Component {
             
                
                <Container>
-                  <MainNavbar activeUser={activeUser}  employees={employees} handleLogout={handleLogout} />
+                  <MainNavbar activeUser={activeUser}  employees={employees} handleLogout={handleLogout} setMenuChooseState={this.setMenuChooseState}/>
                 
-                  <MainWindow activeUser={activeUser} employees={employees}/>
+                  <MainWindow activeUser={activeUser} employees={employees} menuChoose={menuChoose}/>
                    
 
 
