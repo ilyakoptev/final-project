@@ -8,7 +8,7 @@ class MainNavbar extends React.Component {
         super(props);
         this.state = {
             redirectToHome: false,
-            currentUser: null,
+            currectUserName: null,
             createNewOrder: false,
             customersEdit: false,
             customersRead: false,
@@ -44,7 +44,7 @@ class MainNavbar extends React.Component {
       // const {activeUser} = this.props;
        const { activeUser , employees } = this.props;
        const currectUser = employees[0].data.find( (item)=> {if (item.EmployeeId == activeUser) return item.Name} ) //get all data of currect user 
-       this.setState({currectUser: currectUser.Name})
+       this.setState({currectUserName: currectUser.Name}) // get a current user name 
        console.log(currectUser)
         switch(currectUser.Position) {
             case "1":
@@ -224,7 +224,7 @@ class MainNavbar extends React.Component {
                        {navAccounts}
                        {navEmployees}
                        <Nav className="ml-auto">
-                          <Nav.Link onClick={this.logout} ><span class="text-danger">   Logout {this.state.currectUser} </span></Nav.Link>
+                          <Nav.Link onClick={this.logout} ><span class="text-danger">   Logout {this.state.currectUserName} </span></Nav.Link>
                        </Nav>
             {/* <Form inline>
                 <FormControl type="text" placeholder="Search" className="mr-sm-2" />

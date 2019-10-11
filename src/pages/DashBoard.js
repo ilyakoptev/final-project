@@ -2,7 +2,7 @@ import React from 'react'
 import MainNavbar from '../components/MainNavbar'
 import MainWindow from '../components/MainWindow'
 import { Container, Row, Col, Button, Modal, Form, Image } from 'react-bootstrap'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Switch, Route } from 'react-router-dom'
 import customers from '../data/customers'
 import customerorders from '../data/customerorders'
 //import RecipeCard from '../components/RecipeCard'
@@ -51,9 +51,9 @@ class DashBoard extends React.Component {
                
                <Container>
                   <MainNavbar activeUser={activeUser}  employees={employees} handleLogout={handleLogout} setMenuChooseState={this.setMenuChooseState}/>
-                
+                  
                   <MainWindow activeUser={activeUser} employees={employees} menuChoose={menuChoose}/>
-                   
+               
 
 
                     {/* 

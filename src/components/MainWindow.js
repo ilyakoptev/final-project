@@ -1,5 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
+import { Container, Button } from 'react-bootstrap';
+import ShowCustomers from '../components/ShowCustomers'
 import customerorders from '../data/customerorders';
 
 class MainWindow extends React.Component {
@@ -33,12 +35,12 @@ class MainWindow extends React.Component {
     render() {
         const { activeUser, employees, menuChoose } = this.props;
         const { redirectToHome } = this.state;
-
+        const currectUser = employees[0].data.find( (item)=> {if (item.EmployeeId == activeUser) return item.Name} ) //get all data of currect user 
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
         //console.log(employees)
-        const currectUser = employees[0].data.find( (item)=> {if (item.EmployeeId == activeUser) return item.Name} ) //get all data of currect user 
+        const currectUserName = employees[0].data.find( (item)=> {if (item.EmployeeId == activeUser) return item.Name} ) //get all data of currect user 
         //console.log(customerorders)
        //conditional rendering by menu item clicked
        switch(menuChoose) {
@@ -63,7 +65,7 @@ class MainWindow extends React.Component {
            case "showCustomers": 
            {
                 return(
-                             <div>showCustomers</div>
+                             <ShowCustomers/>
                         )  
             };
             case "createNewSuppOrder": 
@@ -172,16 +174,13 @@ class MainWindow extends React.Component {
 
         default : 
             return (
-                <div>
-                  <h1>Users</h1>
-                        <ul>
-                          {this.state.getData.map(data =>
-                           <li key={data.CustID}>{data.WorkName}</li>)}
-                        </ul>
+                <Container>
+                  <h1>Welcome , {currectUser.Name} !!! </h1>
+                      
        
        
                    
-                </div>
+                </Container>
 
              ) };
     }
