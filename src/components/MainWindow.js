@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button } from 'react-bootstrap';
@@ -35,21 +36,21 @@ class MainWindow extends React.Component {
     render() {
         const { activeUser, employees, menuChoose } = this.props;
         const { redirectToHome } = this.state;
-        const currectUser = employees[0].data.find( (item)=> {if (item.EmployeeId == activeUser) return item.Name} ) //get all data of currect user 
+        const currectUser = employees[0].data.find( (item) => {if (item.EmployeeId == activeUser) return item.Name} )  //get all data of currect user 
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
         //console.log(employees)
-        const currectUserName = employees[0].data.find( (item)=> {if (item.EmployeeId == activeUser) return item.Name} ) //get all data of currect user 
+        
         //console.log(customerorders)
        //conditional rendering by menu item clicked
        switch(menuChoose) {
         case "createNewCustOrder": 
-                    {
+                    
                          return(
                                       <div>Create New Order</div>
                                  )  
-                     };
+                     
         case "addNewCustomer": 
                     {
                          return(
