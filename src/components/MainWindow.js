@@ -2,7 +2,9 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button } from 'react-bootstrap';
-import ShowCustomers from '../components/ShowCustomers'
+import ShowCustomers from '../components/ShowCustomers';
+import ShowSuppliers from './ShowSuppliers';
+
 import customerorders from '../data/customerorders';
 
 class MainWindow extends React.Component {
@@ -84,7 +86,7 @@ class MainWindow extends React.Component {
            case "showSuppliers": 
           {
                return(
-                            <div>showSuppliers</div>
+                    <ShowSuppliers/>
                        )  
            };
            case "addNewProduct": 

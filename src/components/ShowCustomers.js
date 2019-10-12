@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal} from 'react-bootstrap';
 import customerorders from '../data/customerorders';
 
-export default class MainWindow extends React.Component {
+export default class ShowCustomers extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
