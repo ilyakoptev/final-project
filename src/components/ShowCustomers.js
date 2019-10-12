@@ -8,6 +8,7 @@ export default class MainWindow extends React.Component {
         super(props);
         this.state = {
             getData: [],
+            getDataEmployees:[],
             selectedCustomer: {},
             redirectToHome: false,
             customerorders: customerorders,
@@ -15,7 +16,7 @@ export default class MainWindow extends React.Component {
             customerRowNum: null, 
         }
 
-        this.openCustomerDetails = this.openCustomerDetails.bind(this);
+        //this.openCustomerDetails = this.openCustomerDetails.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.customerModalWindow = this.customerModalWindow.bind(this);
@@ -28,9 +29,12 @@ export default class MainWindow extends React.Component {
       
         //console.log(this.state.getData)
       }
-    openCustomerDetails(){
-          alert("Hello!")
-
+   
+      getDetails(){
+        console.log( "Hello")
+        fetch('/getdataEmployees')
+        .then(res => res.json())
+        .then(getDataEmployees => this.setState({getDataEmployees}));
       }
       
     openModal(e) {
@@ -55,6 +59,7 @@ export default class MainWindow extends React.Component {
                             <td>{detailsValues[i]}</td>
                         </tr>
        }
+       this.getDetails();
        return result
      }
       render() {
