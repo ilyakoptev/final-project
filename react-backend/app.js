@@ -9,6 +9,8 @@ var usersRouter = require('./routes/users');
 var getDataRouter = require('./routes/getdata');
 var getDataEmployees = require('./routes/getdataEmployees');
 var getDataSuppliers = require('./routes/getdataSuppliers');
+var getDataProducts = require('./routes/getdataProducts');
+
 var app = express();
 
 // view engine setup
@@ -26,6 +28,7 @@ app.use('/users', usersRouter);
 app.use('/getdata', getDataRouter);
 app.use('/getdataEmployees', getDataEmployees);
 app.use('/getdataSuppliers', getDataSuppliers);
+app.use('/getdataProducts', getDataProducts);
 
 
 // catch 404 and forward to error handler

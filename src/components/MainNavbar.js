@@ -130,16 +130,19 @@ class MainNavbar extends React.Component {
        
         
         let navCustomers 
-        if (!customersEdit&&!customersRead)  
+        if (!customersEdit&&!customersRead)  // if no permession do not show all block of navbar at all 
             navCustomers = ""
         else  {
             let newCustomerOrder = createNewOrder ? <NavDropdown.Item id ="createNewCustOrder"  onClick={this.getMenuItem}>Create New Order</NavDropdown.Item> : ""
+            let showAllCustomerOrders = createNewOrder ? <NavDropdown.Item id ="showAllCustomerOrders"  onClick={this.getMenuItem}>Show All Exists Orders</NavDropdown.Item> : ""
             let addNewCustomer = customersEdit ? <NavDropdown.Item id ="addNewCustomer" onClick={this.getMenuItem}>Add New Customer</NavDropdown.Item> : ""
             let editCustomer = customersEdit ?  <NavDropdown.Item id ="editCustomer" onClick={this.getMenuItem}>Edit Exist Customer</NavDropdown.Item>: ""
             let showCustomers = customersRead ?  <NavDropdown.Item id ="showCustomers" onClick={this.getMenuItem}>Show Customers</NavDropdown.Item> : ""
             navCustomers=  <Nav className="mr-auto">
                             <NavDropdown  title="Customers" id="navCustomers"> 
                             {newCustomerOrder}
+                            {showAllCustomerOrders}
+                            <NavDropdown.Divider />
                             {addNewCustomer}
                             {editCustomer}
                              <NavDropdown.Divider />
@@ -150,12 +153,15 @@ class MainNavbar extends React.Component {
              navSuppliers = ""
         else {
             let createSuppOrder = suppliersEdit ?  <NavDropdown.Item id ="createNewSuppOrder" onClick={this.getMenuItem}>Create New Order from Supliers</NavDropdown.Item> : "" 
+            let showAllSuppOrders = suppliersEdit ?  <NavDropdown.Item id ="showAllSuppOrders" onClick={this.getMenuItem}>Show all Orders</NavDropdown.Item> : "" 
             let addNewSupplier = suppliersEdit ?  <NavDropdown.Item id ="addNewSupplier" onClick={this.getMenuItem}>Add New Supplier</NavDropdown.Item> : ""
             let editSupplier = suppliersEdit ?  <NavDropdown.Item id ="editSupplier" onClick={this.getMenuItem}>Edit Exist Supplier</NavDropdown.Item> : ""
             let showSuppliers = suppliersRead ?  <NavDropdown.Item id ="showSuppliers" onClick={this.getMenuItem}>Show suppliers</NavDropdown.Item> : ""
             navSuppliers = <Nav className="mr-auto">
                             <NavDropdown title="Suppliers" id="basic-nav-dropdown">  
                             {createSuppOrder}
+                            {showAllSuppOrders}
+                            <NavDropdown.Divider />
                             {addNewSupplier}
                             {editSupplier}
                             <NavDropdown.Divider />

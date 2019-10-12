@@ -48,131 +48,115 @@ class MainWindow extends React.Component {
        //conditional rendering by menu item clicked
        switch(menuChoose) {
         case "createNewCustOrder": 
-                    
-                         return(
-                                      <div>Create New Order</div>
+              return(
+                     <div>Create New Order</div>
                                  )  
-                     
+        case "showAllCustomerOrders": 
+               return(
+                      <div>Create New Order</div>
+                                 )                         
         case "addNewCustomer": 
-                    {
-                         return(
+              return(
                                       <div>addNewCustomer</div>
                                  )  
-                     };
         case "editCustomer": 
-          {
-               return(
+              return(
                             <div>editCustomer</div>
                        )  
-           };
-           case "showCustomers": 
-           {
-                return(
+        case "showCustomers": 
+              return(
                              <ShowCustomers/>
                         )  
-            };
-            case "createNewSuppOrder": 
-            {
-                 return(
-                              <div>createNewSuppOrder</div>
+        case "createNewSuppOrder": 
+                return(
+                       <div>createNewSuppOrder</div>
                          )  
-             };
-             case "editSupplier": 
-          {
-               return(
+        case "showAllSuppOrders": 
+                return(
+                       <div>createNewSuppOrder</div>
+                         ) 
+        case "editSupplier": 
+                 return(
                             <div>editSupplier</div>
                        )  
-           };
-           case "showSuppliers": 
-          {
-               return(
+        case "showSuppliers": 
+                 return(
                     <ShowSuppliers/>
                        )  
-           };
-           case "addNewProduct": 
-          {
-               return(
+        case "addNewProduct": 
+                 return(
                             <div>addNewProduct</div>
                        )  
-           };
-           case "editProduct": 
-          {
-               return(
+        case "editProduct": 
+                 return(
                             <div>editProduct</div>
                        )  
-           };
-           case "deleteProduct": 
-          {
+        case "deleteProduct": 
+         
                return(
                             <div>deleteProduct</div>
                        )  
-           };
+           
            case "showProducts": 
-          {
+         
                return(
                             <div>showProducts</div>
                        )  
-           }; 
+           
            case "newReciept": 
-          {
+         
                return(
                             <div>newReciept</div>
                        )  
-           };  
+             
            case "newPayment": 
-          {
+         
                return(
                             <div>newPayment</div>
                        )  
-           };  
+            
            case "custBalance": 
-          {
+          
                return(
                             <div>custBalance</div>
                        )  
-           };  
+            
            case "suppBalance": 
-          {
+          
                return(
                             <div>suppBalance</div>
                        )  
-           };  
+            
            case "showSaldo": 
-          {
+          
                return(
                             <div>showSaldo</div>
                        )  
-           };     
+                
            case "addNewEmployee": 
-          {
+          
                return(
                             <div>addNewEmployee</div>
                        )  
-           };  
+           
            case "editEmployee": 
-          {
+          
                return(
                             <div>editEmployee</div>
                        )  
-           };  
-           case "showProducts": 
-          {
-               return(
-                            <div>showProducts</div>
-                       )  
-           };  
+         
            case "deleteEmployeer": 
-          {
+         
                return(
                             <div>deleteEmployeer</div>
                        )  
-           };  
+            
            case "showEmployees": 
-          {
+          
                return(
                             <div>showEmployees</div>
                        )  
-           };  
+        
           
 
         default : 

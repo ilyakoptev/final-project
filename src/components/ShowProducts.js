@@ -110,7 +110,7 @@ export default class ShowSuppliers extends React.Component {
 
                         <Modal show={showModal} onHide={this.closeModal} size="">  
                             <Modal.Header closeButton>
-                                <Modal.Title>Supplier Details - {selectedSupplier.SuppName}</Modal.Title>
+                                <Modal.Title>Supplier Details - {selectedSupplier.WorkName}</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                             <Table responsive="sm" size="sm">
