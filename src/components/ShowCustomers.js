@@ -40,9 +40,7 @@ export default class MainWindow extends React.Component {
       //  console.log( e.target.getAttribute('data-key'))
         console.log( this.state.getData[index-1].WorkName )
         this.setState({ selectedCustomer: this.state.getData[index-1] })
-        //let empId = this.state.selectedCustomer.EmployeeID
-       // console.log( this.state.selectedCustomer )
-       const res = this.state.getDataEmployees.find( (item) => {if (item.EmployeeId == this.state.getData[index-1].EmployeeID) return item} ) //get all data of Employee that work with current customer
+        const res = this.state.getDataEmployees.find( (item) => {if (item.EmployeeId == this.state.getData[index-1].EmployeeID) return item} ) //get all data of Employee that work with current customer
        //console.log( res.Name )
        this.setState({ getEmployee: res })
       
@@ -54,7 +52,7 @@ export default class MainWindow extends React.Component {
     customerModalWindow() {
         const {selectedCustomer,getEmployee } = this.state;
         selectedCustomer.Agent = getEmployee.Name // add property employee name to customer modal 
-        let detailsKeys = Object.keys(selectedCustomer)
+        let detailsKeys = Object.keys(selectedCustomer) 
         let detailsValues = Object.values(selectedCustomer)
         let result =[]
         for(let i=0;i<detailsKeys.length;i++){
@@ -115,7 +113,7 @@ export default class MainWindow extends React.Component {
                                 <Modal.Title>Customer Details - {selectedCustomer.WorkName}</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                            <Table responsive="sm">
+                            <Table responsive="sm" size="sm">
                                    <tbody>
                                    {this.customerModalWindow()}
                                    </tbody>
