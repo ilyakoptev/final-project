@@ -3,14 +3,14 @@ import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal} from 'react-bootstrap';
 //import customerorders from '../data/customerorders';
 
-export default class ShowSuppliers extends React.Component {
+export default class ShowProducts extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             getData: [],
-            getDataSuppliers:[],
-            selectedSupplier: {},
-            getSupplier: {},
+            getDataProducts:[],
+            selectedProduct: {},
+            getProduct: {},
             redirectToHome: false,
             showModal: false,
           
@@ -26,10 +26,10 @@ export default class ShowSuppliers extends React.Component {
         // fetch('/getdata')
         // .then(res => res.json())
         // .then(getData => this.setState({getData}));
-        fetch('/getdataSuppliers')
+        fetch('/getDataProducts')
         .then(res => res.json())
-        .then(getDataSuppliers => this.setState({getDataSuppliers}));
-        console.log(this.state.getDataSuppliers)
+        .then(getDataProducts => this.setState({getDataProducts}));
+        console.log(this.state.getDataProducts)
         
       }
          
@@ -38,11 +38,11 @@ export default class ShowSuppliers extends React.Component {
         this.setState({ showModal: true })
         
       //  console.log( e.target.getAttribute('data-key'))
-        console.log( this.state.getDataSuppliers[index-1].SuppId )
-        this.setState({ selectedSupplier: this.state.getDataSuppliers[index-1] })
-        //const res = this.state.getDataSuppliers.find( (item) => {if (item.SuppId == this.state.getDataSuppliers[index-1].CategoryID) return item} ) //get all data of Employee that work with current customer
+        console.log( this.state.getDataProducts[index-1].SuppId )
+        this.setState({ selectedProduct: this.state.getDataProducts[index-1] })
+        //const res = this.state.getDataProducts.find( (item) => {if (item.SuppId == this.state.getDataProducts[index-1].CategoryID) return item} ) //get all data of Employee that work with current customer
        //console.log( res.Name )
-     //  this.setState({ getSupplier: res })
+     //  this.setState({ getProduct: res })
       
     }
     
@@ -50,10 +50,10 @@ export default class ShowSuppliers extends React.Component {
         this.setState({ showModal: false })
     }
     supplierModalWindow() {
-       const {selectedSupplier,getSupplier } = this.state;
-     //   selectedSupplier.Agent = getSupplier.Name // add property employee name to customer modal 
-        let detailsKeys = Object.keys(selectedSupplier) 
-        let detailsValues = Object.values(selectedSupplier)
+       const {selectedProduct,getProduct } = this.state;
+     //   selectedProduct.Agent = getProduct.Name // add property employee name to customer modal 
+        let detailsKeys = Object.keys(selectedProduct) 
+        let detailsValues = Object.values(selectedProduct)
         let result =[]
         for(let i=0;i<detailsKeys.length;i++){
             result[i]=
@@ -63,44 +63,45 @@ export default class ShowSuppliers extends React.Component {
                         </tr>
        }
        
-       console.log( getSupplier.Name )
-        // console.log(this.state.selectedSupplier)
+       console.log( getProduct.Name )
+        // console.log(this.state.selectedProduct)
        return result
      }
       render() {
-        const { redirectToHome, getDataSuppliers , showModal, selectedSupplier} = this.state;
-        console.log(getDataSuppliers) 
+        const { redirectToHome, getDataProducts , showModal, selectedProduct} = this.state;
+        console.log(getDataProducts) 
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
         let count = 0 // row number in the table
-        let Rows = getDataSuppliers.map(supp =>   // generate table with customers
+        let Rows = getDataProducts.map(prod =>   // generate table with customers
             <tr data-key={++count} onClick={this.openModal}> 
                  <td data-key={count}>{count}</td>
-                                <td data-key={count}>{supp.SuppId}</td>
-                                <td data-key={count}>{supp.SuppName}</td>
-                                <td data-key={count}>{supp.ContactName}</td>
-                                <td data-key={count}>{supp.Telephone}</td>
-                                <td data-key={count}>{supp.Email}</td>
+                                <td data-key={count}>{prod.ProductID}</td>
+                                <td data-key={count}>{prod.ProductName}</td>
+                                <td data-key={count}>{prod.Description}</td>
+                                <td data-key={count}>{prod.MinOrder + prod.Unit}</td>
+                                <td data-key={count}>{prod.ListPrice}</td>
+                                <td data-key={count}>{prod.CategoryID}</td>
                                
                                 
              </tr>)
       // console.log( this.state.getData[0].City )
-      // console.log(selectedSupplier.City ) 
-      //  console.log( Object.keys(selectedSupplier) ) 
+      // console.log(selectedProduct.City ) 
+      //  console.log( Object.keys(selectedProduct) ) 
         return(
-              <Container> <h2> All Supplier List</h2>
+              <Container> <h2> All Products List</h2>
                         
                         <Table responsive="lg">
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>SuppID</th>
-                                <th>Supp Name</th>
-                                <th>Contact Name</th>
-                                <th>Telephone</th>
-                                <th>E-Mail</th>
-                                
+                                <th>ProductId</th>
+                                <th>ProductName</th>
+                                <th>Description</th>
+                                <th>MinOrder</th>
+                                <th>ListPrice</th>
+                                <th>Category</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -110,7 +111,7 @@ export default class ShowSuppliers extends React.Component {
 
                         <Modal show={showModal} onHide={this.closeModal} size="">  
                             <Modal.Header closeButton>
-                                <Modal.Title>Supplier Details - {selectedSupplier.WorkName}</Modal.Title>
+                                <Modal.Title>Product Details - {selectedProduct.ProductName}</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                             <Table responsive="sm" size="sm">

@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { Container, Button } from 'react-bootstrap';
 import ShowCustomers from '../components/ShowCustomers';
 import ShowSuppliers from './ShowSuppliers';
-
+import ShowProducts from './ShowProducts';
 import customerorders from '../data/customerorders';
 
 class MainWindow extends React.Component {
@@ -100,7 +100,7 @@ class MainWindow extends React.Component {
            case "showProducts": 
          
                return(
-                            <div>showProducts</div>
+                            <ShowProducts/>
                        )  
            
            case "newReciept": 
