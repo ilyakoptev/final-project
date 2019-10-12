@@ -10,6 +10,7 @@ export default class MainWindow extends React.Component {
             getData: [],
             getDataEmployees:[],
             selectedCustomer: {},
+            getEmployee: {},
             redirectToHome: false,
             customerorders: customerorders,
             showModal: false,
@@ -26,31 +27,35 @@ export default class MainWindow extends React.Component {
         fetch('/getdata')
         .then(res => res.json())
         .then(getData => this.setState({getData}));
-      
-        //console.log(this.state.getData)
-      }
-   
-      getDetails(){
-        console.log( "Hello")
         fetch('/getdataEmployees')
         .then(res => res.json())
         .then(getDataEmployees => this.setState({getDataEmployees}));
+        //console.log(this.state.getData)
       }
-      
+         
     openModal(e) {
+        const index = e.target.getAttribute('data-key')
         this.setState({ showModal: true })
-        this.setState({ customerRowNum: e.target.getAttribute('data-key') })
-        console.log( e.target.getAttribute('data-key'))
-        console.log( this.state.getData[e.target.getAttribute('data-key')-1].WorkName )
-        this.setState({ selectedCustomer: this.state.getData[e.target.getAttribute('data-key')-1] })
+        this.setState({ customerRowNum:index })
+      //  console.log( e.target.getAttribute('data-key'))
+        console.log( this.state.getData[index-1].WorkName )
+        this.setState({ selectedCustomer: this.state.getData[index-1] })
+        //let empId = this.state.selectedCustomer.EmployeeID
+       // console.log( this.state.selectedCustomer )
+       const res = this.state.getDataEmployees.find( (item) => {if (item.EmployeeId == this.state.getData[index-1].EmployeeID) return item} ) //get all data of Employee that work with current customer
+       //console.log( res.Name )
+       this.setState({ getEmployee: res })
+      
     }
-
+    
     closeModal() {
         this.setState({ showModal: false })
     }
     customerModalWindow() {
-        let detailsKeys = Object.keys(this.state.selectedCustomer)
-        let detailsValues = Object.values(this.state.selectedCustomer)
+        const {selectedCustomer,getEmployee } = this.state;
+        selectedCustomer.Agent = getEmployee.Name // add property employee name to customer modal 
+        let detailsKeys = Object.keys(selectedCustomer)
+        let detailsValues = Object.values(selectedCustomer)
         let result =[]
         for(let i=0;i<detailsKeys.length;i++){
             result[i]=
@@ -59,7 +64,9 @@ export default class MainWindow extends React.Component {
                             <td>{detailsValues[i]}</td>
                         </tr>
        }
-       this.getDetails();
+       
+       console.log( getEmployee.Name )
+        // console.log(this.state.selectedCustomer)
        return result
      }
       render() {
