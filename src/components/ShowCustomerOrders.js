@@ -1,16 +1,16 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Table, Modal, Image} from 'react-bootstrap';
+import { Container, Button , Table, Modal} from 'react-bootstrap';
 //import customerorders from '../data/customerorders';
 
-export default class ShowProducts extends React.Component {
+export default class ShowCustomerOrders extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             getData: [],
-            getDataProducts:[],
-            selectedProduct: {},
-            getProduct: {},
+            getDataCustOrders:[],
+            selectedOrder: {},
+            getOrder: {},
             redirectToHome: false,
             showModal: false,
           
@@ -26,10 +26,10 @@ export default class ShowProducts extends React.Component {
         // fetch('/getdata')
         // .then(res => res.json())
         // .then(getData => this.setState({getData}));
-        fetch('/getDataProducts')
+        fetch('/getCustomersOrders')
         .then(res => res.json())
-        .then(getDataProducts => this.setState({getDataProducts}));
-        console.log(this.state.getDataProducts)
+        .then(getDataCustOrders => this.setState({getDataCustOrders}));
+        console.log(this.state.getDataCustOrders)
         
       }
          
@@ -38,11 +38,11 @@ export default class ShowProducts extends React.Component {
         this.setState({ showModal: true })
         
       //  console.log( e.target.getAttribute('data-key'))
-        console.log( this.state.getDataProducts[index-1].SuppId )
-        this.setState({ selectedProduct: this.state.getDataProducts[index-1] })
-        //const res = this.state.getDataProducts.find( (item) => {if (item.SuppId == this.state.getDataProducts[index-1].CategoryID) return item} ) //get all data of Employee that work with current customer
+     //   console.log( this.state.getDataCustOrders[index-1].SuppId )
+        this.setState({ selectedOrder: this.state.getDataCustOrders[index-1] })
+        //const res = this.state.getDataCustOrders.find( (item) => {if (item.SuppId == this.state.getDataCustOrders[index-1].CategoryID) return item} ) //get all data of Employee that work with current customer
        //console.log( res.Name )
-     //  this.setState({ getProduct: res })
+     //  this.setState({ getOrder: res })
       
     }
     
@@ -50,10 +50,10 @@ export default class ShowProducts extends React.Component {
         this.setState({ showModal: false })
     }
     detailsModalWindow() {
-       const {selectedProduct,getProduct } = this.state;
-     //   selectedProduct.Agent = getProduct.Name // add property employee name to customer modal 
-        let detailsKeys = Object.keys(selectedProduct) 
-        let detailsValues = Object.values(selectedProduct)
+       const {selectedOrder,getOrder } = this.state;
+     //   selectedOrder.Agent = getOrder.Name // add property employee name to customer modal 
+        let detailsKeys = Object.keys(selectedOrder) 
+        let detailsValues = Object.values(selectedOrder)
         let result =[]
         for(let i=0;i<detailsKeys.length;i++){
             result[i]=
@@ -63,47 +63,44 @@ export default class ShowProducts extends React.Component {
                         </tr>
        }
        
-       console.log( getProduct.Name )
-        // console.log(this.state.selectedProduct)
+       console.log( getOrder.Name )
+        // console.log(this.state.selectedOrder)
        return result
      }
       render() {
-        const { redirectToHome, getDataProducts , showModal, selectedProduct} = this.state;
-       let image = "images/" + selectedProduct.ProductID + ".jpg"
-       
-        console.log(getDataProducts) 
+        const { redirectToHome, getDataCustOrders , showModal, selectedOrder} = this.state;
+        console.log(getDataCustOrders) 
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
         let count = 0 // row number in the table
-        let Rows = getDataProducts.map(prod =>   // generate table with customers
+        let Rows = getDataCustOrders.map(order =>   // generate table with customers
             <tr data-key={++count} onClick={this.openModal}> 
                  <td data-key={count}>{count}</td>
-                                <td data-key={count}>{prod.ProductID}</td>
-                                <td data-key={count}>{prod.ProductName}</td>
-                                <td data-key={count}>{prod.Description}</td>
-                                <td data-key={count}>{prod.MinOrder + prod.Unit}</td>
-                                <td data-key={count}>{prod.ListPrice}</td>
-                                <td data-key={count}>{prod.CategoryID}</td>
+                                <td data-key={count}>{order.CustOrderID}</td>
+                                <td data-key={count}>{order.CustomerID}</td>
+                                <td data-key={count}>{order.OrderIncomingDate}</td>
+                                <td data-key={count}>{order.OrderShippingDate}</td>
+                                
                                
                                 
              </tr>)
       // console.log( this.state.getData[0].City )
-      // console.log(selectedProduct.City ) 
-      //  console.log( Object.keys(selectedProduct) ) 
+      // console.log(selectedOrder.City ) 
+      //  console.log( Object.keys(selectedOrder) ) 
         return(
-              <Container> <h2> All Products List</h2>
+              <Container> <h2> All Supplier List</h2>
                         
                         <Table responsive="lg">
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>ProductId</th>
-                                <th>ProductName</th>
-                                <th>Description</th>
-                                <th>MinOrder</th>
-                                <th>ListPrice</th>
-                                <th>Category</th>
+                                <th>OrderID</th>
+                                <th>CustomerID</th>
+                                <th>Order Date</th>
+                                <th>Shipping Date</th>
+                               
+                                
                             </tr>
                             </thead>
                             <tbody>
@@ -111,14 +108,11 @@ export default class ShowProducts extends React.Component {
                             </tbody>
                         </Table>
 
-                        <Modal show={showModal} onHide={this.closeModal} size="md" >  
+                        <Modal show={showModal} onHide={this.closeModal} size="">  
                             <Modal.Header closeButton>
-                                <Modal.Title>Product Details - {selectedProduct.ProductName}</Modal.Title>
+                                <Modal.Title>Order Details - {selectedOrder.CustOrderID}</Modal.Title>
                             </Modal.Header>
-                            <Modal.Body >
-                            <div class="text-center mb-2" >
-                              <Image  src={image} width="300px" fluid/>
-                             </div>
+                            <Modal.Body>
                             <Table responsive="sm" size="sm">
                                    <tbody>
                                    {this.detailsModalWindow()}

@@ -10,6 +10,7 @@ var getDataRouter = require('./routes/getdata');
 var getDataEmployees = require('./routes/getdataEmployees');
 var getDataSuppliers = require('./routes/getdataSuppliers');
 var getDataProducts = require('./routes/getdataProducts');
+var getCustomersOrders = require('./routes/getCustomersOrders');
 
 var app = express();
 
@@ -29,6 +30,8 @@ app.use('/getdata', getDataRouter);
 app.use('/getdataEmployees', getDataEmployees);
 app.use('/getdataSuppliers', getDataSuppliers);
 app.use('/getdataProducts', getDataProducts);
+app.use('/getCustomersOrders', getCustomersOrders);
+
 
 
 // catch 404 and forward to error handler

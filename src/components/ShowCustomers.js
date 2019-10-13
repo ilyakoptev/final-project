@@ -20,7 +20,7 @@ export default class ShowCustomers extends React.Component {
         //this.openCustomerDetails = this.openCustomerDetails.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
-        this.customerModalWindow = this.customerModalWindow.bind(this);
+        this.detailsModalWindow = this.detailsModalWindow.bind(this);
         
     }
     componentDidMount(){
@@ -49,7 +49,7 @@ export default class ShowCustomers extends React.Component {
     closeModal() {
         this.setState({ showModal: false })
     }
-    customerModalWindow() {
+    detailsModalWindow() {
         const {selectedCustomer,getEmployee } = this.state;
         selectedCustomer.Agent = getEmployee.Name // add property employee name to customer modal 
         let detailsKeys = Object.keys(selectedCustomer) 
@@ -115,7 +115,7 @@ export default class ShowCustomers extends React.Component {
                             <Modal.Body>
                             <Table responsive="sm" size="sm">
                                    <tbody>
-                                   {this.customerModalWindow()}
+                                   {this.detailsModalWindow()}
                                    </tbody>
                                </Table> 
                             </Modal.Body>

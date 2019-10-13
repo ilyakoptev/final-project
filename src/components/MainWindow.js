@@ -5,6 +5,7 @@ import { Container, Button } from 'react-bootstrap';
 import ShowCustomers from '../components/ShowCustomers';
 import ShowSuppliers from './ShowSuppliers';
 import ShowProducts from './ShowProducts';
+import ShowCustomerOrders from './ShowCustomerOrders';
 import customerorders from '../data/customerorders';
 
 class MainWindow extends React.Component {
@@ -53,11 +54,11 @@ class MainWindow extends React.Component {
                                  )  
         case "showAllCustomerOrders": 
                return(
-                      <div>Create New Order</div>
+                      <ShowCustomerOrders/>
                                  )                         
         case "addNewCustomer": 
               return(
-                                      <div>addNewCustomer</div>
+                           <div>addNewCustomer</div>
                                  )  
         case "editCustomer": 
               return(
