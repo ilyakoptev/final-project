@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Table, Modal} from 'react-bootstrap';
+import { Container, Button , Table, Modal, Image} from 'react-bootstrap';
 //import customerorders from '../data/customerorders';
 
 export default class ShowProducts extends React.Component {
@@ -69,6 +69,8 @@ export default class ShowProducts extends React.Component {
      }
       render() {
         const { redirectToHome, getDataProducts , showModal, selectedProduct} = this.state;
+       let image = "images/" + selectedProduct.ProductID + ".jpg"
+       
         console.log(getDataProducts) 
         if (redirectToHome) {
             return <Redirect to="/"/>
@@ -109,11 +111,14 @@ export default class ShowProducts extends React.Component {
                             </tbody>
                         </Table>
 
-                        <Modal show={showModal} onHide={this.closeModal} size="">  
+                        <Modal show={showModal} onHide={this.closeModal} size="md" >  
                             <Modal.Header closeButton>
                                 <Modal.Title>Product Details - {selectedProduct.ProductName}</Modal.Title>
                             </Modal.Header>
-                            <Modal.Body>
+                            <Modal.Body >
+                            <div class="text-center mb-2" >
+                              <Image  src={image} width="300px" fluid/>
+                             </div>
                             <Table responsive="sm" size="sm">
                                    <tbody>
                                    {this.supplierModalWindow()}
