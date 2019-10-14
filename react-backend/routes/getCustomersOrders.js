@@ -48,11 +48,11 @@ setTimeout(function() { startRoute(); }, timer);
 function startRoute() {
 
     result.forEach(joinTables)
-
+    
     function joinTables(item) {
+        item.orderDetails = []
         for (let i = 0; i < resultCustomersorderdetails.length; i++) {
-            if (item.CustOrderID === resultCustomersorderdetails[i].OrderId) {
-                item.orderDetails = []
+           if (item.CustOrderID === resultCustomersorderdetails[i].OrderId) {
                 item.orderDetails.push(resultCustomersorderdetails[i])
             }
         }
@@ -64,7 +64,7 @@ function startRoute() {
         res.json(result)
 
     });
-    console.log(result);
+    console.log(result[0]);
 }
 
 

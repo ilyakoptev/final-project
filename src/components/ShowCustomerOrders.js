@@ -63,8 +63,8 @@ export default class ShowCustomerOrders extends React.Component {
                         </tr>
        }
        
-       console.log( getOrder.Name )
-        // console.log(this.state.selectedOrder)
+      
+         console.log(this.state.selectedOrder)
        return result
      }
       render() {
@@ -79,7 +79,7 @@ export default class ShowCustomerOrders extends React.Component {
                  <td data-key={count}>{count}</td>
                                 <td data-key={count}>{order.CustOrderID}</td>
                                 <td data-key={count}>{order.CustomerID}</td>
-                                <td data-key={count}>{order.OrderIncomingDate}</td>
+                                <td data-key={count}>{order.OrderIncomeDate}</td>
                                 <td data-key={count}>{order.OrderShippingDate}</td>
                                 
                                
