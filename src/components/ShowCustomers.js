@@ -24,7 +24,7 @@ export default class ShowCustomers extends React.Component {
         
     }
     componentDidMount(){
-        fetch('/getdata')
+        fetch('/getdataCustomers')
         .then(res => res.json())
         .then(getData => this.setState({getData}));
         fetch('/getdataEmployees')
@@ -63,7 +63,7 @@ export default class ShowCustomers extends React.Component {
                         </tr>
        }
        
-       console.log( getEmployee.Name )
+      // console.log( result)
         // console.log(this.state.selectedCustomer)
        return result
      }

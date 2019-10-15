@@ -7,31 +7,33 @@ export default class ShowCustomerOrders extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            getData: [],
+            getDataCustomers: [],
             getDataCustOrders:[],
             selectedOrder: {},
-            getOrder: {},
+            selectedOrderDetails:[],
+            getCustomer: {},
             redirectToHome: false,
             showModal: false,
           
         }
 
-        //this.openCustomerDetails = this.openCustomerDetails.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.detailsModalWindow = this.detailsModalWindow.bind(this);
         
     }
     componentDidMount(){
-        // fetch('/getdata')
-        // .then(res => res.json())
-        // .then(getData => this.setState({getData}));
+        fetch('/getdataCustomers')
+        .then(res => res.json())
+        .then(getDataCustomers => this.setState({getDataCustomers}));
         fetch('/getCustomersOrders')
         .then(res => res.json())
         .then(getDataCustOrders => this.setState({getDataCustOrders}));
-        console.log(this.state.getDataCustOrders)
+        console.log("componentDidMount" + this.state.getDataCustOrders)
         
-      }
+
+    }
+  
          
     openModal(e) {
         const index = e.target.getAttribute('data-key')
@@ -40,9 +42,10 @@ export default class ShowCustomerOrders extends React.Component {
       //  console.log( e.target.getAttribute('data-key'))
      //   console.log( this.state.getDataCustOrders[index-1].SuppId )
         this.setState({ selectedOrder: this.state.getDataCustOrders[index-1] })
-        //const res = this.state.getDataCustOrders.find( (item) => {if (item.SuppId == this.state.getDataCustOrders[index-1].CategoryID) return item} ) //get all data of Employee that work with current customer
-       //console.log( res.Name )
-     //  this.setState({ getOrder: res })
+        this.setState({ selectedOrderDetails: this.state.getDataCustOrders[index-1].OrderDetails })
+      //  const res = this.state.getDataCustomers.find( (item) => {if (item.CustID == this.state.getDataCustOrders[index-1].CustomerID) return item} ) //get all data of Employee that work with current customer
+      //  console.log( res.WorkName )
+       // this.setState({ getCustomer: res })
       
     }
     
@@ -50,26 +53,53 @@ export default class ShowCustomerOrders extends React.Component {
         this.setState({ showModal: false })
     }
     detailsModalWindow() {
-       const {selectedOrder,getOrder } = this.state;
-     //   selectedOrder.Agent = getOrder.Name // add property employee name to customer modal 
-        let detailsKeys = Object.keys(selectedOrder) 
-        let detailsValues = Object.values(selectedOrder)
-        let result =[]
-        for(let i=0;i<detailsKeys.length;i++){
-            result[i]=
-                        <tr>
-                            <td>{detailsKeys[i]}</td>
-                            <td>{detailsValues[i]}</td>
-                        </tr>
-       }
-       
+       const {selectedOrder, selectedOrderDetails } = this.state;
       
-         console.log(this.state.selectedOrder)
-       return result
+       let obj = {}
+     //   selectedOrder.Customer = getCustomer.WorkName // add property "Customer"  to order modal 
+       let result =[]
+       let resultArr 
+       let header = " "
+       let rowdata 
+        for(let z=0;z<selectedOrderDetails.length;z++){
+            obj  = selectedOrderDetails[z]
+            console.log(obj)       
+            let detailsKeys = Object.keys(obj) 
+            let detailsValues = Object.values(obj)
+            
+            console.log(detailsKeys) 
+            console.log(detailsValues)      
+                        
+            if(z===0){
+                header =  detailsKeys.map((key, index) => {
+                    return <th key={index}>{key.toUpperCase()}</th>
+            })}
+           
+            rowdata =  detailsValues.map((key, index) => {
+                    return <th key={index}>{key}</th>
+                
+                })
+            result[z]= <tr>{rowdata}</tr>
+            
+          // resultArr.push(result)
+        }
+              
+     //   obj  = selectedOrderDetails[0]
+      //header = <tr>{header}</tr>
+      //  console.log(header)       
+      resultArr = <tbody><tr>{header}</tr> {result} </tbody>
+      return resultArr
      }
       render() {
         const { redirectToHome, getDataCustOrders , showModal, selectedOrder} = this.state;
         console.log(getDataCustOrders) 
+    //    getDataCustOrders.forEach(addCustomerName)
+    
+    //     function addCustomerName(name) {
+    //         const res = this.state.getDataCustomers.find( (item) => {if (item.CustID == this.state.getDataCustOrders[index-1].CustomerID) return item} ) //get all data of Employee that work with current customer
+    //         name.Customer = res
+    //      }
+
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
@@ -78,10 +108,10 @@ export default class ShowCustomerOrders extends React.Component {
             <tr data-key={++count} onClick={this.openModal}> 
                  <td data-key={count}>{count}</td>
                                 <td data-key={count}>{order.CustOrderID}</td>
-                                <td data-key={count}>{order.CustomerID}</td>
+                                <td data-key={count}>{order.Customer}</td>
                                 <td data-key={count}>{order.OrderIncomeDate}</td>
                                 <td data-key={count}>{order.OrderShippingDate}</td>
-                                
+                                <td data-key={count}>{order.OrderShippingDate}</td>
                                
                                 
              </tr>)
@@ -96,10 +126,10 @@ export default class ShowCustomerOrders extends React.Component {
                             <tr>
                                 <th>#</th>
                                 <th>OrderID</th>
-                                <th>CustomerID</th>
+                                <th>Customer</th>
                                 <th>Order Date</th>
                                 <th>Shipping Date</th>
-                               
+                                <th></th>
                                 
                             </tr>
                             </thead>
@@ -108,7 +138,7 @@ export default class ShowCustomerOrders extends React.Component {
                             </tbody>
                         </Table>
 
-                        <Modal show={showModal} onHide={this.closeModal} size="">  
+                        <Modal show={showModal} onHide={this.closeModal} size="lg">  
                             <Modal.Header closeButton>
                                 <Modal.Title>Order Details - {selectedOrder.CustOrderID}</Modal.Title>
                             </Modal.Header>

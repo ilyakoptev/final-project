@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var getDataRouter = require('./routes/getdata');
+var getDataCustomers = require('./routes/getdataCustomers');
 var getDataEmployees = require('./routes/getdataEmployees');
 var getDataSuppliers = require('./routes/getdataSuppliers');
 var getDataProducts = require('./routes/getdataProducts');
@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/getdata', getDataRouter);
+app.use('/getdataCustomers', getDataCustomers);
 app.use('/getdataEmployees', getDataEmployees);
 app.use('/getdataSuppliers', getDataSuppliers);
 app.use('/getdataProducts', getDataProducts);
