@@ -58,12 +58,12 @@ export default class ShowCustomerOrders extends React.Component {
        let rowdata 
         for(let z=0;z<selectedOrderDetails.length;z++){
             obj  = selectedOrderDetails[z]
-            console.log(obj)       
+           // console.log(obj)       
             let detailsKeys = Object.keys(obj) 
             let detailsValues = Object.values(obj)
             
-            console.log(detailsKeys) 
-            console.log(detailsValues)      
+            //console.log(detailsKeys) 
+            //console.log(detailsValues)      
                         
             if(z===0){   // make header for table in modal 
                 header =  detailsKeys.map((key, index) => {
@@ -71,7 +71,7 @@ export default class ShowCustomerOrders extends React.Component {
             })}
             
             rowdata =  detailsValues.map((key, index) => {  // insert rows with data to table in modal 
-                    return <th key={index}>{key}</th>
+                    return <td key={index}>{key}</td>
                 
                 })
             result[z]= <tr>{rowdata}</tr>
@@ -82,18 +82,23 @@ export default class ShowCustomerOrders extends React.Component {
      //   obj  = selectedOrderDetails[0]
       //header = <tr>{header}</tr>
       //  console.log(header)       
-      resultArr = <tbody><tr>{header}</tr> {result} </tbody>
+      resultArr = <tbody><tr>{header}</tr> {result} </tbody>  // build table for modal window 
       return resultArr
      }
       render() {
         const { redirectToHome, getDataCustOrders , showModal, selectedOrder} = this.state;
         const {activeUser} = this.props;
-       // console.log(getDataCustOrders) 
-       if (activeUser == 2 && activeUser == 4){   // if user sales manager or driver as can see only his orders
-            var sortedArray = this.state.getDataCustOrders.filter(x => x.EmployeeID.includes(activeUser));
-            console.log("this.props.activeUser.ImployeeId" + activeUser)
+        
+        
+        console.log(getDataCustOrders.EmployeeID, activeUser.EmployeeId) 
+        var sortedArray = getDataCustOrders
+        console.log(getDataCustOrders)
+        console.log(activeUser.Position)
+        if (activeUser.Position == 2 && activeUser.Position == 4){   // if user sales manager or driver as can see only his orders
+             sortedArray = getDataCustOrders.filter(x => x.EmployeeID.includes(activeUser.EmployeeId));
+            console.log("this.props.activeUser.ImployeeId" + activeUser.EmployeeId)
             console.log(sortedArray)
-       } else  sortedArray = getDataCustOrders
+       } //else  sortedArray = getDataCustOrders
     
         if (redirectToHome) {
             return <Redirect to="/"/>

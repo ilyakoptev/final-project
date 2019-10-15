@@ -42,8 +42,8 @@ class MainNavbar extends React.Component {
 
     componentDidMount(){
       // const {activeUser} = this.props;
-       const { activeUser , employees } = this.props;
-       const currectUser = employees[0].data.find( (item)=> {if (item.EmployeeId == activeUser) return item.Name} ) //get all data of currect user 
+       const { activeUser } = this.props;
+       const currectUser = activeUser // employees[0].data.find( (item)=> {if (item.EmployeeId == activeUser) return item.Name} ) //get all data of currect user 
        this.setState({currectUserName: currectUser.Name}) // get a current user name 
        console.log(currectUser)
         switch(currectUser.Position) {

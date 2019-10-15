@@ -6,10 +6,10 @@ import { Container, Button } from 'react-bootstrap';
 import { Switch, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage';
 import DashBoard from './pages/DashBoard';
-import MainNavbar from './components/MainNavbar';
-import customerorders from './data/customerorders';
-import employees from './data/employees'
-import customers from './data/customers'
+//import MainNavbar from './components/MainNavbar';
+//import customerorders from './data/customerorders';
+//import employees from './data/employees'
+//import customers from './data/customers'
 
 class App extends React.Component {
 
@@ -18,26 +18,14 @@ class App extends React.Component {
     super(props);
     this.state = {
       activeUser: null,
-    //   activeUser:   {
-    //     "id": 1,
-    //     "fname": "Nir",
-    //     "lname": "Channes",
-    //     "email": "nir@nir.com",
-    //     "pwd": "123"
-    // },
-      employees: employees,
-      customers: customers,
-      customerorders: []
-      // hack for starting with my recipes
-      // activeUserRecipes: jsonRecipes.filter(recipe => recipe.userId === 1)
+     
     }
 
      this.handleLogout = this.handleLogout.bind(this);
      this.handleLogin = this.handleLogin.bind(this);
-    // this.addRecipe = this.addRecipe.bind(this);
-
-    // console.log(this.state.allRecipes);
+   
   }
+ 
   handleLogin(user){
     this.setState({activeUser:user})
     console.log(user)
@@ -48,15 +36,15 @@ class App extends React.Component {
   }
 
   render(){
-  const {activeUser,customers} = this.state
+  const {activeUser} = this.state
   return (
     <Container>
      <Switch>
         <Route exact path="/">
-          <HomePage activeUser={activeUser} employees={employees} handleLogin={this.handleLogin}/>
+          <HomePage activeUser={activeUser}  handleLogin={this.handleLogin}/>
         </Route>
         <Route exact path="/dashboard">
-          <DashBoard activeUser={activeUser} employees={employees} handleLogout={this.handleLogout}/>
+          <DashBoard activeUser={activeUser}  handleLogout={this.handleLogout}/>
         </Route>
         {/* <Route path="/recipes">
           <RecipesPage />

@@ -20,9 +20,9 @@ class MainWindow extends React.Component {
         //this.logout = this.logout.bind(this);
     }
     componentDidMount(){
-        fetch('/getdata')
-        .then(res => res.json())
-        .then(getData => this.setState({getData}));
+        // fetch('/getdata')
+        // .then(res => res.json())
+        // .then(getData => this.setState({getData}));
       
         //console.log(this.state.getData)
       }
@@ -37,15 +37,13 @@ class MainWindow extends React.Component {
     
 
     render() {
-        const { activeUser, employees, menuChoose } = this.props;
+        const { activeUser,  menuChoose } = this.props;
         const { redirectToHome } = this.state;
-        const currectUser = employees[0].data.find( (item) => {if (item.EmployeeId == activeUser) return item.Name} )  //get all data of currect user 
+        const currectUser = activeUser //  //get all data of currect user 
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
-        //console.log(employees)
-        
-        //console.log(customerorders)
+       
        //conditional rendering by menu item clicked
        switch(menuChoose) {
         case "createNewCustOrder": 
@@ -54,7 +52,7 @@ class MainWindow extends React.Component {
                                  )  
         case "showAllCustomerOrders": 
                return(
-                      <ShowCustomerOrders/>
+                      <ShowCustomerOrders activeUser={activeUser}/>
                                  )                         
         case "addNewCustomer": 
               return(
@@ -66,7 +64,7 @@ class MainWindow extends React.Component {
                        )  
         case "showCustomers": 
               return(
-                             <ShowCustomers/>
+                             <ShowCustomers activeUser={activeUser}/>
                         )  
         case "createNewSuppOrder": 
                 return(

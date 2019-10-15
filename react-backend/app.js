@@ -12,6 +12,7 @@ var getDataSuppliers = require('./routes/getdataSuppliers');
 var getDataProducts = require('./routes/getdataProducts');
 var getCustomersOrders = require('./routes/getCustomersOrders');
 
+
 var app = express();
 
 // view engine setup
