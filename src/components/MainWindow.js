@@ -6,6 +6,8 @@ import ShowCustomers from '../components/ShowCustomers';
 import ShowSuppliers from './ShowSuppliers';
 import ShowProducts from './ShowProducts';
 import ShowCustomerOrders from './ShowCustomerOrders';
+import AddNewCustOrder from './AddNewCustOrder';
+
 import customerorders from '../data/customerorders';
 
 class MainWindow extends React.Component {
@@ -48,7 +50,7 @@ class MainWindow extends React.Component {
        switch(menuChoose) {
         case "createNewCustOrder": 
               return(
-                     <div>Create New Order</div>
+                     <AddNewCustOrder activeUser={activeUser}/>
                                  )  
         case "showAllCustomerOrders": 
                return(
