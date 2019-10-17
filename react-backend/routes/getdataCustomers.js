@@ -9,10 +9,7 @@ const url = "mongodb://localhost:27017/";
 const mongoClient = new MongoClient(url, { useUnifiedTopology: true }); //{ useNewUrlParser: true }
 var result;
 
-function getDataFromDb(res) {
-    //console.log(res[1].data.data);
-    // return result = res[0].data.data
-}
+
 mongoClient.connect(function(err, client) {
 
     const db = client.db("PAG_Flowers");

@@ -6,6 +6,8 @@ import { Container, Button } from 'react-bootstrap';
 import { Switch, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage';
 import DashBoard from './pages/DashBoard';
+import MainWindow from './components/MainWindow';
+
 //import MainNavbar from './components/MainNavbar';
 //import customerorders from './data/customerorders';
 //import employees from './data/employees'
@@ -46,8 +48,8 @@ class App extends React.Component {
         <Route exact path="/dashboard">
           <DashBoard activeUser={activeUser}  handleLogout={this.handleLogout}/>
         </Route>
-        {/* <Route path="/recipes">
-          <RecipesPage />
+        {/* <Route path="/mainwindow">
+          <MainWindow />
         </Route> */}
       </Switch>
     </Container>
