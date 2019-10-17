@@ -90,7 +90,7 @@ export default class AddNewCustOrder extends React.Component {
      }
 
 
-     insertProdQuantity(e){
+     insertProdQuantity(e){ // read input 
         const {selectedProducts,selectedProductQuantity, ifCustomerSelected, ifProductSelected} = this.state
         if(e.target.value == 0){
            return
@@ -107,8 +107,8 @@ export default class AddNewCustOrder extends React.Component {
         console.log(e.target.id, e.target.value )
         console.log(selectedProducts)
      }
-     setQuantity(){
-        const {selectedProducts,getQuantity, ifCustomerSelected, ifProductSelected} = this.state
+     setQuantity(){  // get input  from input field and put it into temporary array and get a last value = final input
+        const {selectedProducts,getQuantity} = this.state
         let temp =  [] 
         temp = selectedProducts
         temp.unshift(getQuantity[0]) 
@@ -121,16 +121,13 @@ export default class AddNewCustOrder extends React.Component {
        let id = e.target.getAttribute('data-key') // button id = productID 
        let submitOrder = submitOrderArray // 
        let submitProduct = selectedProducts.find((prod) => {if(prod.id==id) return prod}) // get last inserting of quantity
-       
+       var flag = false
        console.log("before the insert:")
        console.log(selectedProducts)
        console.log(submitProduct)
        console.log(submitOrder)
-       var x = 0 ,y = 0 
-       if(submitProduct!==undefined){
-        //    submitOrder.forEach((x)=>{ if(x.id==submitProduct.id) x.id+=submitProduct.quantity
-        //                               else submitOrder.push(submitProduct)})
-            // insert to product array
+        if(submitProduct!==undefined){
+                   // insert to product array
             if(submitOrder.length===0){
                  submitOrder.push(submitProduct)    
                  console.log("if lenght = 0 ")
@@ -143,18 +140,15 @@ export default class AddNewCustOrder extends React.Component {
                 if (submitOrder[i].id === submitProduct.id){
                     console.log("inside if ")
                     console.log(submitOrder[i].id, submitOrder[i].quantity , submitProduct.id, submitProduct.quantity )
-                     x = parseInt(submitOrder[i].quantity)
-                     y = parseInt(submitProduct.quantity)
                      submitOrder[i].quantity = submitProduct.quantity
-                     //submitOrder[i].quantity = parseInt(submitOrder[i].quantity)
-                    // submitOrder[i].quantity += parseInt(submitProduct.quantity)
+                     flag = true
                      console.log(submitProduct)
                      console.log(submitOrder)
                      break
                 }
                 
             }
-            if(x===0) { submitOrder.push(submitProduct)   
+            if(!flag) { submitOrder.push(submitProduct)   
                 console.log("inside of else")
                 console.log(submitProduct)
                 console.log(submitOrder) 
@@ -171,16 +165,16 @@ export default class AddNewCustOrder extends React.Component {
       console.log(submitOrder)
      }
    
-     setCustomer(e){   // set state for customer
+     setCustomer(e){   // set state for customer for new order 
        const {ifProductSelected} = this.state
        let customer = e.target.value
        this.setState({selectedCustomer:customer})
        this.setState({ifCustomerSelected:true})  
        if(ifProductSelected) 
-          this.setState({isDisabled:false})   // open submit button 
+          this.setState({isDisabled:false})   // set visible to  submit button 
      }
      
-     submitOrder(){
+     submitOrder(){  // open modal with final order and save it to array with all customer orders
        console.log(this.state.submitOrderArray)
        console.log( this.state.selectedCustomer)
        this.openModal()
@@ -246,9 +240,9 @@ export default class AddNewCustOrder extends React.Component {
                                      </Form.Control>
                             </Col>
                             <Col xs={2} lg={2}>
-                                <div  className="position-relative cart text-center" >
+                                <div  className="position-relative cart mx-auto text-center" >
                                     <Image src="images/cart.jpg" />
-                                    <span class="counter position-absolute" ><h3 class="red">{submitOrderArray.length}</h3></span>
+                                    <span class="counter position-absolute" ><h3 class="red ">{submitOrderArray.length}</h3></span>
                                     </div>
                                      
                             </Col>
