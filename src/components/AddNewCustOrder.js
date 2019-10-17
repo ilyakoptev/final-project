@@ -6,9 +6,9 @@ export default class AddNewCustOrder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            getDataCustomers: [],
-            getDataProducts:[],
-            getCustomersOrders: [],
+            getDataCustomers: [], // all customers data 
+            getDataProducts:[], // all products data
+            getCustomersOrders: [], // all customers orders data
             selectedCustomer: {},
             getEmployee: {},
             redirectToHome: false,
@@ -18,7 +18,6 @@ export default class AddNewCustOrder extends React.Component {
             isDisabled: true,  // button Submit order status 
             ifProductSelected: false, 
             ifCustomerSelected: false,
-            tdBackground:"",
             submitOrderArray:[],
             getQuantity:[]
             
@@ -71,18 +70,22 @@ export default class AddNewCustOrder extends React.Component {
          this.setState({ showModal: false })
     }
     detailsModalWindow() {
-           const {selectedCustomer,selectedProducts } = this.state;
+           const {submitOrderArray,selectedProducts } = this.state;
    
     //     let detailsKeys = Object.keys(selectedCustomer) 
     //     let detailsValues = Object.values(selectedCustomer)
-           let result =[]
-            for(let i=0;i<selectedProducts.length;i++){
+           let result = []
+           if (submitOrderArray.length===0){
+               result[0] = <tr><td>No items selected</td></tr>
+           }
+           else
+           for(let i=0;i<submitOrderArray.length;i++){
                 result[i]=
                             <tr>
-                                <td>{selectedProducts[i].id}</td>
-                                <td>{selectedProducts[i].quantity}</td>
+                                <td>{submitOrderArray[i].id}</td>
+                                <td>{submitOrderArray[i].quantity}</td>
                             </tr>
-        }
+          }
        
     //   // console.log( result)
     //     // console.log(this.state.selectedCustomer)
@@ -174,14 +177,42 @@ export default class AddNewCustOrder extends React.Component {
           this.setState({isDisabled:false})   // set visible to  submit button 
      }
      
-     submitOrder(){  // open modal with final order and save it to array with all customer orders
+     submitOrder(){  // open modal with final order  
        console.log(this.state.submitOrderArray)
        console.log( this.state.selectedCustomer)
        this.openModal()
+
      }
 
-     confirmOrder(){
-        this.setState({redirectToHome:true})
+     confirmOrder(){ // save it to array with all customer orders 
+       // this.setState({redirectToHome:true})
+       const {selectedCustomer, getCustomersOrders,submitOrderArray,getDataProducts} = this.state
+       var date = new Date();
+       var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+       var shipDate = new Date();
+       var numberOfDaysToAdd = 10;
+       shipDate.setDate(shipDate.getDate() + numberOfDaysToAdd); 
+       var customerOrder = {} // greate a new order to add to data base
+       customerOrder.CustomerID = selectedCustomer
+       customerOrder.custOrderId = (parseInt(getCustomersOrders[getCustomersOrders.length-1].CustOrderID) + 1 ).toString()
+       customerOrder.OrderIncomeDate = currentDate
+       customerOrder.OrderShippingDate = shipDate.getFullYear() + "-" + (shipDate.getMonth()+1) + "-" + shipDate.getDate()
+      
+       var orderDetailsArray = [] // greate a new order to add to data base
+       for(let i=0;i<submitOrderArray.length;i++){
+             let orderDetails={}
+             let index =  getCustomersOrders[getCustomersOrders.length-1].OrderDetails.length
+             orderDetails.ID = (parseInt(getCustomersOrders[getCustomersOrders.length-1].OrderDetails[index-1].ID)+1+i).toString() //get to next ID 
+             orderDetails.OrderId = customerOrder.custOrderId
+             orderDetails.ProductId = submitOrderArray[i].id
+             orderDetails.Qty = submitOrderArray[i].quantity
+             orderDetails.UnitPrice = getDataProducts.find((prod) => {if(orderDetails.ProductId==prod.ProductID) return prod}).ListPrice
+             orderDetails.Discount = "0.00"
+             orderDetailsArray = orderDetailsArray.concat(orderDetails)
+
+       } // [91].OrderDetails[2].ID
+       console.log(customerOrder)
+       console.log(orderDetailsArray)
      }
      handleSubmit(event) {
         //alert(event.target.length)
@@ -207,8 +238,8 @@ export default class AddNewCustOrder extends React.Component {
                                 <td data-key={count}>{prod.ProductName}</td>
                                 <td data-key={count}>{prod.Description}</td>
                                 <td data-key={count}>{prod.MinOrder + prod.Unit}</td>
-                                <td data-key={count}>
-                                    <Form.Control   data-key={prod.ProductID} as="input" type="text" size="sm" placeholder={prod.ListPrice} onBlur={this.insertProdQuantity}/>     
+                                <td data-key={count}>{prod.ListPrice}
+                                    {/* <Form.Control   data-key={prod.ProductID} as="input" type="text" size="sm" placeholder={prod.ListPrice} onBlur={this.insertProdQuantity}/>      */}
                                   </td>
                                 <td data-key={count} >
                                     <Form.Control   id={prod.ProductID} as="input" type="number" size="sm"  placeholder="0" onChange={this.insertProdQuantity}
