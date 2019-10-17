@@ -7,11 +7,11 @@ const MongoClient = require("mongodb").MongoClient;
 const url = "mongodb://localhost:27017/";
 //const url = "mongodb+srv://admin:admin@koptevilya-wdc68.mongodb.net/admin?retryWrites=true&w=majority";
 const mongoClient = new MongoClient(url, { useUnifiedTopology: true }); //{ useNewUrlParser: true }
-var collectionCustomersOrders;
-var resultCustomers;
-var resultProducts;
-var resultCustomersorderdetails;
-var result //array of all tables
+var collectionCustomersOrders = [];
+var resultCustomers = [];
+var resultProducts = [];
+var resultCustomersorderdetails = [];
+var result = [] //array of all tables
 
 
 mongoClient.connect(function(err, client) {
@@ -24,17 +24,17 @@ mongoClient.connect(function(err, client) {
 
     if (err) return console.log(err);
 
-    collectionCustomersOrders.find().toArray(function(err, results) {  // get customer orders table 
-        result = results[0].data.data;
+    collectionCustomersOrders.find().toArray(function(err, results) { // get customer orders table 
+        result = results;
     })
-    collectionCustomersorderdetails.find().toArray(function(err, results) {  //get order details table 
+    collectionCustomersorderdetails.find().toArray(function(err, results) { //get order details table 
         resultCustomersorderdetails = results[0].data.data;
     })
-    collectionCustomers.find().toArray(function(err, results) {  //get customer table 
-        resultCustomers = results[0].data.data;
+    collectionCustomers.find().toArray(function(err, results) { //get customer table 
+        resultCustomers = results;
     })
-    collectionProducts.find().toArray(function(err, results) {  //get customer table 
-        resultProducts = results[0].data.data;
+    collectionProducts.find().toArray(function(err, results) { //get customer table 
+        resultProducts = results;
     })
     client.close();
 });
@@ -50,20 +50,21 @@ setTimeout(function() { startRoute(); }, timer);
 function startRoute() {
     //joining tables by orderId and insert customer name 
     result.forEach(joinTables)
-        function joinTables(item) {
-       
-        let customer = resultCustomers.find( (cust) => {if (cust.CustID === item.CustomerID) return cust} ) //get all data of Employee that work with current customer
-        item.Customer  =  customer.WorkName
-        item.EmployeeID  =  customer.EmployeeID
-        item.OrderDetails = []
+
+    function joinTables(item) {
+
+        let customer = resultCustomers.find((cust) => { if (cust.CustID === item.CustomerID) return cust }) //get all data of Employee that work with current customer
+        item.Customer = customer.WorkName // add new property WorkName to custOrder object
+        item.EmployeeID = customer.EmployeeID // add new property EmployeeID to custOrder object
+        item.OrderDetails = [] // add new property with array of  products list of current order 
         for (let i = 0; i < resultCustomersorderdetails.length; i++) {
-           if (item.CustOrderID === resultCustomersorderdetails[i].OrderId) {
-               let temp = resultCustomersorderdetails[i]
-               let product = resultProducts.find( (prod) => {if (prod.ProductID === temp.ProductId) return prod} ) // all data of product
-               //console.log(product)
-               resultCustomersorderdetails[i].ProductName = product.ProductName
-               resultCustomersorderdetails[i].Description = product.Description
-               item.OrderDetails.push(resultCustomersorderdetails[i])
+            if (item.CustOrderID === resultCustomersorderdetails[i].OrderId) {
+                let temp = resultCustomersorderdetails[i]
+                let product = resultProducts.find((prod) => { if (prod.ProductID === temp.ProductId) return prod }) // all data of product
+                    //console.log(product)
+                resultCustomersorderdetails[i].ProductName = product.ProductName
+                resultCustomersorderdetails[i].Description = product.Description
+                item.OrderDetails.push(resultCustomersorderdetails[i])
             }
         }
 
@@ -74,8 +75,10 @@ function startRoute() {
         res.json(result)
 
     });
-   
     console.log(result[0]);
+    //console.log(resultCustomersorderdetails);
+    //console.log(resultCustomers);
+    //console.log(resultProducts);
 }
 
 

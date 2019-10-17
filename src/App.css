@@ -24,3 +24,17 @@
 .hide {
     display: none;
 }
+
+.red {
+    color: red;
+}
+
+.cart {
+    position: relative;
+}
+
+.counter {
+    position: absolute;
+    top: 18px;
+    left: 70px;
+}

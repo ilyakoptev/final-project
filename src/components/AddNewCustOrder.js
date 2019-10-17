@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Table, Modal, Form, Row, Col} from 'react-bootstrap';
+import { Container, Button , Table, Modal, Form, Row, Col, Image} from 'react-bootstrap';
 
 export default class AddNewCustOrder extends React.Component {
     constructor(props) {
@@ -217,10 +217,12 @@ export default class AddNewCustOrder extends React.Component {
                                     <Form.Control   data-key={prod.ProductID} as="input" type="text" size="sm" placeholder={prod.ListPrice} onBlur={this.insertProdQuantity}/>     
                                   </td>
                                 <td data-key={count} >
-                                    <Form.Control   id={prod.ProductID} as="input" type="number" size="sm"  placeholder="0" onChange={this.insertProdQuantity} onBlur={this.setQuantity}/>
-                                 <Button size="sm" data-key={prod.ProductID} onClick={this.addProduct}>Add to Order</Button> 
+                                    <Form.Control   id={prod.ProductID} as="input" type="number" size="sm"  placeholder="0" onChange={this.insertProdQuantity}
+                                      onBlur={this.setQuantity} />
+                                 
                                 {/* <span>{submitOrderArray.find((item) => {if(item.id===prod.ProductID) return item.quantity})}</span> */}
                                  </td>
+                                 <td><Button size="sm" data-key={prod.ProductID} onClick={this.addProduct}>Add to Order</Button> </td>
                                  
                                 
               </tr>)
@@ -237,13 +239,18 @@ export default class AddNewCustOrder extends React.Component {
                             <Col xs={4} lg={2}>
                             <Form.Label>  <h5> Choose Customer: </h5></Form.Label>
                             </Col>
-                            <Col xs={8} lg={10}>
-
-                                   
-                                        <Form.Control as="select" onChange={this.setCustomer} >
+                            <Col xs={6} lg={8}>
+                                     <Form.Control as="select" onChange={this.setCustomer} >
                                         <option>Select Customer:</option>
                                         {customerRows}
                                      </Form.Control>
+                            </Col>
+                            <Col xs={2} lg={2}>
+                                <div  className="position-relative cart text-center" >
+                                    <Image src="images/cart.jpg" />
+                                    <span class="counter position-absolute" ><h3 class="red">{submitOrderArray.length}</h3></span>
+                                    </div>
+                                     
                             </Col>
                            
                         </Row>

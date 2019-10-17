@@ -13,16 +13,40 @@ var result;
 mongoClient.connect(function(err, client) {
 
     const db = client.db("PAG_Flowers");
-    const collection = db.collection("Customers");
+    const collection = db.collection("Receipts");
 
 
     if (err) return console.log(err);
 
     collection.find().toArray(function(err, results) {
         //  getDataFromDb(results)
-        result = results;
+        result = results //[0].data.data;
     })
     client.close();
+});
+
+// mongoClient.connect(function(err, client) {
+
+//     const db = client.db("PAG_Flowers");
+//     const collection = db.collection("Receipts");
+
+
+//     if (err) return console.log(err);
+
+//     const document = ({ "name": "Bill", "age": 32, languages: ["english", "french"] })
+//     collection.insertOne({"name": "Tom", "age": 28, languages: ["english", "spanish"]})
+//     client.close();
+// });
+
+mongoClient.connect(function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("PAG_Flowers");
+    var myobj = { name: "Company Inc", address: "Highway 37" };
+    dbo.collection("Receipts").insertOne(myobj, function(err, res) {
+        if (err) throw err;
+        console.log("1 document inserted");
+        db.close();
+    });
 });
 //console.log(result);
 

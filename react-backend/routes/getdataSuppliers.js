@@ -19,7 +19,7 @@ mongoClient.connect(function(err, client) {
 
     collection.find().toArray(function(err, results) {
         //  getDataFromDb(results)
-        result = results[0].data.data;
+        result = results;
     })
     client.close();
 });
@@ -35,7 +35,7 @@ function startRoute() {
         res.json(result)
 
     });
-    console.log(result);
+    console.log(result[0]);
 }
 
 

@@ -24,9 +24,9 @@ export default class ShowCustomers extends React.Component {
         
     }
     componentDidMount(){
-        fetch('/getdataCustomers')
-        .then(res => res.json())
-        .then(getData => this.setState({getData}));
+        fetch('/getdataCustomers') // get promise
+        .then(res => res.json())  //get json 
+        .then(getData => this.setState({getData})); // get data from json and set on state
         fetch('/getdataEmployees')
         .then(res => res.json())
         .then(getDataEmployees => this.setState({getDataEmployees}));
