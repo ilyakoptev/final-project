@@ -52,7 +52,7 @@ export default class AddNewCustOrder extends React.Component {
         .then(getCustomersOrders => this.setState({getCustomersOrders}));
         //console.log(this.state.getData)
       }
-         
+      
     openModal(e) {
     //     const index = e.target.getAttribute('data-key')
           this.setState({ showModal: true })
@@ -210,10 +210,33 @@ export default class AddNewCustOrder extends React.Component {
              orderDetails.Discount = "0.00"
              orderDetailsArray = orderDetailsArray.concat(orderDetails)
 
-       } // [91].OrderDetails[2].ID
+       } 
        console.log(customerOrder)
        console.log(orderDetailsArray)
+
+       fetch('/insertCustomerOrders',{
+                method: 'POST',
+                mode: 'cors',
+                body: JSON.stringify(customerOrder),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  },
+                })
+                .then((res) => {
+                    if (res.ok){
+                      return res.json();
+                    } else {
+                      throw new Error ('Something went wrong with your fetch');
+                    }
+                  }).then((json) => {
+                    console.log(json);
+                  })
+        this.closeModal()  
+        this.setState({redirectToHome:true})      
      }
+
+
      handleSubmit(event) {
         //alert(event.target.length)
        

@@ -11,6 +11,8 @@ var getDataEmployees = require('./routes/getdataEmployees');
 var getDataSuppliers = require('./routes/getdataSuppliers');
 var getDataProducts = require('./routes/getdataProducts');
 var getCustomersOrders = require('./routes/getCustomersOrders');
+var insertCustomerOrders = require('./routes/test-post');
+
 
 
 var app = express();
@@ -32,6 +34,9 @@ app.use('/getdataEmployees', getDataEmployees);
 app.use('/getdataSuppliers', getDataSuppliers);
 app.use('/getdataProducts', getDataProducts);
 app.use('/getCustomersOrders', getCustomersOrders);
+app.use('/insertCustomerOrders', insertCustomerOrders);
+
+
 
 
 
