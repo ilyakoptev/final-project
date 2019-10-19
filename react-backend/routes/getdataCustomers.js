@@ -10,35 +10,44 @@ const mongoClient = new MongoClient(url, { useUnifiedTopology: true }); //{ useN
 var result;
 
 
-mongoClient.connect(function(err, client) {
-
-    const db = client.db("PAG_Flowers");
-    const collection = db.collection("Customers");
-
-
-    if (err) return console.log(err);
-
-    collection.find().toArray(function(err, results) {
-        //  getDataFromDb(results)
-        result = results;
-    })
-    client.close();
-});
 //console.log(result);
 
 /* GET users listing. */
 
-let timer = 7000;
-setTimeout(function() { startRoute(); }, timer);
+router.get('/', function(req, res, next) {
 
-function startRoute() {
-    router.get('/', function(req, res, next) {
+
+    mongoClient.connect(function(err, client) {
+
+        const db = client.db("PAG_Flowers");
+        const collection = db.collection("Customers");
+
+
+        if (err) return console.log(err);
+
+        collection.find().toArray(function(err, results) {
+            //  getDataFromDb(results)
+            result = results;
+        })
+        client.close();
+    });
+
+
+    let timer = 1000;
+    setTimeout(function() { startRoute(); }, timer);
+
+    function startRoute() {
+
         //   res.json([{ id: 1, username: "Nick 1" }, { id: 2, username: "Name 2" }])
         res.json(result)
-
-    });
+    }
+    console.log("Inside the route.get");
     console.log(result);
-}
+    console.log("--------------------");
 
+});
 
+console.log("Customers - end of file ");
+console.log(result);
+console.log("---------------------");
 module.exports = router;

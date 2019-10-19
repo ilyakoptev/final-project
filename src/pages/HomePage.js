@@ -47,12 +47,12 @@ class HomePage extends React.Component {
     }
 
     login() {
-        const { employees } = this.props;
+       const { employees } = this.props;
         const { inputName, inputPassword, getDataEmployees } = this.state;
         // console.log(inputName,inputPassword);
-        console.log(inputName, inputPassword); //[0] - kind of data base struction - all data in [0] item
-        console.log(getDataEmployees.length, getDataEmployees[0].Name, getDataEmployees[0].Password);
-        for (let i = 0; i < getDataEmployees.length; i++) {
+         console.log(inputName, inputPassword); //[0] - kind of data base struction - all data in [0] item
+         console.log(getDataEmployees.length, getDataEmployees[0].Name, getDataEmployees[0].Password);
+         for (let i = 0; i < getDataEmployees.length; i++) {
             //console.log(i,getDataEmployees[i].Name, getDataEmployees[i].Password);
             if (inputName === getDataEmployees[i].Name && inputPassword === getDataEmployees[i].Password) {
                 this.closeModal();
@@ -63,86 +63,56 @@ class HomePage extends React.Component {
             } else
                 this.setState({ invalidLogin: true })
         }
-    }
+       }
     render() {
 
         if (this.state.successLogin) {
-            return <Redirect to = "/dashboard" / >
+            return <Redirect to = "/dashboard"/>
         }
 
 
         const { activeUser, customers } = this.props;
         const { showModal } = this.state;
 
-        return ( < div >
+        return ( <div>
 
-            <
-            Jumbotron >
-            <
-            Container >
-            <
-            h1 className = "display-3" > Accounting Programm < /h1> <p> Make your office more efficient </p >
-            <
-            p > < Button variant = "info"
-            onClick = { this.openModal } > Login < /Button>  <
-            /p>  <
-            /Container>  <
-            /Jumbotron>
+            <Jumbotron>
+            <Container>
+            <h1 className = "display-3" > Accounting Programm </h1> <p> Make your office more efficient </p> 
+            <p>    <Button variant = "info" onClick = { this.openModal } > Login </Button> 
+            </p> 
+            </Container> 
+            </Jumbotron>
 
-            <
-            Modal show = { showModal }
-            onHide = { this.closeModal }
-            size = "" >
-            <
-            Modal.Header closeButton >
-            <
-            Modal.Title > Please enter Name and password < /Modal.Title>  <
-            /Modal.Header>  <
-            Modal.Body >
-            <
-            Alert variant = "danger"
-            show = { this.state.invalidLogin } >
-            Invalid email or password!
-            <
-            /Alert>  <
-            Form >
-            <
-            Form.Group controlId = "formBasicEmail" >
-            <
-            Form.Label > Email address < /Form.Label> <
-            Form.Control type = "text"
-            placeholder = "Enter your name"
-            onBlur = { this.getInputName }
-            />  <
-            Form.Text className = "text-muted" >
-            Please enter your name that you get from main office <
-            /Form.Text> </Form.Group >
+            <Modal show = { showModal }  onHide = { this.closeModal  }  size = "" >
+            <Modal.Header closeButton >
+            <Modal.Title > Please enter Name and password </Modal.Title> 
+            </Modal.Header> 
+            <Modal.Body >
+            <Alert variant = "danger"   show = { this.state.invalidLogin } >
+                     Invalid email or password!
+            </Alert> 
+            <Form>
+            <Form.Group controlId = "formBasicEmail" >
+            <Form.Label > Email address </Form.Label>
+            <Form.Control type = "text"   placeholder = "Enter your name"     onBlur = { this.getInputName }   /> 
+            <Form.Text className = "text-muted" >
+            Please enter your name that you get from main office
+            </Form.Text> </Form.Group>
 
-            <
-            Form.Group controlId = "formBasicPassword" >
-            <
-            Form.Label > Password < /Form.Label>  <
-            Form.Control type = "password"
-            placeholder = "Password"
-            onBlur = { this.getInputPassword }
-            />  <
-            /Form.Group>
+            <Form.Group controlId = "formBasicPassword" >
+            <Form.Label > Password </Form.Label> 
+            <Form.Control type = "password"   placeholder = "Password"   onBlur = { this.getInputPassword }   /> 
+            </Form.Group>
 
-            <
-            /Form> </Modal.Body >
+            </Form> </Modal.Body>
 
-            <
-            Modal.Footer >
-            <
-            Button variant = "info"
-            type = "button"
-            onClick = { this.login } > Login < /Button>  <
-            Button variant = "secondary"
-            onClick = { this.closeModal } > Close < /Button> <
-            /Modal.Footer>    </Modal >
+            <Modal.Footer>
+            <Button variant = "info"  type = "button"   onClick = { this.login } >  Login </Button> 
+            <Button variant = "secondary"    onClick = { this.closeModal } >      Close          </Button>
+           </Modal.Footer>    </Modal>
 
-            <
-            /div>
+            </div>
         );
     }
 }

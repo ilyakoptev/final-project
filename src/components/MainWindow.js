@@ -7,6 +7,9 @@ import ShowSuppliers from './ShowSuppliers';
 import ShowProducts from './ShowProducts';
 import ShowCustomerOrders from './ShowCustomerOrders';
 import AddNewCustOrder from './AddNewCustOrder';
+import AddNewCustomer from './AddNewCustomer';
+
+
 
 import customerorders from '../data/customerorders';
 
@@ -58,7 +61,7 @@ class MainWindow extends React.Component {
                                  )                         
         case "addNewCustomer": 
               return(
-                           <div>addNewCustomer</div>
+                <AddNewCustomer activeUser={activeUser}/>
                                  )  
         case "editCustomer": 
               return(
@@ -164,10 +167,6 @@ class MainWindow extends React.Component {
             return (
                 <Container>
                   <h1>Welcome , {currectUser.Name} !!! </h1>
-                      
-       
-       
-                   
                 </Container>
 
              ) };

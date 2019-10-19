@@ -54,26 +54,14 @@ export default class AddNewCustOrder extends React.Component {
       }
       
     openModal(e) {
-    //     const index = e.target.getAttribute('data-key')
-          this.setState({ showModal: true })
-    //     this.setState({ customerRowNum:index })
-    //   //  console.log( e.target.getAttribute('data-key'))
-    //     console.log( this.state.getData[index-1].WorkName )
-    //     this.setState({ selectedCustomer: this.state.getData[index-1] })
-    //     const res = this.state.getDataEmployees.find( (item) => {if (item.EmployeeId == this.state.getData[index-1].EmployeeID) return item} ) //get all data of Employee that work with current customer
-    //    //console.log( res.Name )
-    //    this.setState({ getEmployee: res })
-      
+        this.setState({ showModal: true })
     }
     
     closeModal() {
          this.setState({ showModal: false })
     }
     detailsModalWindow() {
-           const {submitOrderArray,selectedProducts } = this.state;
-   
-    //     let detailsKeys = Object.keys(selectedCustomer) 
-    //     let detailsValues = Object.values(selectedCustomer)
+           const {submitOrderArray,getDataProducts } = this.state;
            let result = []
            if (submitOrderArray.length===0){
                result[0] = <tr><td>No items selected</td></tr>
@@ -193,8 +181,10 @@ export default class AddNewCustOrder extends React.Component {
        var numberOfDaysToAdd = 10;
        shipDate.setDate(shipDate.getDate() + numberOfDaysToAdd); 
        var customerOrder = {} // greate a new order to add to data base
+       let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].CustOrderID) + 1 ).toString()
+      // customerOrder._id = id
+       customerOrder.CustOrderId = id
        customerOrder.CustomerID = selectedCustomer
-       customerOrder.custOrderId = (parseInt(getCustomersOrders[getCustomersOrders.length-1].CustOrderID) + 1 ).toString()
        customerOrder.OrderIncomeDate = currentDate
        customerOrder.OrderShippingDate = shipDate.getFullYear() + "-" + (shipDate.getMonth()+1) + "-" + shipDate.getDate()
       
@@ -202,7 +192,9 @@ export default class AddNewCustOrder extends React.Component {
        for(let i=0;i<submitOrderArray.length;i++){
              let orderDetails={}
              let index =  getCustomersOrders[getCustomersOrders.length-1].OrderDetails.length
-             orderDetails.ID = (parseInt(getCustomersOrders[getCustomersOrders.length-1].OrderDetails[index-1].ID)+1+i).toString() //get to next ID 
+             let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].OrderDetails[index-1].ID)+1+i).toString() //get to next ID 
+            // orderDetails._id = id
+             orderDetails.ID = id
              orderDetails.OrderId = customerOrder.custOrderId
              orderDetails.ProductId = submitOrderArray[i].id
              orderDetails.Qty = submitOrderArray[i].quantity
@@ -214,7 +206,7 @@ export default class AddNewCustOrder extends React.Component {
        console.log(customerOrder)
        console.log(orderDetailsArray)
 
-       fetch('/insertCustomerOrders',{
+       fetch('/insertCustomerOrder',{ // send data to express server 
                 method: 'POST',
                 mode: 'cors',
                 body: JSON.stringify(customerOrder),
@@ -233,7 +225,7 @@ export default class AddNewCustOrder extends React.Component {
                     console.log(json);
                   })
         this.closeModal()  
-        this.setState({redirectToHome:true})      
+        this.setState({redirectToHome:true})    // redirect to mainwindow   
      }
 
 
@@ -353,11 +345,12 @@ export default class AddNewCustOrder extends React.Component {
                             </Modal.Body>
                 
                         <Modal.Footer>
-                        <Button variant="success" onClick={this.confirmOrder}>
-                            Confirm
-                         </Button>
+                       
                          <Button variant="danger" onClick={this.closeModal}>
                             Cancel
+                         </Button>
+                         <Button variant="success" onClick={this.confirmOrder}>
+                            Confirm
                          </Button>
                         </Modal.Footer>   
                 </Modal>
