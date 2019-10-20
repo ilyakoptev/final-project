@@ -95,12 +95,12 @@ class MainWindow extends React.Component {
                 return(                         <div>deleteEmployeer</div>                    )  
         case "showEmployees": 
                return(                         <div>showEmployees</div>                    )  
-        case null:
-                return (
-                    <Container>
-                      <h1>Success !!! </h1>
-                    </Container>
-                   ) 
+        // case null:
+        //         return (
+        //             <Container>
+        //               <h1>Success !!! </h1>
+        //             </Container>
+        //            ) 
          default : 
             return (
                 <Container>

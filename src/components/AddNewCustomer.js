@@ -15,6 +15,7 @@ export default class AddNewCustomer extends React.Component {
             isDisabled: true,  // button Submit order status 
             customerRowNum: null, 
             validated: false,
+            isSuccess: false,
             fieldValidation:{ // insert all values as false for hiding submit button 
                 workName:false,
                 crn: false,
@@ -31,7 +32,7 @@ export default class AddNewCustomer extends React.Component {
 
         this.validateFields = this.validateFields.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-       // this.closeModal = this.closeModal.bind(this);
+        this.reset = this.reset.bind(this);
        // this.detailsModalWindow = this.detailsModalWindow.bind(this);
         
     }
@@ -44,8 +45,8 @@ export default class AddNewCustomer extends React.Component {
         // .then(getDataEmployees => this.setState({getDataEmployees}));
         //console.log(this.state.getData)
       }
-      changeStatus(key,status){
-      
+   changeStatus(key,status){
+    const { getDataCustomers, isDisabled , fieldValidation, newCustomer} = this.state;
         switch (key){
             case "workName":
                       this.setState(prevState => {
@@ -128,7 +129,27 @@ export default class AddNewCustomer extends React.Component {
              }) 
              break;             
              default: break; 
-        }   
+        } 
+        
+        
+      // check of all field are ok and visible to submit button 
+      
+       let fieldValidationValues = Object.values(fieldValidation)
+       let submit = !isDisabled  //set false to visible 
+       submit = fieldValidationValues.find((item)=>{  // if one value still false as button still invisible 
+                   if(!item) 
+                   console.log("item: " + item) 
+                   return !item
+                  })
+       for(let i=0;i<fieldValidationValues.length;i++){
+           if(!fieldValidationValues[i])
+              submit = true
+       }
+       this.setState({isDisabled:submit})
+       console.log(submit , isDisabled ) 
+       console.log(fieldValidation)
+      //   this.setState({workName:"valid"})
+      //  alert(this.state.fieldValidation.workName)
       }
       validateFields(e){
        const { getDataCustomers, isDisabled , fieldValidation, newCustomer} = this.state;
@@ -148,14 +169,15 @@ export default class AddNewCustomer extends React.Component {
                             this.changeStatus(e.target.id,false)
                            break;}
                         // custName = getDataCustomers.find((cust) => { if(cust.CustID==1000) return cust})
-                        insertData = insertData.toUpperCase()
-                        let custName = getDataCustomers.find((cust) => { if(cust.WorkName==insertData) return cust})
-                        console.log(custName, e.target.value.toUpperCase())  
+                        insertData = insertData.toUpperCase() 
+                        let custName = getDataCustomers.find((cust) => { if(cust.WorkName==insertData) return cust}) //check if already exist customer with same WorkName
+                        console.log("WorkName : " + custName, e.target.value.toUpperCase())   
                         if(custName!==undefined){
                             this.changeStatus(e.target.id,false)
                            break;}
-                       
+                        
                         this.changeStatus(e.target.id,true)
+                        e.target.value = insertData  // show in input in database format 
                         this.setState(prevState => {
                         let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
                         newCustomer.WorkName = insertData;                     // update the name property, assign a new value                 
@@ -171,6 +193,11 @@ export default class AddNewCustomer extends React.Component {
                 if(insertData.length < 7 || insertData.length > 13  || isNaN(insertData)){  // length between 2-5
                     this.changeStatus(e.target.id,false)
                     break;}
+                let crn = getDataCustomers.find((cust) => { if(cust.CRN==insertData) return cust}) //check if already exist customer with this CRN
+                console.log("CRN : " + crn, e.target.value)  
+                if(crn!==undefined){
+                    this.changeStatus(e.target.id,false)
+                   break;}    
                 this.changeStatus(e.target.id,true)
                 this.setState(prevState => {
                     let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
@@ -204,6 +231,7 @@ export default class AddNewCustomer extends React.Component {
                    this.changeStatus(e.target.id,true)
                    insertData = insertData.toLowerCase()
                    insertData = insertData.charAt(0).toUpperCase() + insertData.slice(1);
+                   e.target.value = insertData  // show in input in database format 
                    this.setState(prevState => {
                        let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
                        newCustomer.ContactName = insertData;                     // update the name property, assign a new value                 
@@ -236,6 +264,7 @@ export default class AddNewCustomer extends React.Component {
                     this.changeStatus(e.target.id,true)
                     insertData = insertData.toLowerCase()
                     insertData = insertData.charAt(0).toUpperCase() + insertData.slice(1);
+                    e.target.value = insertData  // show in input in database format 
                     this.setState(prevState => {
                         let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
                         newCustomer.ContactName2 = insertData;                     // update the name property, assign a new value                 
@@ -266,6 +295,9 @@ export default class AddNewCustomer extends React.Component {
                      this.changeStatus(e.target.id,false)
                      break;}
                  this.changeStatus(e.target.id,true)
+                 insertData = insertData.toLowerCase()
+                 insertData = insertData.charAt(0).toUpperCase() + insertData.slice(1);
+                 e.target.value = insertData  // show in input in database format 
                  this.setState(prevState => {
                      let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
                      newCustomer.City = insertData;                     // update the name property, assign a new value                 
@@ -281,6 +313,9 @@ export default class AddNewCustomer extends React.Component {
                      this.changeStatus(e.target.id,false)
                      break;}
                  this.changeStatus(e.target.id,true)
+                 insertData = insertData.toLowerCase()
+                 insertData = insertData.charAt(0).toUpperCase() + insertData.slice(1);
+                 e.target.value = insertData  // show in input in database format 
                  this.setState(prevState => {
                      let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
                      newCustomer.Country = insertData;                     // update the name property, assign a new value                 
@@ -313,24 +348,6 @@ export default class AddNewCustomer extends React.Component {
        } 
 
     
-      // check of all field are ok and visible to submit button 
-      
-       let fieldValidationValues = Object.values(fieldValidation)
-       let submit = !isDisabled  //set false to visible 
-       submit = fieldValidationValues.find((item)=>{  // if one value still false as button still invisible 
-                   if(!item) 
-                   console.log("item: " + item) 
-                   return !item
-                  })
-       for(let i=0;i<fieldValidationValues.length;i++){
-           if(!fieldValidationValues[i])
-              submit = true
-       }
-       this.setState({isDisabled:submit})
-       console.log(submit , isDisabled ) 
-       console.log(fieldValidation)
-      //   this.setState({workName:"valid"})
-      //  alert(this.state.fieldValidation.workName)
      }    
    
      validateEmail(email) {
@@ -340,9 +357,9 @@ export default class AddNewCustomer extends React.Component {
         
      
      handleSubmit(){
-        const { getDataCustomers, isDisabled , fieldValidation, newCustomer} = this.state;
+        const { getDataCustomers, newCustomer} = this.state;
         let customer  = newCustomer
-        let id = (parseInt(getDataCustomers[getDataCustomers.length-1].CusID) + 1 ).toString()
+        let id = (parseInt(getDataCustomers[getDataCustomers.length-1].CustID) + 1 ).toString()
         let employeeId = this.props.activeUser.EmployeeId
         customer.CustID = id
         customer.EmployeeID = employeeId
@@ -368,15 +385,42 @@ export default class AddNewCustomer extends React.Component {
                 }
               }).then((json) => {
                 console.log(json);
+                this.setState({isSuccess:true})
+
               })
+      this.setState({redirectToHome:true})    // redirect to mainwindow          
      }
-   
-     render() {
-        const { redirectToHome, validated , fieldValidation, isDisabled} = this.state;
-       
-        if (redirectToHome) {
-            return <Redirect to="/"/>
+
+
+     reset(){
+       let fieldValidation = { // reset checking all fields on reset action
+            workName:false,
+            crn: false,
+            company:false,
+            name1: false,
+            telephone1: false,
+            name2: false,
+            telephone2: false,
+            email: false,
+            city: false,
+            country: false
         }
+        this.setState({fieldValidation:fieldValidation})
+     }
+     render() {
+        const { redirectToHome, validated , fieldValidation, isDisabled, isSuccess} = this.state;
+        // print this message after to get u success json from server 
+        if (isSuccess) {
+            return <Container>
+                     <Row>
+                         <Col> <h2 className="text-success text-center">Adding new customer was successfull</h2> </Col>
+                     </Row>
+                  </Container>
+        }
+        if (redirectToHome) {
+            return <Redirect to="/dashboard"/>
+        }
+        
        
       // console.log( this.state.getData[0].City )
       // console.log(newCustomer.City ) 
@@ -538,7 +582,7 @@ export default class AddNewCustomer extends React.Component {
                       </Form.Row>
                       <Form.Row>
                       <Col xs={6} >        
-                                    <Button className="my-3 btn-block" variant="danger" type="reset">
+                                    <Button className="my-3 btn-block" variant="danger" type="reset" onClick={this.reset}>
                                         <h5>Reset all fields</h5>
                                     </Button>
                             </Col>

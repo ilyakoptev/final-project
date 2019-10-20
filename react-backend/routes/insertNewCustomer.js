@@ -28,7 +28,7 @@ router.post('/', async(req, res) => {
         //var myobj = { name: "Company Inc", address: "Highway 37" };
         dbo.collection("Customers").insertOne(dataFromClient, function(err, res) {
             if (err) throw err;
-            console.log("Success inserting new csutomer to DB");
+            console.log("Success inserting new customer to DB");
             db.close();
         });
     });

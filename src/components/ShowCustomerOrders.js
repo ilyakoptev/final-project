@@ -8,7 +8,7 @@ export default class ShowCustomerOrders extends React.Component {
         super(props);
         this.state = {
             getDataCustomers: [],
-            getDataCustOrders:[],
+            getCustomersOrders:[],
             selectedOrder: {},
             selectedOrderDetails:[],
             getCustomer: {},
@@ -28,19 +28,19 @@ export default class ShowCustomerOrders extends React.Component {
         // .then(getDataCustomers => this.setState({getDataCustomers}));
         fetch('/getCustomersOrders')
         .then(res => res.json())
-        .then(getDataCustOrders => this.setState({getDataCustOrders}));
-       // console.log("componentDidMount" + this.state.getDataCustOrders)
+        .then(getCustomersOrders => this.setState({getCustomersOrders}));
+       // console.log("componentDidMount" + this.state.getCustomersOrders)
         this.viewstate()
     }
     viewstate(){
-        console.log(this.state.getDataCustOrders)
+        console.log(this.state.getCustomersOrders)
     }
           
     openModal(e) {
         const index = e.target.getAttribute('data-key')
         this.setState({ showModal: true })
-        this.setState({ selectedOrder: this.state.getDataCustOrders[index-1] })
-        this.setState({ selectedOrderDetails: this.state.getDataCustOrders[index-1].OrderDetails })
+        this.setState({ selectedOrder: this.state.getCustomersOrders[index-1] })
+        this.setState({ selectedOrderDetails: this.state.getCustomersOrders[index-1].OrderDetails })
         
     }
     
@@ -86,19 +86,19 @@ export default class ShowCustomerOrders extends React.Component {
       return resultArr
      }
       render() {
-        const { redirectToHome, getDataCustOrders , showModal, selectedOrder} = this.state;
+        const { redirectToHome, getCustomersOrders , showModal, selectedOrder} = this.state;
         const {activeUser} = this.props;
         
         
-        console.log(getDataCustOrders.EmployeeID, activeUser.EmployeeId) 
-        var sortedArray = getDataCustOrders
-        console.log(getDataCustOrders)
+        console.log(getCustomersOrders.EmployeeID, activeUser.EmployeeId) 
+        var sortedArray = getCustomersOrders
+        console.log(getCustomersOrders)
         console.log(activeUser.Position)
         if (activeUser.Position == 2 && activeUser.Position == 4){   // if user sales manager or driver as can see only his orders
-             sortedArray = getDataCustOrders.filter(x => x.EmployeeID.includes(activeUser.EmployeeId));
+             sortedArray = getCustomersOrders.filter(x => x.EmployeeID.includes(activeUser.EmployeeId));
             console.log("this.props.activeUser.ImployeeId" + activeUser.EmployeeId)
             console.log(sortedArray)
-       } //else  sortedArray = getDataCustOrders
+       } //else  sortedArray = getCustomersOrders
     
         if (redirectToHome) {
             return <Redirect to="/"/>
@@ -112,7 +112,7 @@ export default class ShowCustomerOrders extends React.Component {
                                 <td data-key={count}>{order.Customer}</td>
                                 <td data-key={count}>{order.OrderIncomeDate}</td>
                                 <td data-key={count}>{order.OrderShippingDate}</td>
-                                <td data-key={count}>{order.OrderShippingDate}</td>
+                                
                                
                                 
              </tr>)
@@ -130,7 +130,7 @@ export default class ShowCustomerOrders extends React.Component {
                                 <th>Customer</th>
                                 <th>Order Date</th>
                                 <th>Shipping Date</th>
-                                <th></th>
+                                
                                 
                             </tr>
                             </thead>

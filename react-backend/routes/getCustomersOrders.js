@@ -15,7 +15,7 @@ var result = [] //array of all tables
 console.log("create variables");
 
 
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
 
 
     mongoClient.connect(function(err, client) {
@@ -23,7 +23,6 @@ router.get('/', function(req, res, next) {
 
         const db = client.db("PAG_Flowers");
         const collectionCustomersOrders = db.collection("Customerorders");
-        const collectionCustomersorderdetails = db.collection("Customersorderdetails");
         const collectionCustomers = db.collection("Customers");
         const collectionProducts = db.collection("Products");
 
@@ -31,9 +30,6 @@ router.get('/', function(req, res, next) {
 
         collectionCustomersOrders.find().toArray(function(err, results) { // get customer orders table 
             result = results;
-        })
-        collectionCustomersorderdetails.find().toArray(function(err, results) { //get order details table 
-            resultCustomersorderdetails = results[0].data.data;
         })
         collectionCustomers.find().toArray(function(err, results) { //get customer table 
             resultCustomers = results;
@@ -50,7 +46,7 @@ router.get('/', function(req, res, next) {
 
     /* GET users listing. */
 
-    let timer = 7000;
+    let timer = 3000;
     setTimeout(function() { startRoute(); }, timer);
 
     function startRoute() {
@@ -63,16 +59,6 @@ router.get('/', function(req, res, next) {
             item.Customer = customer.WorkName // add new property WorkName to custOrder object
             item.EmployeeID = customer.EmployeeID // add new property EmployeeID to custOrder object
             item.OrderDetails = [] // add new property with array of  products list of current order 
-            for (let i = 0; i < resultCustomersorderdetails.length; i++) {
-                if (item.CustOrderID === resultCustomersorderdetails[i].OrderId) {
-                    let temp = resultCustomersorderdetails[i]
-                    let product = resultProducts.find((prod) => { if (prod.ProductID === temp.ProductId) return prod }) // all data of product
-                        //console.log(product)
-                    resultCustomersorderdetails[i].ProductName = product.ProductName
-                    resultCustomersorderdetails[i].Description = product.Description
-                    item.OrderDetails.push(resultCustomersorderdetails[i])
-                }
-            }
 
         }
 
@@ -84,7 +70,7 @@ router.get('/', function(req, res, next) {
 }); // end of router 
 console.log("End of file ");
 
-//console.log(resultCustomersorderdetails);
+
 //console.log(resultCustomers);
 //console.log(resultProducts);
 

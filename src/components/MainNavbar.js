@@ -133,11 +133,11 @@ class MainNavbar extends React.Component {
         if (!customersEdit&&!customersRead)  // if no permession do not show all block of navbar at all 
             navCustomers = ""
         else  {
-            let newCustomerOrder = createNewOrder ? <NavDropdown.Item id ="createNewCustOrder"  onClick={this.getMenuItem}>Create New Order</NavDropdown.Item> : ""
-            let showAllCustomerOrders = createNewOrder ? <NavDropdown.Item id ="showAllCustomerOrders"  onClick={this.getMenuItem}>Show All Exists Orders</NavDropdown.Item> : ""
-            let addNewCustomer = customersEdit ? <NavDropdown.Item id ="addNewCustomer" onClick={this.getMenuItem}>Add New Customer</NavDropdown.Item> : ""
-            let editCustomer = customersEdit ?  <NavDropdown.Item id ="editCustomer" onClick={this.getMenuItem}>Edit Exist Customer</NavDropdown.Item>: ""
-            let showCustomers = customersRead ?  <NavDropdown.Item id ="showCustomers" onClick={this.getMenuItem}>Show Customers</NavDropdown.Item> : ""
+            let newCustomerOrder = createNewOrder ? <NavDropdown.Item id ="createNewCustOrder" className="font-weight-bold"  onClick={this.getMenuItem}>Create New Order</NavDropdown.Item> : ""
+            let showAllCustomerOrders = createNewOrder ? <NavDropdown.Item id ="showAllCustomerOrders" className="text-info" onClick={this.getMenuItem}>Show All Exists Orders</NavDropdown.Item> : ""
+            let addNewCustomer = customersEdit ? <NavDropdown.Item id ="addNewCustomer" className="text-success" onClick={this.getMenuItem}>Add New Customer</NavDropdown.Item> : ""
+            let editCustomer = customersEdit ?  <NavDropdown.Item id ="editCustomer" className="text-warning" onClick={this.getMenuItem}>Edit Exists Customer</NavDropdown.Item>: ""
+            let showCustomers = customersRead ?  <NavDropdown.Item id ="showCustomers"  className="text-info" onClick={this.getMenuItem}>Show Customers</NavDropdown.Item> : ""
             navCustomers=  <Nav className="mr-auto">
                             <NavDropdown  title="Customers" id="navCustomers"> 
                             {newCustomerOrder}
@@ -156,7 +156,7 @@ class MainNavbar extends React.Component {
             let showAllSuppOrders = suppliersEdit ?  <NavDropdown.Item id ="showAllSuppOrders" onClick={this.getMenuItem}>Show all Orders</NavDropdown.Item> : "" 
             let addNewSupplier = suppliersEdit ?  <NavDropdown.Item id ="addNewSupplier" onClick={this.getMenuItem}>Add New Supplier</NavDropdown.Item> : ""
             let editSupplier = suppliersEdit ?  <NavDropdown.Item id ="editSupplier" onClick={this.getMenuItem}>Edit Exist Supplier</NavDropdown.Item> : ""
-            let showSuppliers = suppliersRead ?  <NavDropdown.Item id ="showSuppliers" onClick={this.getMenuItem}>Show suppliers</NavDropdown.Item> : ""
+            let showSuppliers = suppliersRead ?  <NavDropdown.Item id ="showSuppliers" className="text-success" onClick={this.getMenuItem}>Show suppliers</NavDropdown.Item> : ""
             navSuppliers = <Nav className="mr-auto">
                             <NavDropdown title="Suppliers" id="basic-nav-dropdown">  
                             {createSuppOrder}

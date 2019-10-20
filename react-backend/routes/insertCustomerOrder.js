@@ -25,14 +25,24 @@ router.post('/', async(req, res) => {
     mongoClient.connect(function(err, db) {
         if (err) throw err;
         var dbo = db.db("PAG_Flowers");
-        var myobj = { name: "Company Inc", address: "Highway 37" };
+        // var myobj = { name: "Company Inc", address: "Highway 37" }; 
+
+        //*********** original insert one order  */
         dbo.collection("Customerorders").insertOne(dataFromClient, function(err, res) {
             if (err) throw err;
-            console.log("Success inserting to DB");
+            console.log("Success inserting new customer order to DB");
             db.close();
         });
+        //******************************* */
+        // insert all customers order to data base in new format 
+        // dbo.collection("Customerordersinsert").insertMany(dataFromClient, function(err, res) {
+        //     if (err) throw err;
+        //     console.log("Success inserting new customer order to DB");
+        //     db.close();
+        // });
+
     });
-    //res.json({ greeting: "hello" }); //this is sent back to the browser and i can access it
+    res.json({ greeting: "allback from insert New Order" }); //this is sent back to the browser and i can access it
 });
 
 

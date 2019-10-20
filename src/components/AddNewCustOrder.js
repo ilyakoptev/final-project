@@ -19,7 +19,8 @@ export default class AddNewCustOrder extends React.Component {
             ifProductSelected: false, 
             ifCustomerSelected: false,
             submitOrderArray:[],
-            getQuantity:[]
+            getQuantity:[],
+            isSuccess:false
             
            
            
@@ -182,8 +183,8 @@ export default class AddNewCustOrder extends React.Component {
        shipDate.setDate(shipDate.getDate() + numberOfDaysToAdd); 
        var customerOrder = {} // greate a new order to add to data base
        let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].CustOrderID) + 1 ).toString()
-      // customerOrder._id = id
-       customerOrder.CustOrderId = id
+       customerOrder._id = id
+       customerOrder.CustOrderID = id
        customerOrder.CustomerID = selectedCustomer
        customerOrder.OrderIncomeDate = currentDate
        customerOrder.OrderShippingDate = shipDate.getFullYear() + "-" + (shipDate.getMonth()+1) + "-" + shipDate.getDate()
@@ -191,11 +192,11 @@ export default class AddNewCustOrder extends React.Component {
        var orderDetailsArray = [] // greate a new order to add to data base
        for(let i=0;i<submitOrderArray.length;i++){
              let orderDetails={}
-             let index =  getCustomersOrders[getCustomersOrders.length-1].OrderDetails.length
-             let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].OrderDetails[index-1].ID)+1+i).toString() //get to next ID 
+            // let index =  getCustomersOrders[getCustomersOrders.length-1].OrderDetails.length // length of product array in last custOrder
+            // let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].OrderDetails[index-1].ID)+1+i).toString() //get to next ID 
             // orderDetails._id = id
-             orderDetails.ID = id
-             orderDetails.OrderId = customerOrder.custOrderId
+            // orderDetails.ID = id
+           //  orderDetails.OrderId = customerOrder.CustOrderID
              orderDetails.ProductId = submitOrderArray[i].id
              orderDetails.Qty = submitOrderArray[i].quantity
              orderDetails.UnitPrice = getDataProducts.find((prod) => {if(orderDetails.ProductId==prod.ProductID) return prod}).ListPrice
@@ -203,6 +204,7 @@ export default class AddNewCustOrder extends React.Component {
              orderDetailsArray = orderDetailsArray.concat(orderDetails)
 
        } 
+       customerOrder.OrderDetails = orderDetailsArray
        console.log(customerOrder)
        console.log(orderDetailsArray)
 
@@ -223,6 +225,7 @@ export default class AddNewCustOrder extends React.Component {
                     }
                   }).then((json) => {
                     console.log(json);
+                    this.setState({isSuccess:true})
                   })
         this.closeModal()  
         this.setState({redirectToHome:true})    // redirect to mainwindow   
@@ -240,7 +243,14 @@ export default class AddNewCustOrder extends React.Component {
       }   
     
       render() {
-        const { redirectToHome, getDataProducts, getDataCustomers , showModal, selectedCustomer, isDisabled, submitOrderArray} = this.state;
+        const { redirectToHome, getDataProducts, getDataCustomers , showModal, selectedCustomer, isDisabled, submitOrderArray,isSuccess} = this.state;
+        if (isSuccess) {
+            return <Container>
+                     <Row>
+                         <Col> <h2 className="text-success text-center">Your order was added successfully</h2> </Col>
+                     </Row>
+                  </Container>
+        }
         if (redirectToHome) {
             return <Redirect to="/dashboard"/>
         }
