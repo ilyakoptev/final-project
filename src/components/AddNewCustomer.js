@@ -15,7 +15,7 @@ export default class AddNewCustomer extends React.Component {
             isDisabled: true,  // button Submit order status 
             customerRowNum: null, 
             validated: false,
-            fieldValidation:{
+            fieldValidation:{ // insert all values as false for hiding submit button 
                 workName:false,
                 crn: false,
                 company:false,
@@ -23,7 +23,9 @@ export default class AddNewCustomer extends React.Component {
                 telephone1: false,
                 name2: false,
                 telephone2: false,
-                email: false
+                email: false,
+                city: false,
+                country: false
             }
         }
 
@@ -109,7 +111,23 @@ export default class AddNewCustomer extends React.Component {
               return { fieldValidation };                                 // return new object fieldValidatione object
              }) 
              break;             
-                  default: break; 
+         case "city":
+                this.setState(prevState => {
+                let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
+                //fieldValidation = {[key] : status};         
+                fieldValidation.city = status;                     // update the name property, assign a new value                 
+                return { fieldValidation };                                 // return new object fieldValidatione object
+               }) 
+               break;             
+         case "country":
+              this.setState(prevState => {
+              let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
+              //fieldValidation = {[key] : status};         
+              fieldValidation.country = status;                     // update the name property, assign a new value                 
+              return { fieldValidation };                                 // return new object fieldValidatione object
+             }) 
+             break;             
+             default: break; 
         }   
       }
       validateFields(e){
@@ -243,6 +261,36 @@ export default class AddNewCustomer extends React.Component {
                    console.log(e.target.id) 
                    console.log(newCustomer) 
                 break;
+         case "city" :
+                 if(insertData.length < 3 || insertData.length > 20  || !isNaN(insertData)){  // length between 2-5
+                     this.changeStatus(e.target.id,false)
+                     break;}
+                 this.changeStatus(e.target.id,true)
+                 this.setState(prevState => {
+                     let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
+                     newCustomer.City = insertData;                     // update the name property, assign a new value                 
+                     return { newCustomer };                                 // return new object fieldValidatione object
+                     })
+                     console.log(fieldValidation)
+                    console.log(insertData.length)
+                    console.log(e.target.id) 
+                    console.log(newCustomer) 
+                 break;
+         case "country" :
+                 if(insertData.length < 3 || insertData.length > 20  || !isNaN(insertData)){  // length between 2-5
+                     this.changeStatus(e.target.id,false)
+                     break;}
+                 this.changeStatus(e.target.id,true)
+                 this.setState(prevState => {
+                     let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
+                     newCustomer.Country = insertData;                     // update the name property, assign a new value                 
+                     return { newCustomer };                                 // return new object fieldValidatione object
+                     })
+                     console.log(fieldValidation)
+                    console.log(insertData.length)
+                    console.log(e.target.id) 
+                    console.log(newCustomer) 
+                 break;        
          case "email" :
                 console.log("Email") 
                  console.log(this.validateEmail(insertData)) 
@@ -264,14 +312,12 @@ export default class AddNewCustomer extends React.Component {
                    default :  console.log("default")  ///^[^\s@]+@[^\s@]+\.[^\s@]+$/
        } 
 
-      
-
-
-
+    
+      // check of all field are ok and visible to submit button 
       
        let fieldValidationValues = Object.values(fieldValidation)
        let submit = !isDisabled  //set false to visible 
-       submit = fieldValidationValues.find((item)=>{
+       submit = fieldValidationValues.find((item)=>{  // if one value still false as button still invisible 
                    if(!item) 
                    console.log("item: " + item) 
                    return !item
@@ -291,11 +337,38 @@ export default class AddNewCustomer extends React.Component {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
            }
-
-     
+        
      
      handleSubmit(){
+        const { getDataCustomers, isDisabled , fieldValidation, newCustomer} = this.state;
+        let customer  = newCustomer
+        let id = (parseInt(getDataCustomers[getDataCustomers.length-1].CusID) + 1 ).toString()
+        let employeeId = this.props.activeUser.EmployeeId
+        customer.CustID = id
+        customer.EmployeeID = employeeId
+        customer.PtmDelay = "30" // const be default 
+        console.log(customer)
         console.log(this.state.newCustomer)
+        this.setState({newCustomer:customer})
+
+        fetch('/insertNewCustomer',{ // send data to express server 
+            method: 'POST',
+            mode: 'cors',
+            body: JSON.stringify(customer),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+            })
+            .then((res) => {
+                if (res.ok){
+                  return res.json();
+                } else {
+                  throw new Error ('Something went wrong with your fetch');
+                }
+              }).then((json) => {
+                console.log(json);
+              })
      }
    
      render() {
@@ -414,7 +487,7 @@ export default class AddNewCustomer extends React.Component {
                       </Form.Row>
 
                       <Form.Row>
-                       <Form.Group as={Col} md="8" controlId="validationCustom03">
+                       <Form.Group as={Col} md="8" controlId="address">
                          <Form.Label>Adrress</Form.Label>
                          <Form.Control type="text" placeholder="Adrress"  />
                          <Form.Control.Feedback type="invalid">
@@ -422,18 +495,24 @@ export default class AddNewCustomer extends React.Component {
                          </Form.Control.Feedback>
                        </Form.Group>
                    
-                       <Form.Group as={Col} md="2" controlId="validationCustom04">
+                       <Form.Group as={Col} md="2" controlId="city" onChange={this.validateFields}>
                          <Form.Label>City</Form.Label>
-                         <Form.Control type="text" placeholder="City" required />
+                         <Form.Control type="text" placeholder="City" required 
+                          isValid={fieldValidation.city}
+                             isInvalid={!fieldValidation.city}
+                             />
                          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                          <Form.Control.Feedback type="invalid">
                            Please provide a valid City.
                          </Form.Control.Feedback>
                        </Form.Group>
                    
-                       <Form.Group as={Col} md="2" controlId="validationCustom03">
+                       <Form.Group as={Col} md="2" controlId="country" onChange={this.validateFields}>
                          <Form.Label>Country</Form.Label>
-                         <Form.Control type="text" placeholder="Country" required />
+                         <Form.Control type="text" placeholder="Country" required 
+                          isValid={fieldValidation.country}
+                             isInvalid={!fieldValidation.country}
+                             />
                          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                          <Form.Control.Feedback type="invalid">
                            Please provide a valid Country name 

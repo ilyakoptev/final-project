@@ -32,7 +32,7 @@ router.post('/', async(req, res) => {
             db.close();
         });
     });
-    //res.json({ greeting: "hello" }); //this is sent back to the browser and i can access it
+    res.json({ greeting: "Callback from insert New Customer" }); //this is sent back to the browser and i can access it
 });
 
 

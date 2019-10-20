@@ -52,118 +52,56 @@ class MainWindow extends React.Component {
        //conditional rendering by menu item clicked
        switch(menuChoose) {
         case "createNewCustOrder": 
-              return(
-                     <AddNewCustOrder activeUser={activeUser}/>
-                                 )  
+              return(                        <AddNewCustOrder activeUser={activeUser}/> )  
         case "showAllCustomerOrders": 
-               return(
-                      <ShowCustomerOrders activeUser={activeUser}/>
-                                 )                         
+               return(                       <ShowCustomerOrders activeUser={activeUser}/>                                  )                         
         case "addNewCustomer": 
-              return(
-                <AddNewCustomer activeUser={activeUser}/>
-                                 )  
+              return(                        <AddNewCustomer activeUser={activeUser}/>                                 )  
         case "editCustomer": 
-              return(
-                            <div>editCustomer</div>
-                       )  
+              return(                            <div>editCustomer</div>                       )  
         case "showCustomers": 
-              return(
-                             <ShowCustomers activeUser={activeUser}/>
-                        )  
+              return(                         <ShowCustomers activeUser={activeUser}/>                        )  
         case "createNewSuppOrder": 
-                return(
-                       <div>createNewSuppOrder</div>
-                         )  
+                return(                       <div>createNewSuppOrder</div>                         )  
         case "showAllSuppOrders": 
-                return(
-                       <div>createNewSuppOrder</div>
-                         ) 
+                return(                       <div>createNewSuppOrder</div>                         ) 
         case "editSupplier": 
-                 return(
-                            <div>editSupplier</div>
-                       )  
+                 return(                            <div>editSupplier</div>                       )  
         case "showSuppliers": 
-                 return(
-                    <ShowSuppliers/>
-                       )  
+                 return(                     <ShowSuppliers/>                       )  
         case "addNewProduct": 
-                 return(
-                            <div>addNewProduct</div>
-                       )  
+                 return(                            <div>addNewProduct</div>                        )  
         case "editProduct": 
-                 return(
-                            <div>editProduct</div>
-                       )  
+                 return(                             <div>editProduct</div>                       )  
         case "deleteProduct": 
-         
-               return(
-                            <div>deleteProduct</div>
-                       )  
-           
-           case "showProducts": 
-         
-               return(
-                            <ShowProducts/>
-                       )  
-           
-           case "newReciept": 
-         
-               return(
-                            <div>newReciept</div>
-                       )  
-             
-           case "newPayment": 
-         
-               return(
-                            <div>newPayment</div>
-                       )  
-            
-           case "custBalance": 
-          
-               return(
-                            <div>custBalance</div>
-                       )  
-            
-           case "suppBalance": 
-          
-               return(
-                            <div>suppBalance</div>
-                       )  
-            
-           case "showSaldo": 
-          
-               return(
-                            <div>showSaldo</div>
-                       )  
-                
-           case "addNewEmployee": 
-          
-               return(
-                            <div>addNewEmployee</div>
-                       )  
-           
-           case "editEmployee": 
-          
-               return(
-                            <div>editEmployee</div>
-                       )  
-         
-           case "deleteEmployeer": 
-         
-               return(
-                            <div>deleteEmployeer</div>
-                       )  
-            
-           case "showEmployees": 
-          
-               return(
-                            <div>showEmployees</div>
-                       )  
-        
-          
-
-        default : 
+                 return(                             <div>deleteProduct</div>                          )  
+        case "showProducts": 
+                 return(                      <ShowProducts/>                       )  
+        case "newReciept": 
+               return(                            <div>newReciept</div>                       )  
+        case "newPayment": 
+               return(                         <div>newPayment</div>                    )  
+        case "custBalance": 
+             return(                         <div>custBalance</div>                    )  
+        case "suppBalance": 
+              return(                         <div>suppBalance</div>                    )  
+        case "showSaldo": 
+             return(                            <div>showSaldo</div>                    )  
+        case "addNewEmployee":    
+             return(                            <div>addNewEmployee</div>                    )  
+        case "editEmployee":    
+             return(                            <div>editEmployee</div>                    )  
+        case "deleteEmployeer": 
+                return(                         <div>deleteEmployeer</div>                    )  
+        case "showEmployees": 
+               return(                         <div>showEmployees</div>                    )  
+        case null:
+                return (
+                    <Container>
+                      <h1>Success !!! </h1>
+                    </Container>
+                   ) 
+         default : 
             return (
                 <Container>
                   <h1>Welcome , {currectUser.Name} !!! </h1>
