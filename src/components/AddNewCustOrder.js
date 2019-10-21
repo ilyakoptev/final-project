@@ -9,7 +9,7 @@ export default class AddNewCustOrder extends React.Component {
             getDataCustomers: [], // all customers data 
             getDataProducts:[], // all products data
             getCustomersOrders: [], // all customers orders data
-            selectedCustomer: {},
+            selectedCustomer: {},  // selected customer for current order 
             getEmployee: {},
             redirectToHome: false,
             showModal: false,
@@ -20,9 +20,8 @@ export default class AddNewCustOrder extends React.Component {
             ifCustomerSelected: false,
             submitOrderArray:[],
             getQuantity:[],
-            isSuccess:false
-            
-           
+            isSuccess:false  // show success message in success adding new order
+               
            
         }
 
@@ -36,11 +35,11 @@ export default class AddNewCustOrder extends React.Component {
         this.insertProdQuantity = this.insertProdQuantity.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.setQuantity = this.setQuantity.bind(this);
-        
-        
-        
-           
+        this.reset = this.reset.bind(this); 
+             
     }
+
+
     componentDidMount(){
         fetch('/getdataCustomers')
         .then(res => res.json())
@@ -57,10 +56,11 @@ export default class AddNewCustOrder extends React.Component {
     openModal(e) {
         this.setState({ showModal: true })
     }
-    
     closeModal() {
          this.setState({ showModal: false })
     }
+
+
     detailsModalWindow() {
            const {submitOrderArray,getDataProducts } = this.state;
            let result = []
@@ -87,8 +87,10 @@ export default class AddNewCustOrder extends React.Component {
         if(e.target.value == 0){
            return
         }
-        this.setState({ifProductSelected:true})  // set property of selected product true
-        this.setState({addProductButtonIsDisable:true})
+        // if(e.target.value.lenght > 0)
+        //     this.setState({ifProductSelected:true})  // set property of selected product true
+        // else 
+        //     this.setState({ifProductSelected:false})  // set property of selected product false if field is empty 
         let product = {}
         let productArr = []
         product.id = e.target.id
@@ -96,18 +98,25 @@ export default class AddNewCustOrder extends React.Component {
         productArr.unshift(product) 
         this.setState({getQuantity:productArr})
         console.log("insertProdQuantity" )
-        console.log(e.target.id, e.target.value )
+        console.log(e.target.id, e.target.value, e.target.value.length )
         console.log(selectedProducts)
      }
+    
      setQuantity(){  // get input  from input field and put it into temporary array and get a last value = final input
-        const {selectedProducts,getQuantity} = this.state
+        const {selectedProducts,getQuantity,ifCustomerSelected} = this.state
         let temp =  [] 
         temp = selectedProducts
         temp.unshift(getQuantity[0]) 
         this.setState({selectedProducts:temp})
+        this.setState({ifProductSelected:true})  // set property of selected product true
+        if(ifCustomerSelected) 
+             this.setState({isDisabled:false})   // set visible to  submit button 
+        else 
+             this.setState({isDisabled:true})  
         console.log("setQuantity")
         console.log(temp)
      } 
+    
      addProduct(e){ // add products to state array
        const {selectedProducts,submitOrderArray, ifCustomerSelected, ifProductSelected} = this.state
        let id = e.target.getAttribute('data-key') // button id = productID 
@@ -150,7 +159,9 @@ export default class AddNewCustOrder extends React.Component {
             
        if(ifCustomerSelected&&ifProductSelected) // check of customer selected 
             this.setState({isDisabled:false})   // open submit button 
-      // console.log(e.target.getAttribute('data-key'))
+        else
+             this.setState({isDisabled:true})   // open submit button 
+            // console.log(e.target.getAttribute('data-key'))
       this.setState({submitOrderArray:submitOrder})
       console.log("submitOrderArray")
       console.log(submitProduct)
@@ -158,19 +169,24 @@ export default class AddNewCustOrder extends React.Component {
      }
    
      setCustomer(e){   // set state for customer for new order 
-       const {ifProductSelected} = this.state
-       let customer = e.target.value
+       const {ifProductSelected, getDataCustomers} = this.state
+       //let customer = e.target.value  
+       let customer = getDataCustomers.find((cust) => {if(cust.CustID == e.target.value) return cust})
        this.setState({selectedCustomer:customer})
        this.setState({ifCustomerSelected:true})  
        if(ifProductSelected) 
           this.setState({isDisabled:false})   // set visible to  submit button 
      }
-     
+     reset(){ // by clicking reset button 
+        this.setState({isDisabled:true})
+        this.setState({ifCustomerSelected:false})  
+        this.setState({ifProductSelected:false})  
+     }
+
      submitOrder(){  // open modal with final order  
        console.log(this.state.submitOrderArray)
-       console.log( this.state.selectedCustomer)
-       this.openModal()
-
+       console.log(this.state.selectedCustomer)
+     this.openModal()
      }
 
      confirmOrder(){ // save it to array with all customer orders 
@@ -185,10 +201,11 @@ export default class AddNewCustOrder extends React.Component {
        let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].CustOrderID) + 1 ).toString()
        customerOrder._id = id
        customerOrder.CustOrderID = id
-       customerOrder.CustomerID = selectedCustomer
+       customerOrder.CustomerID = selectedCustomer.CustID // customer ID 
        customerOrder.OrderIncomeDate = currentDate
        customerOrder.OrderShippingDate = shipDate.getFullYear() + "-" + (shipDate.getMonth()+1) + "-" + shipDate.getDate()
-      
+       customerOrder.Customer = selectedCustomer.WorkName
+       customerOrder.EmployeeID  = this.props.activeUser.EmployeeId // number of agent 
        var orderDetailsArray = [] // greate a new order to add to data base
        for(let i=0;i<submitOrderArray.length;i++){
              let orderDetails={}
@@ -211,7 +228,7 @@ export default class AddNewCustOrder extends React.Component {
        fetch('/insertCustomerOrder',{ // send data to express server 
                 method: 'POST',
                 mode: 'cors',
-                body: JSON.stringify(customerOrder),
+                body: JSON.stringify(customerOrder), //customerOrder
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -244,6 +261,7 @@ export default class AddNewCustOrder extends React.Component {
     
       render() {
         const { redirectToHome, getDataProducts, getDataCustomers , showModal, selectedCustomer, isDisabled, submitOrderArray,isSuccess} = this.state;
+        
         if (isSuccess) {
             return <Container>
                      <Row>
@@ -254,6 +272,9 @@ export default class AddNewCustOrder extends React.Component {
         if (redirectToHome) {
             return <Redirect to="/dashboard"/>
         }
+
+
+
         let count = 0 // row number in the table
         let Rows = getDataProducts.map(prod =>   // generate table with customers
            
@@ -273,14 +294,13 @@ export default class AddNewCustOrder extends React.Component {
                                 {/* <span>{submitOrderArray.find((item) => {if(item.id===prod.ProductID) return item.quantity})}</span> */}
                                  </td>
                                  <td><Button size="sm" data-key={prod.ProductID} onClick={this.addProduct}>Add to Order</Button> </td>
-                                 
-                                
+                         
               </tr>)
              
         count = 0 // row number in the table
-        let customerRows = getDataCustomers.map(cust =>   // generate table with customers
+        let customerRows = getDataCustomers.map(cust =>   // generate list with customers
             
-                                <option value={cust.CustID}>{++count} - {cust.WorkName} , {cust.Company} , {cust.Email} </option>
+                 <option value={cust.CustID}>{++count} - {cust.WorkName} , {cust.Company} , {cust.Email} </option>
             )
         return(
               <Container> <h3 class="text-center"> Add New Customer Order:</h3>
@@ -291,8 +311,8 @@ export default class AddNewCustOrder extends React.Component {
                             </Col>
                             <Col xs={6} lg={8}>
                                      <Form.Control as="select" onChange={this.setCustomer} >
-                                        <option>Select Customer:</option>
-                                        {customerRows}
+                                        <option selected disabled>Select Customer:</option>
+                                        {customerRows}       
                                      </Form.Control>
                             </Col>
                             <Col xs={2} lg={2}>
@@ -329,7 +349,7 @@ export default class AddNewCustOrder extends React.Component {
                         </Row>
                         <Row>
                         <Col xs={6} >        
-                                    <Button className="my-3 btn-block" variant="danger" type="submit">
+                                    <Button className="my-3 btn-block" variant="danger" type="reset" onClick={this.reset}>
                                         <h5>Reset all fields</h5>
                                     </Button>
                             </Col>
@@ -344,7 +364,7 @@ export default class AddNewCustOrder extends React.Component {
 
                         <Modal show={showModal} onHide={this.closeModal} size="">  
                             <Modal.Header closeButton>
-                                <Modal.Title>Order for: {selectedCustomer}</Modal.Title>
+                                <Modal.Title>Order for: {selectedCustomer.WorkName}</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                             <Table responsive="sm" size="sm">

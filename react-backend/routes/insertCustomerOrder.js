@@ -42,7 +42,7 @@ router.post('/', async(req, res) => {
         // });
 
     });
-    res.json({ greeting: "allback from insert New Order" }); //this is sent back to the browser and i can access it
+    res.json({ greeting: "callback from insert New Order" }); //this is sent back to the browser and i can access it
 });
 
 

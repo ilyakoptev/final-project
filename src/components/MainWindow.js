@@ -8,6 +8,8 @@ import ShowProducts from './ShowProducts';
 import ShowCustomerOrders from './ShowCustomerOrders';
 import AddNewCustOrder from './AddNewCustOrder';
 import AddNewCustomer from './AddNewCustomer';
+import ShowSuppliersOrders from './ShowSuppliersOrders';
+import AddNewSuppOrder from './AddNewSuppOrder';
 
 
 
@@ -62,9 +64,9 @@ class MainWindow extends React.Component {
         case "showCustomers": 
               return(                         <ShowCustomers activeUser={activeUser}/>                        )  
         case "createNewSuppOrder": 
-                return(                       <div>createNewSuppOrder</div>                         )  
+                return(                       <AddNewSuppOrder activeUser={activeUser}/>                         )  
         case "showAllSuppOrders": 
-                return(                       <div>createNewSuppOrder</div>                         ) 
+                return(                       <ShowSuppliersOrders activeUser={activeUser}/>                         ) 
         case "editSupplier": 
                  return(                            <div>editSupplier</div>                       )  
         case "showSuppliers": 
