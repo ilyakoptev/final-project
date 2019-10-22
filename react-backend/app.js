@@ -15,6 +15,8 @@ var insertCustomerOrder = require('./routes/insertCustomerOrder');
 var insertNewCustomer = require('./routes/insertNewCustomer');
 var getSuppliersOrders = require('./routes/getSuppliersOrders');
 var getUnorderedCustOrders = require('./routes/getUnorderedCustOrders');
+var getSuppPriceList = require('./routes/getSuppPriceList');
+
 
 var app = express();
 
@@ -39,7 +41,7 @@ app.use('/insertCustomerOrder', insertCustomerOrder);
 app.use('/insertNewCustomer', insertNewCustomer);
 app.use('/getSuppliersOrders', getSuppliersOrders);
 app.use('/getUnorderedCustOrders', getUnorderedCustOrders);
-
+app.use('/getSuppPriceList', getSuppPriceList);
 
 
 

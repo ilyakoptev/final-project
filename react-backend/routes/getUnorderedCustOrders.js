@@ -15,77 +15,72 @@ var result = [] //array of all tables
 var resArr = []
 console.log("create variables");
 
+mongoClient.connect(function(err, client) {
+    console.log("Mongo Client Connect")
 
-router.get('/', async function(req, res, next) {
+    const db = client.db("PAG_Flowers");
+    const collectionSuppliersOrders = db.collection("Supporders");
+    const collectionCustomerorders = db.collection("Customerorders");
+    // const collectionProducts = db.collection("Products");
 
-
-    mongoClient.connect(function(err, client) {
-        console.log("Mongo Client Connect")
-
-        const db = client.db("PAG_Flowers");
-        const collectionSuppliersOrders = db.collection("Supporders");
-        const collectionCustomerorders = db.collection("Customerorders");
-        // const collectionProducts = db.collection("Products");
-
-        if (err) return console.log(err);
+    if (err) return console.log(err);
 
 
-        collectionSuppliersOrders.find().toArray(function(err, results) { // get customer orders table 
-            resultSuppliersOrders = results;
+    collectionSuppliersOrders.find().toArray(function(err, results) { // get customer orders table 
+        resultSuppliersOrders = results;
+        client.close();
+    })
+
+    collectionCustomerorders.find().toArray(function(err, results) { //get supplier table 
+            result = results;
             client.close();
+
         })
+        // collectionProducts.find().toArray(function(err, results) { //get supplier table 
+        //     resultProducts = results;
+        //     client.close();
+        // })
 
-        collectionCustomerorders.find().toArray(function(err, results) { //get supplier table 
-                result = results;
-                client.close();
 
-            })
-            // collectionProducts.find().toArray(function(err, results) { //get supplier table 
-            //     resultProducts = results;
-            //     client.close();
-            // })
-
-        // console.log(result)
-        //  client.close();
-    });
+    //  client.close();
+});
 
 
 
 
-    /* GET users listing. */
+/* GET users listing. */
 
-    let timer = 7000;
-    setTimeout(function() { startRoute(); }, timer);
+//console.log(result)
 
-    function startRoute() {
-        //console.log(result)
 
-        result.forEach(joinTables) // for each customer order 
+// router.get('/', function(req, res, next) {
+//     res.json(resArr)
+// });
+// console.log(resArr);
+// console.log(resultSuppliers[0]);
+//console.log(resultSuppliers[0]);
+// console.log(resultSuppliersorderdetails[0]);
+//console.log(resultProducts[0]);
 
-        function joinTables(order) {
+let timer = 7000;
+setTimeout(function() { startRoute(); }, timer);
 
-            let result = resultSuppliersOrders.find((item) => { if (item.CustomerOrderID == order.CustOrderID) return item })
-            if (result === undefined)
-                resArr.push(order)
+function startRoute() {
 
-        }
+    result.forEach(joinTables) // for each customer order 
 
-        // router.get('/', function(req, res, next) {
-        //     res.json(resArr)
-        // });
-        // console.log(resArr);
-        // console.log(resultSuppliers[0]);
-        //console.log(resultSuppliers[0]);
-        // console.log(resultSuppliersorderdetails[0]);
-        //console.log(resultProducts[0]);
+    function joinTables(order) {
+        let result = resultSuppliersOrders.find((item) => { if (item.CustomerOrderID == order.CustOrderID) return item })
+        if (result === undefined)
+            resArr.push(order)
     }
+    console.log(resArr);
+    router.get('/', async function(req, res, next) {
+        res.json(resArr)
 
-    //res.json(result)
-    ////console.log("Read the result Suppliers Orders ");
-    //console.log(result[0]);
-
-}); // end of router 
-//console.log("End of file ");
+    }); // end of router 
+}
+//console.log(resArr);
 
 
 

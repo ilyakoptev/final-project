@@ -27,7 +27,7 @@ mongoClient.connect(function(err, client) {
 
 /* GET users listing. */
 
-let timer = 7000;
+let timer = 5000;
 setTimeout(function() { startRoute(); }, timer);
 
 function startRoute() {

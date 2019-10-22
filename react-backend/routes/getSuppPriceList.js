@@ -12,23 +12,23 @@ var result; //array of all tables
 mongoClient.connect(function(err, client) {
 
     const db = client.db("PAG_Flowers");
-    const collection = db.collection("Suppliers");
+    const collection = db.collection("Supppricelist");
 
 
     if (err) return console.log(err);
 
     collection.find().toArray(function(err, results) {
-        //  getDataFromDb(results)
-        result = results;
-        client.close();
-    })
-
+            //  getDataFromDb(results)
+            result = results;
+            client.close();
+        })
+        // client.close();
 });
 //console.log(result);
 
 /* GET users listing. */
 
-let timer = 7000;
+let timer = 5000;
 setTimeout(function() { startRoute(); }, timer);
 
 function startRoute() {

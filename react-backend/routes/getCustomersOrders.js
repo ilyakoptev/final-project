@@ -66,7 +66,7 @@ router.get('/', async function(req, res, next) {
             for (let i = 0; i < item.OrderDetails.length; i++) {
                 let temp = item.OrderDetails[i]
                 let product = resultProducts.find((prod) => { if (prod.ProductID === temp.ProductId) return prod }) // all data of product
-                console.log(product)
+                    // console.log(product)
                 item.OrderDetails[i].ProductName = product.ProductName
                 item.OrderDetails[i].Description = product.Description
                     // item.OrderDetails.push(resultCustomersorderdetails[i])

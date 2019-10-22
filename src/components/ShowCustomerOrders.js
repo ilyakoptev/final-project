@@ -104,15 +104,12 @@ export default class ShowCustomerOrders extends React.Component {
         let count = 0 // row number in the table
         let Rows = sortedArray.map(order =>   // generate table with customers
             <tr data-key={++count} onClick={this.openModal}> 
-                 <td data-key={count}>{count}</td>
+                                <td data-key={count}>{count}</td>
                                 <td data-key={count}>{order.CustOrderID}</td>
                                 <td data-key={count}>{order.Customer}</td>
                                 <td data-key={count}>{order.OrderIncomeDate}</td>
                                 <td data-key={count}>{order.OrderShippingDate}</td>
-                                
-                               
-                                
-             </tr>)
+               </tr>)
       // console.log( this.state.getData[0].City )
       // console.log(selectedOrder.City ) 
       //  console.log( Object.keys(selectedOrder) ) 

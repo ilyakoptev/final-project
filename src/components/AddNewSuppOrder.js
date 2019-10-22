@@ -10,7 +10,9 @@ export default class AddNewSuppOrder extends React.Component {
             getDataProducts:[], // all products data
             getCustomersOrders: [], // all customers orders data
             getSuppliersOrders: [], // all suppliers orders data
-            selectedCustomer: {},  // selected customer for current order 
+            getSuppPriceList: [],
+            selectedOrder: {},
+            selectedOrderDetails:[],
             unorderedCustOrders:[], // get from data base unordered orders 
             getEmployee: {},
             redirectToHome: false,
@@ -27,17 +29,16 @@ export default class AddNewSuppOrder extends React.Component {
            
         }
 
-        this.submitOrder = this.submitOrder.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.detailsModalWindow = this.detailsModalWindow.bind(this);
-        this.addProduct = this.addProduct.bind(this);
-        this.setCustomer = this.setCustomer.bind(this);
-        this.confirmOrder = this.confirmOrder.bind(this);
-        this.insertProdQuantity = this.insertProdQuantity.bind(this);
+        this.createOrder = this.createOrder.bind(this);
+        //this.setCustomer = this.setCustomer.bind(this);
+       // this.confirmOrder = this.confirmOrder.bind(this);
+       // this.insertProdQuantity = this.insertProdQuantity.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.setQuantity = this.setQuantity.bind(this);
-        this.reset = this.reset.bind(this); 
+      //  this.setQuantity = this.setQuantity.bind(this);
+      //  this.reset = this.reset.bind(this); 
        
         
              
@@ -60,202 +61,145 @@ export default class AddNewSuppOrder extends React.Component {
         fetch('/getUnorderedCustOrders')
         .then(res => res.json())
         .then(unorderedCustOrders => this.setState({unorderedCustOrders}));
+        fetch('/getSuppPriceList')
+        .then(res => res.json())
+        .then(getSuppPriceList => this.setState({getSuppPriceList}));
+        
         //console.log(this.state.getData)
       }
       
-    openModal(e) {
+      openModal(e) {
+        const index = e.target.getAttribute('data-key')
         this.setState({ showModal: true })
+        this.setState({ selectedOrder: this.state.unorderedCustOrders[index-1] })
+        this.setState({ selectedOrderDetails: this.state.unorderedCustOrders[index-1].OrderDetails })
+        
     }
+    
     closeModal() {
          this.setState({ showModal: false })
     }
 
-
     detailsModalWindow() {
-           const {submitOrderArray,getDataProducts } = this.state;
-           let result = []
-           if (submitOrderArray.length===0){
-               result[0] = <tr><td>No items selected</td></tr>
-           }
-           else
-           for(let i=0;i<submitOrderArray.length;i++){
-                result[i]=
-                            <tr>
-                                <td>{submitOrderArray[i].id}</td>
-                                <td>{submitOrderArray[i].quantity}</td>
-                            </tr>
-          }
+        const {getDataProducts, selectedOrderDetails } = this.state;
        
-    //   // console.log( result)
-    //     // console.log(this.state.selectedCustomer)
-        return result
-     }
+        let obj = {}
+      //   selectedOrder.Customer = getCustomer.WorkName // add property "Customer"  to order modal 
+        let result =[]
+        let resultArr 
+        let header = " "
+        let rowdata 
+        var orderDetails = selectedOrderDetails
+        orderDetails.forEach(joinTables) // for each customer order 
 
+        function joinTables(item) {
 
-     insertProdQuantity(e){ // read input 
-        const {selectedProducts,selectedProductQuantity, ifCustomerSelected, ifProductSelected} = this.state
-        if(e.target.value == 0){
-           return
-        }
-        // if(e.target.value.lenght > 0)
-        //     this.setState({ifProductSelected:true})  // set property of selected product true
-        // else 
-        //     this.setState({ifProductSelected:false})  // set property of selected product false if field is empty 
-        let product = {}
-        let productArr = []
-        product.id = e.target.id
-        product.quantity = e.target.value
-        productArr.unshift(product) 
-        this.setState({getQuantity:productArr})
-        console.log("insertProdQuantity" )
-        console.log(e.target.id, e.target.value, e.target.value.length )
-        console.log(selectedProducts)
-     }
-    
-     setQuantity(){  // get input  from input field and put it into temporary array and get a last value = final input
-        const {selectedProducts,getQuantity,ifCustomerSelected} = this.state
-        let temp =  [] 
-        temp = selectedProducts
-        temp.unshift(getQuantity[0]) 
-        this.setState({selectedProducts:temp})
-        this.setState({ifProductSelected:true})  // set property of selected product true
-        if(ifCustomerSelected) 
-             this.setState({isDisabled:false})   // set visible to  submit button 
-        else 
-             this.setState({isDisabled:true})  
-        console.log("setQuantity")
-        console.log(temp)
-     } 
-    
-     addProduct(e){ // add products to state array
-       const {selectedProducts,submitOrderArray, ifCustomerSelected, ifProductSelected} = this.state
-       let id = e.target.getAttribute('data-key') // button id = productID 
-       let submitOrder = submitOrderArray // 
-       let submitProduct = selectedProducts.find((prod) => {if(prod.id==id) return prod}) // get last inserting of quantity
-       var flag = false
-       console.log("before the insert:")
-       console.log(selectedProducts)
-       console.log(submitProduct)
-       console.log(submitOrder)
-        if(submitProduct!==undefined){
-                   // insert to product array
-            if(submitOrder.length===0){
-                 submitOrder.push(submitProduct)    
-                 console.log("if lenght = 0 ")
-                 console.log(submitProduct)
-                 console.log(submitOrder)}
-            else 
-           {
-            for(let i=0;i<submitOrder.length;i++){
-                console.log(i)
-                if (submitOrder[i].id === submitProduct.id){
-                    console.log("inside if ")
-                    console.log(submitOrder[i].id, submitOrder[i].quantity , submitProduct.id, submitProduct.quantity )
-                     submitOrder[i].quantity = submitProduct.quantity
-                     flag = true
-                     console.log(submitProduct)
-                     console.log(submitOrder)
-                     break
-                }
-                
+            //     let customer = resultCustomers.find((cust) => { if (cust.CustID === item.CustomerID) return cust }) //get all data of Employee that work with current customer
+            //   item.Customer = customer.WorkName // add new property WorkName to custOrder object
+            // item.EmployeeID = customer.EmployeeID // add new property EmployeeID to custOrder object
+            //  item.OrderDetails = [] // add new property with array of  products list of current order 
+            for (let i = 0; i <orderDetails.length; i++) {
+                let temp = orderDetails[i]
+                let product = getDataProducts.find((prod) => { if (prod.ProductID === temp.ProductId) return prod }) // all data of product
+                    // console.log(product)
+                orderDetails[i].ProductName = product.ProductName
+                orderDetails[i].Description = product.Description
+                    // item.OrderDetails.push(resultCustomersorderdetails[i])
+
             }
-            if(!flag) { submitOrder.push(submitProduct)   
-                console.log("inside of else")
-                console.log(submitProduct)
-                console.log(submitOrder) 
-                   }
-           }
-       }
+
+        }
+        
+        for(let z=0;z<orderDetails.length;z++){
+             obj  = orderDetails[z]
+            // console.log(obj)       
+             let detailsKeys = Object.keys(obj) 
+             let detailsValues = Object.values(obj)
             
-       if(ifCustomerSelected&&ifProductSelected) // check of customer selected 
-            this.setState({isDisabled:false})   // open submit button 
-        else
-             this.setState({isDisabled:true})   // open submit button 
-            // console.log(e.target.getAttribute('data-key'))
-      this.setState({submitOrderArray:submitOrder})
-      console.log("submitOrderArray")
-      console.log(submitProduct)
-      console.log(submitOrder)
-     }
-   
-     setCustomer(e){   // set state for customer for new order 
-       const {ifProductSelected, getDataCustomers} = this.state
-       //let customer = e.target.value  
-       let customer = getDataCustomers.find((cust) => {if(cust.CustID == e.target.value) return cust})
-       this.setState({selectedCustomer:customer})
-       this.setState({ifCustomerSelected:true})  
-       if(ifProductSelected) 
-          this.setState({isDisabled:false})   // set visible to  submit button 
-     }
-     reset(){ // by clicking reset button 
-        this.setState({isDisabled:true})
-        this.setState({ifCustomerSelected:false})  
-        this.setState({ifProductSelected:false})  
-     }
+             if(z===0){   // make header for table in modal 
+                 header =  detailsKeys.map((key, index) => {
+                     return <th key={index}>{key.toUpperCase()}</th>
+             })}
+             
+             rowdata =  detailsValues.map((key, index) => {  // insert rows with data to table in modal 
+                     return <td key={index}>{key}</td>
+                  })
+             result[z]= <tr>{rowdata}</tr>
+         }
+       
+       resultArr = <tbody><tr>{header}</tr> {result} </tbody>  // build table for modal window 
+       return resultArr
+      }
 
-     submitOrder(){  // open modal with final order  
-       console.log(this.state.submitOrderArray)
-       console.log(this.state.selectedCustomer)
-     this.openModal()
-     }
+     
 
-     confirmOrder(){ // save it to array with all customer orders 
+      createOrder(e){ // save it to array with all customer orders 
        // this.setState({redirectToHome:true})
-       const {selectedCustomer, getCustomersOrders,submitOrderArray,getDataProducts} = this.state
+       const {selectedCustomer, getCustomersOrders,submitOrderArray,getDataProducts,unorderedCustOrders, getSuppPriceList} = this.state
        var date = new Date();
        var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
        var shipDate = new Date();
-       var numberOfDaysToAdd = 10;
+       var numberOfDaysToAdd = 3; // const of shiping dates from suppliers
        shipDate.setDate(shipDate.getDate() + numberOfDaysToAdd); 
-       var customerOrder = {} // greate a new order to add to data base
-       let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].CustOrderID) + 1 ).toString()
-       customerOrder._id = id
-       customerOrder.CustOrderID = id
-       customerOrder.CustomerID = selectedCustomer.CustID // customer ID 
-       customerOrder.OrderIncomeDate = currentDate
-       customerOrder.OrderShippingDate = shipDate.getFullYear() + "-" + (shipDate.getMonth()+1) + "-" + shipDate.getDate()
-       customerOrder.Customer = selectedCustomer.WorkName
-       customerOrder.EmployeeID  = this.props.activeUser.EmployeeId // number of agent 
-       var orderDetailsArray = [] // greate a new order to add to data base
-       for(let i=0;i<submitOrderArray.length;i++){
-             let orderDetails={}
-            // let index =  getCustomersOrders[getCustomersOrders.length-1].OrderDetails.length // length of product array in last custOrder
-            // let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].OrderDetails[index-1].ID)+1+i).toString() //get to next ID 
-            // orderDetails._id = id
-            // orderDetails.ID = id
-           //  orderDetails.OrderId = customerOrder.CustOrderID
-             orderDetails.ProductId = submitOrderArray[i].id
-             orderDetails.Qty = submitOrderArray[i].quantity
-             orderDetails.UnitPrice = getDataProducts.find((prod) => {if(orderDetails.ProductId==prod.ProductID) return prod}).ListPrice
-             orderDetails.Discount = "0.00"
-             orderDetailsArray = orderDetailsArray.concat(orderDetails)
+      
+       var arrayOfOrdersPerSupplier
+       var currentOrder = unorderedCustOrders.find((order) => {if( e.target.getAttribute('data-key')==order.CustOrderID) return order}) // current custOrder
+      
+       console.log(currentOrder)
 
-       } 
-       customerOrder.OrderDetails = orderDetailsArray
-       console.log(customerOrder)
-       console.log(orderDetailsArray)
+       for(let i=0;i<currentOrder.OrderDetails.length;i++){ //for each productID search random Supplier 
 
-       fetch('/insertCustomerOrder',{ // send data to express server 
-                method: 'POST',
-                mode: 'cors',
-                body: JSON.stringify(customerOrder), //customerOrder
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                  },
-                })
-                .then((res) => {
-                    if (res.ok){
-                      return res.json();
-                    } else {
-                      throw new Error ('Something went wrong with your fetch');
-                    }
-                  }).then((json) => {
-                    console.log(json);
-                    this.setState({isSuccess:true})
-                  })
-        this.closeModal()  
-        this.setState({redirectToHome:true})    // redirect to mainwindow   
+
+       }
+    //    var customerOrder = {} // greate a new order to add to data base
+    //    let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].CustOrderID) + 1 ).toString()
+    //    customerOrder._id = id
+    //    customerOrder.CustOrderID = id
+    //    customerOrder.CustomerID = selectedCustomer.CustID // customer ID 
+    //    customerOrder.OrderIncomeDate = currentDate
+    //    customerOrder.OrderShippingDate = shipDate.getFullYear() + "-" + (shipDate.getMonth()+1) + "-" + shipDate.getDate()
+    //    customerOrder.Customer = selectedCustomer.WorkName
+    //    customerOrder.EmployeeID  = this.props.activeUser.EmployeeId // number of agent 
+    //    var orderDetailsArray = [] // greate a new order to add to data base
+    //    for(let i=0;i<submitOrderArray.length;i++){
+    //          let orderDetails={}
+    //         // let index =  getCustomersOrders[getCustomersOrders.length-1].OrderDetails.length // length of product array in last custOrder
+    //         // let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].OrderDetails[index-1].ID)+1+i).toString() //get to next ID 
+    //         // orderDetails._id = id
+    //         // orderDetails.ID = id
+    //        //  orderDetails.OrderId = customerOrder.CustOrderID
+    //          orderDetails.ProductId = submitOrderArray[i].id
+    //          orderDetails.Qty = submitOrderArray[i].quantity
+    //          orderDetails.UnitPrice = getDataProducts.find((prod) => {if(orderDetails.ProductId==prod.ProductID) return prod}).ListPrice
+    //          orderDetails.Discount = "0.00"
+    //          orderDetailsArray = orderDetailsArray.concat(orderDetails)
+
+    //    } 
+    //    customerOrder.OrderDetails = orderDetailsArray
+    //    console.log(customerOrder)
+    //    console.log(orderDetailsArray)
+
+    //    fetch('/insertCustomerOrder',{ // send data to express server 
+    //             method: 'POST',
+    //             mode: 'cors',
+    //             body: JSON.stringify(customerOrder), //customerOrder
+    //             headers: {
+    //                 'Accept': 'application/json',
+    //                 'Content-Type': 'application/json'
+    //               },
+    //             })
+    //             .then((res) => {
+    //                 if (res.ok){
+    //                   return res.json();
+    //                 } else {
+    //                   throw new Error ('Something went wrong with your fetch');
+    //                 }
+    //               }).then((json) => {
+    //                 console.log(json);
+    //                 this.setState({isSuccess:true})
+    //               })
+    //     this.closeModal()  
+    //     this.setState({redirectToHome:true})    // redirect to mainwindow   
      }
 
 
@@ -270,7 +214,7 @@ export default class AddNewSuppOrder extends React.Component {
       }   
     
       render() {
-        const { redirectToHome, getDataProducts, getDataCustomers , showModal, selectedCustomer, isDisabled, submitOrderArray,isSuccess} = this.state;
+        const { redirectToHome, getDataProducts, getDataCustomers , showModal, selectedOrder, isDisabled, submitOrderArray,isSuccess, unorderedCustOrders} = this.state;
         
         if (isSuccess) {
             return <Container>
@@ -286,34 +230,19 @@ export default class AddNewSuppOrder extends React.Component {
        
 
         let count = 0 // row number in the table
-        let Rows = getDataProducts.map(prod =>   // generate table with customers
-           
-            <tr data-key={++count} > 
-                             <td data-key={count}>{count}</td>
-                                <td data-key={count}>{prod.ProductID}</td>
-                                <td data-key={count}>{prod.ProductName}</td>
-                                <td data-key={count}>{prod.Description}</td>
-                                <td data-key={count}>{prod.MinOrder + prod.Unit}</td>
-                                <td data-key={count}>{prod.ListPrice}
-                                    {/* <Form.Control   data-key={prod.ProductID} as="input" type="text" size="sm" placeholder={prod.ListPrice} onBlur={this.insertProdQuantity}/>      */}
-                                  </td>
-                                <td data-key={count} >
-                                    <Form.Control   id={prod.ProductID} as="input" type="number" size="sm"  placeholder="0" onChange={this.insertProdQuantity}
-                                      onBlur={this.setQuantity} />
-                                 
-                                {/* <span>{submitOrderArray.find((item) => {if(item.id===prod.ProductID) return item.quantity})}</span> */}
-                                 </td>
-                                 <td><Button size="sm" data-key={prod.ProductID} onClick={this.addProduct}>Add to Order</Button> </td>
-                         
-              </tr>)
-             
-        count = 0 // row number in the table
-        let customerRows = getDataCustomers.map(cust =>   // generate list with customers
-            
-                 <option value={cust.CustID}>{++count} - {cust.WorkName} , {cust.Company} , {cust.Email} </option>
-            )
+        
+        let Rows = unorderedCustOrders.map(order =>   // generate table with customers
+               <tr data-key={++count} > 
+                                <td data-key={count} onClick={this.openModal}>{count}</td>
+                                <td data-key={count} onClick={this.openModal}>{order.CustOrderID}</td>
+                                <td data-key={count} onClick={this.openModal}>{order.Customer}</td>
+                                <td data-key={count} onClick={this.openModal}>{order.OrderIncomeDate}</td>
+                                <td data-key={count} onClick={this.openModal}>{order.OrderShippingDate}</td>
+                                <td><Button size="sm" data-key={order.CustOrderID} onClick={this.createOrder}>Create Order to Supplier</Button> </td>
+               </tr>)
+                
         return(
-              <Container> <h3 class="text-center"> List of :</h3>
+              <Container> <h3 class="text-center"> List of unprocessed orders:</h3>
                      
                      <Table responsive="lg">
                             <thead>
@@ -323,7 +252,7 @@ export default class AddNewSuppOrder extends React.Component {
                                 <th>Customer</th>
                                 <th>Order Date</th>
                                 <th>Shipping Date</th>
-                                
+                                <th></th>
                                 
                             </tr>
                             </thead>
@@ -333,12 +262,12 @@ export default class AddNewSuppOrder extends React.Component {
                         </Table>
 
 
-                        <Modal show={showModal} onHide={this.closeModal} size="">  
+                        <Modal show={showModal} onHide={this.closeModal} size="lg">  
                             <Modal.Header closeButton>
-                                <Modal.Title>Order for: {selectedCustomer.WorkName}</Modal.Title>
+                                <Modal.Title>Order details for: {selectedOrder.CustOrderID}</Modal.Title>
                             </Modal.Header>
-                            <Modal.Body>
-                            <Table responsive="sm" size="sm">
+                            <Modal.Body className="mx-auto">
+                            <Table responsive="sm" size="sm" >
                                    <tbody>
                                      {this.detailsModalWindow()}
                                    </tbody>
@@ -347,12 +276,10 @@ export default class AddNewSuppOrder extends React.Component {
                 
                         <Modal.Footer>
                        
-                         <Button variant="danger" onClick={this.closeModal}>
-                            Cancel
+                         <Button variant="secondary" onClick={this.closeModal}>
+                            Close
                          </Button>
-                         <Button variant="success" onClick={this.confirmOrder}>
-                            Confirm
-                         </Button>
+                         
                         </Modal.Footer>   
                 </Modal>
 

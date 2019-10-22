@@ -18,10 +18,11 @@ mongoClient.connect(function(err, client) {
     if (err) return console.log(err);
 
     collection.find().toArray(function(err, results) {
-        //  getDataFromDb(results)
-        result = results;
-    })
-    client.close();
+            //  getDataFromDb(results)
+            result = results;
+            client.close();
+        })
+        // client.close();
 });
 //console.log(result);
 
