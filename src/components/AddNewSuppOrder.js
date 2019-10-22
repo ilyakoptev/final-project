@@ -1,10 +1,13 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal, Form, Row, Col, Image} from 'react-bootstrap';
+import {supplierOrder} from '../objects/supplierOrder';
+
 
 export default class AddNewSuppOrder extends React.Component {
     constructor(props) {
         super(props);
+        this.trRef = React.createRef();
         this.state = {
             getDataCustomers: [], // all customers data 
             getDataProducts:[], // all products data
@@ -135,71 +138,161 @@ export default class AddNewSuppOrder extends React.Component {
 
       createOrder(e){ // save it to array with all customer orders 
        // this.setState({redirectToHome:true})
-       const {selectedCustomer, getCustomersOrders,submitOrderArray,getDataProducts,unorderedCustOrders, getSuppPriceList} = this.state
+       const {getSuppliersOrders, getCustomersOrders,submitOrderArray,getDataProducts,unorderedCustOrders, getSuppPriceList} = this.state
        var date = new Date();
        var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
        var shipDate = new Date();
        var numberOfDaysToAdd = 3; // const of shiping dates from suppliers
        shipDate.setDate(shipDate.getDate() + numberOfDaysToAdd); 
-      
-       var arrayOfOrdersPerSupplier
+       shipDate = shipDate.getFullYear() + "-" + (shipDate.getMonth()+1) + "-" + shipDate.getDate()
+       var paymentDate = new Date();
+       var numberOfDaysToAdd1 = 60; // const of shiping dates from suppliers
+       paymentDate.setDate(paymentDate.getDate() + numberOfDaysToAdd1); 
+       paymentDate = paymentDate.getFullYear() + "-" + (paymentDate.getMonth()+1) + "-" + paymentDate.getDate()
+
+       var arrayOfOrdersPerSupplier = []
        var currentOrder = unorderedCustOrders.find((order) => {if( e.target.getAttribute('data-key')==order.CustOrderID) return order}) // current custOrder
-      
+       var arrayOfOrders = []      
+       
        console.log(currentOrder)
 
        for(let i=0;i<currentOrder.OrderDetails.length;i++){ //for each productID search random Supplier 
+           let count = 0 
+           let suppliersPerProduct = []
+           let prodId
+           prodId = currentOrder.OrderDetails[i].ProductId
+           console.log(getSuppPriceList)  
+           console.log("prodId: " + prodId)    
+           for(let j=0;j<getSuppPriceList.length;j++){ //runs on all pricelist table
+               if(prodId==getSuppPriceList[j].ProductId){
+                count++
+                suppliersPerProduct.push(getSuppPriceList[j].SuppId) // list suppliers for each product 
+               }
+               
+           }
+           console.log("count: " + count)  
+           console.log("suppliersPerProduct: " + suppliersPerProduct)       
+           let x = Math.floor((Math.random() * count) + 1);
+           console.log("x: " + x)
+           let randomSupplier = suppliersPerProduct[x-1] // random supplier for current prodId 
+           // if array still empty 
+           console.log("arrayOfOrders.length: " + arrayOfOrders.length)
+          
+          
+           if(arrayOfOrders.length===0){ 
+              // if the first order push into the array - new SuppOrderID 
+              
+               // create first supplier order
+               var id = (parseInt(getSuppliersOrders.length)+5000).toString() //suppOrderID - 5XXX - format 
+               var summ = 0 
+               var quantity = parseFloat(currentOrder.OrderDetails[i].Qty)
+               console.log("quantity: " + quantity)
+            
+              for(let z=0;z<getSuppPriceList.length;z++){  // get price from pricelist by supplier
+                   if(getSuppPriceList[z].ProductId==prodId&&getSuppPriceList[z].SuppId==randomSupplier){
+                   summ = parseFloat(getSuppPriceList[z].SuppPrice)*quantity
+                   console.log("price : " + getSuppPriceList[i].SuppPrice)}
+               }
+               let orderDetails = {}
+               orderDetails.OrderId = id
+               orderDetails.ProductId = prodId
+               orderDetails.Qty=quantity
+               
+               var suppOrder = new supplierOrder (id,id,randomSupplier,currentDate,shipDate,paymentDate, currentOrder.CustOrderID,summ,parseInt(summ*(1.17)))
+               suppOrder.OrderDetails.push(orderDetails)
+               console.log("Create first order")
+               //console.log(suppOrder)
+               arrayOfOrders=arrayOfOrders.concat(suppOrder) // add to orders array
+              // console.log(arrayOfOrders)
+           }
+           
+            else{
+                   // seach if already we have orders to this supplier
+                   // check if exists order from this supplier 
+                   //if random supplier of next product is already exits 
+                   for(let j=0;j<arrayOfOrders.length;j++){
+                       if(arrayOfOrders[j].SupplierID == randomSupplier){
+                           var index = j 
+                           break;}
+                       else index = NaN }
+                       
+                 //  var existsObject = arrayOfOrders.find((item) => {if(item.SupplierID == randomSupplier) return item})
+                   console.log("If exists supplier with same ID :" + index)
+                   if (!isNaN(index)){ // if exists add to order 
+                         console.log("Need to add product to exist order")
+                         
+                         for(let z=0;z<getSuppPriceList.length;z++){ //get price from pricelist by supplier
+                            if(getSuppPriceList[z].ProductId==prodId && getSuppPriceList[z].SuppId==randomSupplier){
+                            summ = parseFloat(getSuppPriceList[z].SuppPrice)*parseFloat(currentOrder.OrderDetails[i].Qty)
+                            console.log("price : " + getSuppPriceList[i].SuppPrice)}
+                         } 
+                         arrayOfOrders[index].Summ+= summ
+                         arrayOfOrders[index].TotalSumm = parseInt(arrayOfOrders[index].Summ*(1.17))
+                         let orderDetails = {}
+                         orderDetails.OrderId = arrayOfOrders[index]._id
+                         orderDetails.ProductId = prodId
+                         orderDetails.Qty=parseFloat(currentOrder.OrderDetails[i].Qty)
+                         arrayOfOrders[index].OrderDetails.push(orderDetails)
+                    }
+                    else { //if not exists as 
+                            console.log("Need to create new  order")
+                         // make new order for supplier for this product  - new SuppOrderID 
 
-
+                         id = (parseInt(getSuppliersOrders.length)+5000).toString() //suppOrderID - 5XXX - format 
+                         summ = 0 
+                         quantity = parseFloat(currentOrder.OrderDetails[i].Qty)
+                         console.log("quantity: " + quantity)
+                      
+                        for(let z=0;z<getSuppPriceList.length;z++){  // get price from pricelist by supplier
+                             if(getSuppPriceList[z].ProductId==prodId&&getSuppPriceList[z].SuppId==randomSupplier){
+                             summ = parseFloat(getSuppPriceList[z].SuppPrice)*quantity
+                             console.log("price : " + getSuppPriceList[i].SuppPrice)}
+                         }
+                         let orderDetails = {}
+                         orderDetails.OrderId = id
+                         orderDetails.ProductId = prodId
+                         orderDetails.Qty=quantity
+                         
+                         suppOrder = new supplierOrder (id,id,randomSupplier,currentDate,shipDate,paymentDate, currentOrder.CustOrderID,summ,parseInt(summ*(1.17)))
+                         suppOrder.OrderDetails.push(orderDetails)
+                         console.log("Create first order")
+                         //console.log(suppOrder)
+                         arrayOfOrders=arrayOfOrders.concat(suppOrder) // add to orders array
+                        // console.log(arrayOfOrders)
+                  }
+                          
+                } 
+          
+         //  arrayOfOrdersPerSupplier.push({productId: prodId , quantity:quantity, suppId: randomSupplier }) // array with all products per supplier
+           // console.log(prodId)
        }
-    //    var customerOrder = {} // greate a new order to add to data base
-    //    let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].CustOrderID) + 1 ).toString()
-    //    customerOrder._id = id
-    //    customerOrder.CustOrderID = id
-    //    customerOrder.CustomerID = selectedCustomer.CustID // customer ID 
-    //    customerOrder.OrderIncomeDate = currentDate
-    //    customerOrder.OrderShippingDate = shipDate.getFullYear() + "-" + (shipDate.getMonth()+1) + "-" + shipDate.getDate()
-    //    customerOrder.Customer = selectedCustomer.WorkName
-    //    customerOrder.EmployeeID  = this.props.activeUser.EmployeeId // number of agent 
-    //    var orderDetailsArray = [] // greate a new order to add to data base
-    //    for(let i=0;i<submitOrderArray.length;i++){
-    //          let orderDetails={}
-    //         // let index =  getCustomersOrders[getCustomersOrders.length-1].OrderDetails.length // length of product array in last custOrder
-    //         // let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].OrderDetails[index-1].ID)+1+i).toString() //get to next ID 
-    //         // orderDetails._id = id
-    //         // orderDetails.ID = id
-    //        //  orderDetails.OrderId = customerOrder.CustOrderID
-    //          orderDetails.ProductId = submitOrderArray[i].id
-    //          orderDetails.Qty = submitOrderArray[i].quantity
-    //          orderDetails.UnitPrice = getDataProducts.find((prod) => {if(orderDetails.ProductId==prod.ProductID) return prod}).ListPrice
-    //          orderDetails.Discount = "0.00"
-    //          orderDetailsArray = orderDetailsArray.concat(orderDetails)
+       console.log(arrayOfOrders)
+      
+     //  e.target.style.visibility = 'hidden'
 
-    //    } 
-    //    customerOrder.OrderDetails = orderDetailsArray
-    //    console.log(customerOrder)
-    //    console.log(orderDetailsArray)
+   
 
-    //    fetch('/insertCustomerOrder',{ // send data to express server 
-    //             method: 'POST',
-    //             mode: 'cors',
-    //             body: JSON.stringify(customerOrder), //customerOrder
-    //             headers: {
-    //                 'Accept': 'application/json',
-    //                 'Content-Type': 'application/json'
-    //               },
-    //             })
-    //             .then((res) => {
-    //                 if (res.ok){
-    //                   return res.json();
-    //                 } else {
-    //                   throw new Error ('Something went wrong with your fetch');
-    //                 }
-    //               }).then((json) => {
-    //                 console.log(json);
-    //                 this.setState({isSuccess:true})
-    //               })
-    //     this.closeModal()  
-    //     this.setState({redirectToHome:true})    // redirect to mainwindow   
+       fetch('/insertCustomerOrder',{ // send data to express server 
+                method: 'POST',
+                mode: 'cors',
+                body: JSON.stringify(customerOrder), //customerOrder
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  },
+                })
+                .then((res) => {
+                    if (res.ok){
+                      return res.json();
+                    } else {
+                      throw new Error ('Something went wrong with your fetch');
+                    }
+                  }).then((json) => {
+                    console.log(json);
+                    this.setState({isSuccess:true})
+                  })
+        this.closeModal()  
+        this.setState({redirectToHome:true})    // redirect to mainwindow   
      }
 
 
