@@ -16,9 +16,17 @@ var insertNewCustomer = require('./routes/insertNewCustomer');
 var getSuppliersOrders = require('./routes/getSuppliersOrders');
 var getUnorderedCustOrders = require('./routes/getUnorderedCustOrders');
 var getSuppPriceList = require('./routes/getSuppPriceList');
-
+var insertSupplierOrder = require('./routes/insertSupplierOrder');
 
 var app = express();
+//----------------------------------------------
+// const mongoose = require('mongoose');
+
+// mongoose.connect('mongodb://localhost:27017/', () =>
+// console.log(' mongoose - connected to DB'));
+
+//-----------------------------------------
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,9 +40,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.use('/getdataSuppliers', getDataSuppliers);
 app.use('/getdataCustomers', getDataCustomers);
 app.use('/getdataEmployees', getDataEmployees);
-app.use('/getdataSuppliers', getDataSuppliers);
 app.use('/getdataProducts', getDataProducts);
 app.use('/getCustomersOrders', getCustomersOrders);
 app.use('/insertCustomerOrder', insertCustomerOrder);
@@ -42,7 +51,7 @@ app.use('/insertNewCustomer', insertNewCustomer);
 app.use('/getSuppliersOrders', getSuppliersOrders);
 app.use('/getUnorderedCustOrders', getUnorderedCustOrders);
 app.use('/getSuppPriceList', getSuppPriceList);
-
+app.use('/insertSupplierOrder', insertSupplierOrder);
 
 
 // catch 404 and forward to error handler

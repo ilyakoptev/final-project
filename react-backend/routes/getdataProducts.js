@@ -14,30 +14,32 @@ mongoClient.connect(function(err, client) {
     const db = client.db("PAG_Flowers");
     const collection = db.collection("Products");
 
-
     if (err) return console.log(err);
-
     collection.find().toArray(function(err, results) {
-            //  getDataFromDb(results)
-            result = results;
-            client.close();
-        })
-        // client.close();
+        //  getDataFromDb(results)
+        result = results;
+
+        router.get('/', function(req, res, next) {
+            res.json(result)
+
+        });
+        console.log(result[0]);
+        client.close();
+    })
+
+
 });
 //console.log(result);
 
 /* GET users listing. */
 
-let timer = 7000;
-setTimeout(function() { startRoute(); }, timer);
+// let timer = 7000;
+// setTimeout(function() { startRoute(); }, timer);
 
-function startRoute() {
-    router.get('/', function(req, res, next) {
-        res.json(result)
+// function startRoute() {
 
-    });
-    console.log(result[0]);
-}
+//     console.log(result[0]);
+// }
 
 
 module.exports = router;

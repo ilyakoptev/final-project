@@ -20,8 +20,9 @@ mongoClient.connect(function(err, client) {
     collection.find().toArray(function(err, results) {
         //  getDataFromDb(results)
         result = results;
+        client.close();
     })
-    client.close();
+
 });
 //console.log(result);
 

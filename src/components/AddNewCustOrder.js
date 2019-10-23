@@ -209,11 +209,6 @@ export default class AddNewCustOrder extends React.Component {
        var orderDetailsArray = [] // greate a new order to add to data base
        for(let i=0;i<submitOrderArray.length;i++){
              let orderDetails={}
-            // let index =  getCustomersOrders[getCustomersOrders.length-1].OrderDetails.length // length of product array in last custOrder
-            // let id = (parseInt(getCustomersOrders[getCustomersOrders.length-1].OrderDetails[index-1].ID)+1+i).toString() //get to next ID 
-            // orderDetails._id = id
-            // orderDetails.ID = id
-           //  orderDetails.OrderId = customerOrder.CustOrderID
              orderDetails.ProductId = submitOrderArray[i].id
              orderDetails.Qty = submitOrderArray[i].quantity
              orderDetails.UnitPrice = getDataProducts.find((prod) => {if(orderDetails.ProductId==prod.ProductID) return prod}).ListPrice

@@ -14,21 +14,19 @@ mongoClient.connect(function(err, client) {
     const db = client.db("PAG_Flowers");
     const collection = db.collection("Suppliers");
 
-
     if (err) return console.log(err);
-
     collection.find().toArray(function(err, results) {
         //  getDataFromDb(results)
         result = results;
         client.close();
-    })
-
+    });
 });
 //console.log(result);
 
 /* GET users listing. */
 
-let timer = 7000;
+
+let timer = 3000;
 setTimeout(function() { startRoute(); }, timer);
 
 function startRoute() {

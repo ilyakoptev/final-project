@@ -13,10 +13,10 @@ var resultProducts = [];
 var resultSuppliersOrders = [];
 var result = [] //array of all tables
 var resArr = []
-console.log("create variables");
+    //console.log("create variables");
 
 mongoClient.connect(function(err, client) {
-    console.log("Mongo Client Connect")
+    // console.log("Mongo Client Connect")
 
     const db = client.db("PAG_Flowers");
     const collectionSuppliersOrders = db.collection("Supporders");

@@ -238,7 +238,7 @@ export default class AddNewSuppOrder extends React.Component {
                             console.log("Need to create new  order")
                          // make new order for supplier for this product  - new SuppOrderID 
 
-                         id = (parseInt(getSuppliersOrders.length)+5000).toString() //suppOrderID - 5XXX - format 
+                         id = (parseInt(getSuppliersOrders.length)+5000+arrayOfOrders.length).toString() //suppOrderID - 5XXX - format 
                          summ = 0 
                          quantity = parseFloat(currentOrder.OrderDetails[i].Qty)
                          console.log("quantity: " + quantity)
@@ -268,14 +268,10 @@ export default class AddNewSuppOrder extends React.Component {
        }
        console.log(arrayOfOrders)
       
-     //  e.target.style.visibility = 'hidden'
-
-   
-
-       fetch('/insertCustomerOrder',{ // send data to express server 
+       fetch('/insertSupplierOrder',{ // send data to express server 
                 method: 'POST',
                 mode: 'cors',
-                body: JSON.stringify(customerOrder), //customerOrder
+                body: JSON.stringify(arrayOfOrders), //customerOrder
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -291,9 +287,10 @@ export default class AddNewSuppOrder extends React.Component {
                     console.log(json);
                     this.setState({isSuccess:true})
                   })
-        this.closeModal()  
+      
         this.setState({redirectToHome:true})    // redirect to mainwindow   
-     }
+        e.target.style.visibility = 'hidden'
+    }
 
 
      handleSubmit(event) {

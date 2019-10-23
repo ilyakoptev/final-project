@@ -15,7 +15,7 @@ var result = [] //array of all tables
 console.log("create variables");
 
 
-router.get('/', async function(req, res, next) {
+router.get('/', function(req, res, next) {
 
 
     mongoClient.connect(function(err, client) {
