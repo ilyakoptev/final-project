@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Table, Modal} from 'react-bootstrap';
+import { Container, Button , Table, Modal, Row, Col, InputGroup, Form, FormControl} from 'react-bootstrap';
 import customerorders from '../data/customerorders';
 
 export default class ShowCustomers extends React.Component {
@@ -15,12 +15,16 @@ export default class ShowCustomers extends React.Component {
             customerorders: customerorders,
             showModal: false,
             customerRowNum: null, 
+            filterCustomers: "",
         }
 
         //this.openCustomerDetails = this.openCustomerDetails.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.detailsModalWindow = this.detailsModalWindow.bind(this);
+        this.getFilterText = this.getFilterText.bind(this);
+        this.sortBy = this.sortBy.bind(this);
+        
         
     }
     componentDidMount(){
@@ -32,7 +36,15 @@ export default class ShowCustomers extends React.Component {
         .then(getDataEmployees => this.setState({getDataEmployees}));
         //console.log(this.state.getData)
       }
-         
+    
+    getFilterText(e){
+       this.setState({filterCustomers:e.target.value})
+      }
+
+    sortBy(e){
+
+      }
+
     openModal(e) {
         const index = e.target.getAttribute('data-key')
         this.setState({ showModal: true })
@@ -43,12 +55,12 @@ export default class ShowCustomers extends React.Component {
         const res = this.state.getDataEmployees.find( (item) => {if (item.EmployeeId == this.state.getData[index-1].EmployeeID) return item} ) //get all data of Employee that work with current customer
        //console.log( res.Name )
        this.setState({ getEmployee: res })
-      
-    }
+     }
     
     closeModal() {
         this.setState({ showModal: false })
     }
+
     detailsModalWindow() {
         const {selectedCustomer,getEmployee } = this.state;
         selectedCustomer.Agent = getEmployee.Name // add property employee name to customer modal 
@@ -67,14 +79,19 @@ export default class ShowCustomers extends React.Component {
         // console.log(this.state.selectedCustomer)
        return result
      }
-      render() {
-        const { redirectToHome, getData , showModal, selectedCustomer} = this.state;
-       
-        if (redirectToHome) {
-            return <Redirect to="/"/>
-        }
+
+      customerTable(filter){
+        const { getData,filterCustomers } = this.state;
         let count = 0 // row number in the table
-        let customerRows = getData.map(cust =>   // generate table with customers
+       
+        let filteredData =[]
+        for (let i=0;i<getData.length;i++) {
+           let fullName = getData[i].WorkName + getData[i].Company // get full name in one string
+           if (fullName.toLowerCase().includes(filter.toLowerCase()) ){ // fullname and filter to lowCase to find all names 
+               filteredData = filteredData.concat(getData[i])
+                }        
+        }
+        let customerRows = filteredData.map(cust =>   // generate table with customers
             <tr data-key={++count} onClick={this.openModal}> 
                  <td data-key={count}>{count}</td>
                                 <td data-key={count}>{cust.CustID}</td>
@@ -85,13 +102,44 @@ export default class ShowCustomers extends React.Component {
                                 <td data-key={count}>{cust.City}</td> 
                                 
              </tr>)
+        console.log("filterCustomers: " + filterCustomers)
+        return  customerRows  
+      }
+    
+      render() {
+        const { redirectToHome, getData , showModal, selectedCustomer} = this.state;
+       
+        if (redirectToHome) {
+            return <Redirect to="/"/>
+        }
+       
       // console.log( this.state.getData[0].City )
       // console.log(selectedCustomer.City ) 
       //  console.log( Object.keys(selectedCustomer) ) 
         return(
-              <Container> <h2> All Customers List</h2>
-                        
-                        <Table responsive="lg">
+              <Container> 
+                    <Row className="justify-content-md-center">
+                    <h2> Customers </h2>
+                        <Col lg={12} xl={10}>
+                         <InputGroup size="sm" className="mb-3">
+                            <InputGroup.Prepend>
+                                   <InputGroup.Text id="inputGroup-sizing-sm">Filter by:</InputGroup.Text>
+                           </InputGroup.Prepend>
+                           <FormControl onChange={this.getFilterText} aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="WorkName or Company"/>
+                           <InputGroup.Prepend>
+                                   <InputGroup.Text id="inputGroup-sizing-sm">Sort By:</InputGroup.Text>
+                           </InputGroup.Prepend>
+                           <Form.Control as="select" onChange={this.sortBy}>
+                                    <option value="">Choose...</option>
+                                    <option value="WorkName">WorkName</option>
+                                    <option value="Company">Company</option>
+                                    <option value="City">City</option>
+                                    </Form.Control>
+                         </InputGroup>
+                        </Col>
+                    </Row>   
+                    <Row className="justify-content-md-center"> 
+                        <Table responsive="lg" >
                             <thead>
                             <tr>
                                 <th>#</th>
@@ -104,10 +152,10 @@ export default class ShowCustomers extends React.Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {customerRows}
+                            {this.customerTable(this.state.filterCustomers)}
                             </tbody>
                         </Table>
-
+                      </Row>   
                         <Modal show={showModal} onHide={this.closeModal} size="">  
                             <Modal.Header closeButton>
                                 <Modal.Title>Customer Details - {selectedCustomer.WorkName}</Modal.Title>

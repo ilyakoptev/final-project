@@ -31,6 +31,8 @@ router.get('/', function(req, res, next) {
 
         collectionSuppliersOrders.find().toArray(function(err, results) { // get customer orders table 
             result = results;
+
+
             client.close();
         })
 

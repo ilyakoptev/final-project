@@ -69,5 +69,24 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+///*************************************************** */
+// const MongoClient = require("mongodb").MongoClient;
+
+// const url = "mongodb://localhost:27017/";
+// //const url = "mongodb+srv://admin:admin@koptevilya-wdc68.mongodb.net/admin?retryWrites=true&w=majority";
+// const mongoClient = new MongoClient(url, { useUnifiedTopology: true }); //{ useNewUrlParser: true }
+
+
+// /* GET users listing. */
+
+// var db
+// mongoClient.connect(function(err, client) {
+
+//     const dbc = client.db("PAG_Flowers");
+//     db = dbc
+//     if (err) return console.log(err);
+// });
+
+// //module.exports = bdConnect;
 
 module.exports = app;

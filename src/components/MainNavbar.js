@@ -230,7 +230,7 @@ class MainNavbar extends React.Component {
                        {navAccounts}
                        {navEmployees}
                        <Nav className="ml-auto">
-                          <Nav.Link onClick={this.logout} ><span class="text-danger">   Logout {this.state.currectUserName} </span></Nav.Link>
+                          <Nav.Link onClick={this.logout} ><span className="text-danger">   Logout {this.state.currectUserName} </span></Nav.Link>
                        </Nav>
             {/* <Form inline>
                 <FormControl type="text" placeholder="Search" className="mr-sm-2" />
