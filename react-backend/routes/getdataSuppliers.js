@@ -19,10 +19,12 @@ router.get('/', function(req, res, next) {
             result = results;
             res.json(result)
             client.close();
+            if (result.length > 0)
+            //  console.log(result[0]);
+                console.log("GetDataSuppliers loaded successfully");
         });
-        // console.log(result[0]);
+
     });
-    //console.log(result);
 
 });
 

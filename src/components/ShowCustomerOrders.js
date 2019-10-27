@@ -7,7 +7,6 @@ export default class ShowCustomerOrders extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            getDataCustomers: [],
             getCustomersOrders:[],
             selectedOrder: {},
             selectedOrderDetails:[],

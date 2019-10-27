@@ -9,9 +9,6 @@ router.get('/', function(req, res, next) {
 
     var result;
 
-    /* GET users listing. */
-
-
     mongoClient.connect(function(err, client) {
         const db = client.db("PAG_Flowers");
         const collection = db.collection("Customers");
@@ -21,14 +18,11 @@ router.get('/', function(req, res, next) {
         collection.find().toArray(function(err, results) {
             result = results;
             res.send(JSON.stringify(result))
+            if (result.length > 0)
+            //  console.log(result[0]);
+                console.log("getdataCustomers loaded successfull");
         });
-        console.log("--------getdataCustomers---------");
-        // console.log(result[0]);
-        console.log("--------------------");
-        //// client.close();
     })
-
 });
-
 
 module.exports = router;

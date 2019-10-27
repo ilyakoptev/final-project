@@ -47,7 +47,7 @@ class HomePage extends React.Component {
     }
 
     login() {
-       const { employees } = this.props;
+      
         const { inputName, inputPassword, getDataEmployees } = this.state;
         // console.log(inputName,inputPassword);
          console.log(inputName, inputPassword); //[0] - kind of data base struction - all data in [0] item
@@ -70,8 +70,6 @@ class HomePage extends React.Component {
             return <Redirect to = "/dashboard"/>
         }
 
-
-        const { activeUser, customers } = this.props;
         const { showModal } = this.state;
 
         return ( <div>

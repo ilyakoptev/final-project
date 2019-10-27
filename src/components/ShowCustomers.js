@@ -113,9 +113,7 @@ export default class ShowCustomers extends React.Component {
                                 
              </tr>)
            
-        console.log("filter: " + filter)
-        console.log("sort: " + sort)
-        return  customerRows  
+         return  customerRows  
       }
     
       render() {

@@ -171,15 +171,13 @@ class MainNavbar extends React.Component {
          if (!productsEdit&&!productsRead)  
              navProducts = ""
          else {
-             let addProduct = productsEdit ?  <NavDropdown.Item id ="addNewProduct" onClick={this.getMenuItem}>Add New Product</NavDropdown.Item> : "" 
-             let editProduct = productsEdit ?   <NavDropdown.Item id ="editProduct" onClick={this.getMenuItem}>Edit Exist Product</NavDropdown.Item> : ""
-             let deleteProduct = productsEdit ?  <NavDropdown.Item id ="deleteProduct" onClick={this.getMenuItem}>Delete Product</NavDropdown.Item> : ""
-             let showProducts = productsRead ?   <NavDropdown.Item id ="showProducts" onClick={this.getMenuItem}>Show Products</NavDropdown.Item> : ""
+             let addProduct = productsEdit ?  <NavDropdown.Item id ="addNewProduct" className="text-success" onClick={this.getMenuItem}>Add New Product</NavDropdown.Item> : "" 
+             let editProduct = productsEdit ?   <NavDropdown.Item id ="editProduct" className="text-warning" onClick={this.getMenuItem}>Edit Exist Product</NavDropdown.Item> : ""
+             let showProducts = productsRead ?   <NavDropdown.Item id ="showProducts" className="text-info" onClick={this.getMenuItem}>Show Products</NavDropdown.Item> : ""
              navProducts = <Nav className="mr-auto">
                              <NavDropdown title="Products" id="basic-nav-dropdown">
                                   {addProduct}
                                   {editProduct}
-                                  {deleteProduct}
                                   <NavDropdown.Divider />
                                   {showProducts}
                              </NavDropdown>
