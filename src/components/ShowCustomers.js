@@ -16,6 +16,7 @@ export default class ShowCustomers extends React.Component {
             showModal: false,
             customerRowNum: null, 
             filterCustomers: "",
+            sortCustomers: "",
         }
 
         //this.openCustomerDetails = this.openCustomerDetails.bind(this);
@@ -40,11 +41,10 @@ export default class ShowCustomers extends React.Component {
     getFilterText(e){
        this.setState({filterCustomers:e.target.value})
       }
-
-    sortBy(e){
-
-      }
-
+     sortBy(e){
+       this.setState({sortCustomers:e.target.value})
+     }
+      
     openModal(e) {
         const index = e.target.getAttribute('data-key')
         this.setState({ showModal: true })
@@ -80,10 +80,11 @@ export default class ShowCustomers extends React.Component {
        return result
      }
 
-      customerTable(filter){
-        const { getData,filterCustomers } = this.state;
+      customerTable(){
+        const { getData,filterCustomers, sortCustomers} = this.state;
         let count = 0 // row number in the table
-       
+        let filter = filterCustomers
+        let sort = sortCustomers
         let filteredData =[]
         for (let i=0;i<getData.length;i++) {
            let fullName = getData[i].WorkName + getData[i].Company // get full name in one string
@@ -91,9 +92,18 @@ export default class ShowCustomers extends React.Component {
                filteredData = filteredData.concat(getData[i])
                 }        
         }
+        if(sort==="WorkName"){
+            filteredData.sort((a, b) => (a.WorkName > b.WorkName) ? 1 : -1)
+         }
+         if(sort==="Company"){
+            filteredData.sort((a, b) => (a.Company > b.Company) ? 1 : -1)
+         }
+         if(sort==="City"){
+            filteredData.sort((a, b) => (a.City > b.City) ? 1 : -1)
+         } 
         let customerRows = filteredData.map(cust =>   // generate table with customers
             <tr data-key={++count} onClick={this.openModal}> 
-                 <td data-key={count}>{count}</td>
+                                <td data-key={count}>{count}</td>
                                 <td data-key={count}>{cust.CustID}</td>
                                 <td data-key={count}>{cust.WorkName}</td>
                                 <td data-key={count}>{cust.Company}</td>
@@ -102,7 +112,9 @@ export default class ShowCustomers extends React.Component {
                                 <td data-key={count}>{cust.City}</td> 
                                 
              </tr>)
-        console.log("filterCustomers: " + filterCustomers)
+           
+        console.log("filter: " + filter)
+        console.log("sort: " + sort)
         return  customerRows  
       }
     
@@ -152,7 +164,7 @@ export default class ShowCustomers extends React.Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {this.customerTable(this.state.filterCustomers)}
+                            {this.customerTable()}
                             </tbody>
                         </Table>
                       </Row>   
