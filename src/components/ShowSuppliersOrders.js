@@ -38,10 +38,12 @@ export default class ShowSuppliersOrders extends React.Component {
     }
           
     openModal(e) {
-        const index = e.target.getAttribute('data-key')
+        const{getSuppliersOrders}=this.state
+        const dataKey = e.target.getAttribute('data-key')
         this.setState({ showModal: true })
-        this.setState({ selectedOrder: this.state.getSuppliersOrders[index-1] })
-        this.setState({ selectedOrderDetails: this.state.getSuppliersOrders[index-1].OrderDetails })
+        let order = getSuppliersOrders.find((order)=>{ if(order.SuppOrderID===dataKey) return order })
+        this.setState({ selectedOrder: order })
+        this.setState({ selectedOrderDetails: order.OrderDetails })
         
     }
     
@@ -74,11 +76,9 @@ export default class ShowSuppliersOrders extends React.Component {
                 header =  detailsKeys.map((key, index) => {
                     return <th key={index}>{key.toUpperCase()}</th>
             })}
-            
-            rowdata =  detailsValues.map((key, index) => {  // insert rows with data to table in modal 
+             rowdata =  detailsValues.map((key, index) => {  // insert rows with data to table in modal 
                     return <td key={index}>{key}</td>
-                
-                })
+                    })
             result[z]= <tr>{rowdata}</tr>
             
           // resultArr.push(result)
@@ -90,7 +90,8 @@ export default class ShowSuppliersOrders extends React.Component {
       resultArr = <tbody><tr>{header}</tr> {result} </tbody>  // build table for modal window 
       return resultArr
      }
-      render() {
+    
+     render() {
         const { redirectToHome, getSuppliersOrders , showModal, selectedOrder} = this.state;
         const {activeUser} = this.props;
         
@@ -112,12 +113,12 @@ export default class ShowSuppliersOrders extends React.Component {
         let count = 0 // row number in the table
         let Rows = sortedArray.map(order =>   // generate table with customers
             <tr data-key={++count} onClick={this.openModal}> 
-                                 <td data-key={count}>{count}</td>
-                                <td data-key={count}>{order.SuppOrderID}</td>
-                                <td data-key={count}>{order.SuppName}</td>
-                                <td data-key={count}>{order.CustomerOrderID}</td>
-                                <td data-key={count}>{order.OrderDate}</td>
-                                <td data-key={count}>{order.ShippingDate}</td>
+                                <td data-key={order.SuppOrderID}>{count}</td>
+                                <td data-key={order.SuppOrderID}>{order.SuppOrderID}</td>
+                                <td data-key={order.SuppOrderID}>{order.SuppName}</td>
+                                <td data-key={order.SuppOrderID}>{order.CustomerOrderID}</td>
+                                <td data-key={order.SuppOrderID}>{order.OrderDate}</td>
+                                <td data-key={order.SuppOrderID}>{order.ShippingDate}</td>
                                 
                                
                                 

@@ -11,6 +11,7 @@ import AddNewCustomer from './AddNewCustomer';
 import ShowSuppliersOrders from './ShowSuppliersOrders';
 import AddNewSuppOrder from './AddNewSuppOrder';
 import EditCustomer from './EditCustomer';
+import AddNewSupplier from './AddNewSupplier';
 
 
 class MainWindow extends React.Component {
@@ -65,6 +66,8 @@ class MainWindow extends React.Component {
                 return(                       <AddNewSuppOrder activeUser={activeUser}/>                         )  
         case "showAllSuppOrders": 
                 return(                       <ShowSuppliersOrders activeUser={activeUser}/>                         ) 
+        case "addNewSupplier": 
+                return(                       <AddNewSupplier activeUser={activeUser}/>                         ) 
         case "editSupplier": 
                  return(                            <div>editSupplier</div>                       )  
         case "showSuppliers": 

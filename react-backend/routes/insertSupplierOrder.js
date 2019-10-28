@@ -39,11 +39,4 @@ router.post('/', async(req, res) => {
 });
 
 
-// let timer = 7000;
-// setTimeout(function() { startInsert(); }, timer); // staat function with delay to await for getting all data 
-
-// function startInsert() {
-
-// }
-
 module.exports = router;

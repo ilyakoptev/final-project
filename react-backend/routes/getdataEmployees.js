@@ -9,7 +9,6 @@ router.get('/', function(req, res, next) {
     const mongoClient = new MongoClient(url, { useUnifiedTopology: true }); //{ useNewUrlParser: true }
     var result; //array of all tables
 
-
     mongoClient.connect(function(err, client) {
         const db = client.db("PAG_Flowers");
         const collection = db.collection("Employees");
@@ -18,8 +17,10 @@ router.get('/', function(req, res, next) {
 
         collection.find().toArray(function(err, results) {
                 result = results;
-                res.json(result)
-                client.close();
+                res.send(JSON.stringify(result))
+                if (result.length > 0)
+                //  console.log(result[0]);
+                    console.log("getdataCustomers loaded successfull");
             })
             //console.log(result[0]);
     });

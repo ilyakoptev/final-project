@@ -34,23 +34,10 @@ router.post('/', async(req, res) => {
             db.close();
         });
         //******************************* */
-        // insert all customers order to data base in new format 
-        // dbo.collection("Customerordersinsert").insertMany(dataFromClient, function(err, res) {
-        //     if (err) throw err;
-        //     console.log("Success inserting new customer order to DB");
-        //     db.close();
-        // });
 
     });
     res.json({ greeting: "callback from insert New Order" }); //this is sent back to the browser and i can access it
 });
 
-
-// let timer = 7000;
-// setTimeout(function() { startInsert(); }, timer); // staat function with delay to await for getting all data 
-
-// function startInsert() {
-
-// }
 
 module.exports = router;
