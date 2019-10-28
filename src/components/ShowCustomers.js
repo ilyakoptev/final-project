@@ -96,6 +96,7 @@ export default class ShowCustomers extends React.Component {
 
       customerTable(){
         const { getData,filterCustomers, sortCustomers} = this.state;
+        const {activeUser} = this.props;
         let count = 0 // row number in the table
         let filter = filterCustomers
         let sort = sortCustomers
@@ -115,7 +116,14 @@ export default class ShowCustomers extends React.Component {
          if(sort==="City"){
             filteredData.sort((a, b) => (a.City > b.City) ? 1 : -1)
          } 
-        let customerRows = filteredData.map(cust =>   // generate table with customers
+        
+        
+         if (activeUser.Position == 2 || activeUser.Position == 4){   // if user sales manager or driver as can see only his orders
+            filteredData = filteredData.filter(x => x.EmployeeID.includes(activeUser.EmployeeId));
+                } //else  sortedArray = getSuppliersOrders
+     
+       
+         let customerRows = filteredData.map(cust =>   // generate table with customers
             <tr data-key={++count} id={cust.CustID} onClick={this.openModal}> 
                                 <td data-key={cust.CustID}>{count}</td>
                                 <td data-key={cust.CustID}>{cust.CustID}</td>

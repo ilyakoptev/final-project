@@ -87,19 +87,16 @@ export default class ShowCustomerOrders extends React.Component {
         
         
         console.log(getCustomersOrders.EmployeeID, activeUser.EmployeeId) 
-        var sortedArray = getCustomersOrders
-        console.log(getCustomersOrders)
-        console.log(activeUser.Position)
-        if (activeUser.Position == 2 && activeUser.Position == 4){   // if user sales manager or driver as can see only his orders
+        var sortedArray = getCustomersOrders.slice();
+       
+        if (activeUser.Position == 2 || activeUser.Position == 4){   // if user sales manager or driver as can see only his orders
              sortedArray = getCustomersOrders.filter(x => x.EmployeeID.includes(activeUser.EmployeeId));
-            console.log("this.props.activeUser.ImployeeId" + activeUser.EmployeeId)
-            console.log(sortedArray)
-       } //else  sortedArray = getCustomersOrders
+            } //else  sortedArray = getCustomersOrders
     
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
-
+        sortedArray.reverse()
         let count = 0 // row number in the table
         let Rows = sortedArray.map(order =>   // generate table with customers
             <tr data-key={++count} onClick={this.openModal}> 

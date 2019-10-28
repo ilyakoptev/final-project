@@ -92,24 +92,16 @@ export default class ShowSuppliersOrders extends React.Component {
      }
     
      render() {
+       
         const { redirectToHome, getSuppliersOrders , showModal, selectedOrder} = this.state;
-        const {activeUser} = this.props;
         
-        
-        console.log(getSuppliersOrders.EmployeeID, activeUser.EmployeeId) 
-        var sortedArray = getSuppliersOrders
-        console.log(getSuppliersOrders)
-        console.log(activeUser.Position)
-        if (activeUser.Position == 2 && activeUser.Position == 4){   // if user sales manager or driver as can see only his orders
-             sortedArray = getSuppliersOrders.filter(x => x.EmployeeID.includes(activeUser.EmployeeId));
-            console.log("this.props.activeUser.ImployeeId" + activeUser.EmployeeId)
-            console.log(sortedArray)
-       } //else  sortedArray = getSuppliersOrders
-    
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
-
+        
+        let sortedArray = getSuppliersOrders.slice();
+       
+        sortedArray.reverse()
         let count = 0 // row number in the table
         let Rows = sortedArray.map(order =>   // generate table with customers
             <tr data-key={++count} onClick={this.openModal}> 

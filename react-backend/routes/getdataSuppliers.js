@@ -18,7 +18,6 @@ router.get('/', function(req, res, next) {
         collection.find().toArray(function(err, results) {
             result = results;
             res.json(result)
-            client.close();
             if (result.length > 0)
             //  console.log(result[0]);
                 console.log("GetDataSuppliers loaded successfully");
