@@ -12,9 +12,8 @@ export default class ShowCustomers extends React.Component {
             selectedCustomer: {},
             getEmployee: {},
             redirectToHome: false,
-            customerorders: customerorders,
             showModal: false,
-            customerRowNum: null, 
+            filteredData:[],
             filterCustomers: "",
             sortCustomers: "",
         }
@@ -46,13 +45,15 @@ export default class ShowCustomers extends React.Component {
      }
       
     openModal(e) {
-        const index = e.target.getAttribute('data-key')
+       const{getData,getDataEmployees,} = this.state
+       // const index = e.target.getAttribute('id')
         this.setState({ showModal: true })
-        this.setState({ customerRowNum:index })
-      //  console.log( e.target.getAttribute('data-key'))
-        console.log( this.state.getData[index-1].WorkName )
-        this.setState({ selectedCustomer: this.state.getData[index-1] })
-        const res = this.state.getDataEmployees.find( (item) => {if (item.EmployeeId == this.state.getData[index-1].EmployeeID) return item} ) //get all data of Employee that work with current customer
+        //console.log( e.target)
+        //console.log( getData[index-1].WorkName )
+        const cust = getData.find((cust)=>{if(cust.CustID == e.target.getAttribute('data-key')) return cust})
+        console.log( cust )
+        this.setState({ selectedCustomer: cust })
+        const res = getDataEmployees.find( (item) => {if (item.EmployeeId == cust.EmployeeID) return item} ) //get all data of Employee that work with current customer
        //console.log( res.Name )
        this.setState({ getEmployee: res })
      }
@@ -61,6 +62,13 @@ export default class ShowCustomers extends React.Component {
         this.setState({ showModal: false })
     }
 
+    detailsModalHeader(){
+      const {selectedCustomer} = this.state;
+      let header = <Modal.Header closeButton>
+      <Modal.Title>Customer Details - {selectedCustomer.WorkName}</Modal.Title>
+      </Modal.Header>
+      return   header
+    }
     detailsModalWindow() {
         const {selectedCustomer,getEmployee } = this.state;
         selectedCustomer.Agent = getEmployee.Name // add property employee name to customer modal 
@@ -74,10 +82,16 @@ export default class ShowCustomers extends React.Component {
                             <td>{detailsValues[i]}</td>
                         </tr>
        }
-       
+       let modalBody = <Modal.Body >
+                              <Table responsive="sm" size="sm">
+                                <tbody>
+                                {result}
+                                </tbody>
+                              </Table> 
+                            </Modal.Body>
       // console.log( result)
         // console.log(this.state.selectedCustomer)
-       return result
+       return  modalBody
      }
 
       customerTable(){
@@ -102,17 +116,17 @@ export default class ShowCustomers extends React.Component {
             filteredData.sort((a, b) => (a.City > b.City) ? 1 : -1)
          } 
         let customerRows = filteredData.map(cust =>   // generate table with customers
-            <tr data-key={++count} onClick={this.openModal}> 
-                                <td data-key={count}>{count}</td>
-                                <td data-key={count}>{cust.CustID}</td>
-                                <td data-key={count}>{cust.WorkName}</td>
-                                <td data-key={count}>{cust.Company}</td>
-                                <td data-key={count}>{cust.ContactName}</td>
-                                <td data-key={count}>{cust.Email}</td>
-                                <td data-key={count}>{cust.City}</td> 
+            <tr data-key={++count} id={cust.CustID} onClick={this.openModal}> 
+                                <td data-key={cust.CustID}>{count}</td>
+                                <td data-key={cust.CustID}>{cust.CustID}</td>
+                                <td data-key={cust.CustID}>{cust.WorkName}</td>
+                                <td data-key={cust.CustID}>{cust.Company}</td>
+                                <td data-key={cust.CustID}>{cust.ContactName}</td>
+                                <td data-key={cust.CustID}>{cust.Email}</td>
+                                <td data-key={cust.CustID}>{cust.City}</td> 
                                 
              </tr>)
-           
+         //this.setState({filteredData:filteredData}) 
          return  customerRows  
       }
     
@@ -130,7 +144,9 @@ export default class ShowCustomers extends React.Component {
               <Container> 
                     <Row className="justify-content-md-center">
                     <h2> Customers </h2>
-                        <Col lg={12} xl={10}>
+                    </Row>
+                    <Row>
+                        <Col lg={12}>
                          <InputGroup size="sm" className="mb-3">
                             <InputGroup.Prepend>
                                    <InputGroup.Text id="inputGroup-sizing-sm">Filter by:</InputGroup.Text>
@@ -167,20 +183,10 @@ export default class ShowCustomers extends React.Component {
                         </Table>
                       </Row>   
                         <Modal show={showModal} onHide={this.closeModal} size="">  
-                            <Modal.Header closeButton>
-                                <Modal.Title>Customer Details - {selectedCustomer.WorkName}</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                            <Table responsive="sm" size="sm">
-                                   <tbody>
-                                   {this.detailsModalWindow()}
-                                   </tbody>
-                               </Table> 
-                            </Modal.Body>
-                
+                               {this.detailsModalHeader()}
+                               {this.detailsModalWindow()}
                         <Modal.Footer>
-                          
-                         <Button variant="danger" onClick={this.closeModal}>
+                           <Button variant="danger" onClick={this.closeModal}>
                             Close
                          </Button>
                         </Modal.Footer>   

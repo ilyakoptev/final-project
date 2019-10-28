@@ -10,10 +10,8 @@ import AddNewCustOrder from './AddNewCustOrder';
 import AddNewCustomer from './AddNewCustomer';
 import ShowSuppliersOrders from './ShowSuppliersOrders';
 import AddNewSuppOrder from './AddNewSuppOrder';
+import EditCustomer from './EditCustomer';
 
-
-
-import customerorders from '../data/customerorders';
 
 class MainWindow extends React.Component {
     constructor(props) {
@@ -21,7 +19,7 @@ class MainWindow extends React.Component {
         this.state = {
             getData: [],
             redirectToHome: false,
-            customerorders: customerorders,
+           
         }
 
         //this.logout = this.logout.bind(this);
@@ -60,7 +58,7 @@ class MainWindow extends React.Component {
         case "addNewCustomer": 
               return(                        <AddNewCustomer activeUser={activeUser}/>                                 )  
         case "editCustomer": 
-              return(                            <div>editCustomer</div>                       )  
+              return(                            <EditCustomer activeUser={activeUser}/>                           )  
         case "showCustomers": 
               return(                         <ShowCustomers activeUser={activeUser}/>                        )  
         case "createNewSuppOrder": 

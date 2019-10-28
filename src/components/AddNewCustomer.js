@@ -46,7 +46,7 @@ export default class AddNewCustomer extends React.Component {
         //console.log(this.state.getData)
       }
    changeStatus(key,status){
-    const { getDataCustomers, isDisabled , fieldValidation, newCustomer} = this.state;
+    const { isDisabled , fieldValidation} = this.state;
         switch (key){
             case "workName":
                       this.setState(prevState => {
@@ -163,6 +163,13 @@ export default class AddNewCustomer extends React.Component {
            case "workName" :  
                         if(insertData.length<3||insertData.length>5 || !isNaN(insertData)){  // length between 2-5
                            this.changeStatus(e.target.id,false)
+
+                            // // copy object
+                            // let fieldValidation = Object.assign({}, this.state.fieldValidation);
+                            // fieldValidation[e.target.id] = false;
+                            // this.setState({fieldValidation});
+
+
                            break;}
                        
                         if(insertData.length<4 && insertData.includes("-",2) ){  // if length > 4 so format must be X-XXX
@@ -361,6 +368,7 @@ export default class AddNewCustomer extends React.Component {
         let customer  = newCustomer
         let id = (parseInt(getDataCustomers[getDataCustomers.length-1].CustID) + 1 ).toString()
         let employeeId = this.props.activeUser.EmployeeId
+        customer._id = id
         customer.CustID = id
         customer.EmployeeID = employeeId
         customer.PtmDelay = "30" // const be default 
@@ -388,7 +396,7 @@ export default class AddNewCustomer extends React.Component {
                 this.setState({isSuccess:true})
 
               })
-      this.setState({redirectToHome:true})    // redirect to mainwindow          
+       this.setState({redirectToHome:true})    // redirect to mainwindow          
      }
 
 

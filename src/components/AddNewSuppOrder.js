@@ -332,7 +332,7 @@ export default class AddNewSuppOrder extends React.Component {
                </tr>)
                 
         return(
-              <Container> <h3 class="text-center"> List of unprocessed orders:</h3>
+              <Container> <h3 className="text-center"> List of unprocessed orders:</h3>
                      
                      <Table responsive="lg">
                             <thead>

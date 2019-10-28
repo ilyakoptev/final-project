@@ -268,13 +268,11 @@ export default class AddNewCustOrder extends React.Component {
             return <Redirect to="/dashboard"/>
         }
 
-
-
         let count = 0 // row number in the table
         let Rows = getDataProducts.map(prod =>   // generate table with customers
            
             <tr data-key={++count} > 
-                             <td data-key={count}>{count}</td>
+                                <td data-key={count}>{count}</td>
                                 <td data-key={count}>{prod.ProductID}</td>
                                 <td data-key={count}>{prod.ProductName}</td>
                                 <td data-key={count}>{prod.Description}</td>
@@ -289,14 +287,12 @@ export default class AddNewCustOrder extends React.Component {
                                 {/* <span>{submitOrderArray.find((item) => {if(item.id===prod.ProductID) return item.quantity})}</span> */}
                                  </td>
                                  <td><Button size="sm" data-key={prod.ProductID} onClick={this.addProduct}>Add to Order</Button> </td>
-                         
-              </tr>)
+                    </tr>)
              
         count = 0 // row number in the table
         let customerRows = getDataCustomers.map(cust =>   // generate list with customers
-            
-                 <option value={cust.CustID}>{++count} - {cust.WorkName} , {cust.Company} , {cust.Email} </option>
-            )
+                          <option value={cust.CustID}>{++count} - {cust.WorkName} , {cust.Company} , {cust.Email} </option>
+                          )
         return(
               <Container> <h3 class="text-center"> Add New Customer Order:</h3>
                      <Form onSubmit={this.handleSubmit}>

@@ -3,36 +3,39 @@ import { Redirect } from 'react-router-dom'
 import { Container, Button , Row, Col, Form, InputGroup} from 'react-bootstrap';
 
 
-export default class AddNewCustomer extends React.Component {
+export default class EditCustomer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             getDataCustomers: [],
             getDataEmployees:[],
             newCustomer: {},
+            selectedCustomer: {}, // selected customer to change details 
             getEmployee: {},
             redirectToHome: false,
-            isDisabled: true,  // button Submit order status 
             customerRowNum: null, 
             validated: false,
             isSuccess: false,
+            showForm: "d-none",
+            isDisabled: false,  // button Submit order status 
             fieldValidation:{ // insert all values as false for hiding submit button 
-                workName:false,
-                crn: false,
-                company:false,
-                name1: false,
-                telephone1: false,
+                workName:true,
+                crn: true,
+                company:true,
+                name1: true,
+                telephone1: true,
                 name2: true,
                 telephone2: true,
-                email: false,
-                city: false,
-                country: false
+                email: true,
+                city: true,
+                country: true
             }
         }
 
         this.validateFields = this.validateFields.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.reset = this.reset.bind(this);
+        this.setCustomer = this.setCustomer.bind(this)
        // this.detailsModalWindow = this.detailsModalWindow.bind(this);
         
     }
@@ -45,8 +48,17 @@ export default class AddNewCustomer extends React.Component {
         // .then(getDataEmployees => this.setState({getDataEmployees}));
         //console.log(this.state.getData)
       }
+   
+    setCustomer(e){   // set state for customer for new order 
+        const {getDataCustomers} = this.state
+        let customer = getDataCustomers.find((cust) => {if(cust.CustID == e.target.value) return cust})
+        this.setState({selectedCustomer:customer})
+        this.setState({showForm:""})
+        console.log(customer)
+     }
+   
    changeStatus(key,status){
-    const { getDataCustomers, isDisabled , fieldValidation, newCustomer} = this.state;
+    const { isDisabled , fieldValidation} = this.state;
         switch (key){
             case "workName":
                       this.setState(prevState => {
@@ -152,13 +164,14 @@ export default class AddNewCustomer extends React.Component {
       //  alert(this.state.fieldValidation.workName)
       }
       validateFields(e){
-       const { getDataCustomers, isDisabled , fieldValidation, newCustomer} = this.state;
+       const { getDataCustomers, isDisabled , fieldValidation, newCustomer, selectedCustomer} = this.state;
        console.log("on start") 
        console.log(e.target.value.toUpperCase(),e.target.value.length, e.target.id )  
        console.log(fieldValidation) 
-       console.log(newCustomer) 
+       console.log(selectedCustomer) 
        console.log("****************") 
        var insertData = e.target.value
+       let selectedCustomerCopy = Object.assign({}, this.state.selectedCustomer); // creating copy of state variable fieldValidatione
        switch (e.target.id){
            case "workName" :  
                         if(insertData.length<3||insertData.length>5 || !isNaN(insertData)){  // length between 2-5
@@ -178,16 +191,14 @@ export default class AddNewCustomer extends React.Component {
                         
                         this.changeStatus(e.target.id,true)
                         e.target.value = insertData  // show in input in database format 
-                        this.setState(prevState => {
-                        let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                        newCustomer.WorkName = insertData;                     // update the name property, assign a new value                 
-                        return { newCustomer };                                 // return new object fieldValidatione object
-                        })
-                   
+                       
+                        selectedCustomerCopy.WorkName = insertData;  // update the name property, assign a new value     
+                        this.setState({selectedCustomer:selectedCustomerCopy});   // setState to  object
+                     
                    console.log(fieldValidation)
                    console.log(insertData.length)
                    console.log(e.target.id) 
-                   console.log(newCustomer) 
+                   console.log(selectedCustomer) 
                    break ;
            case "crn" :
                 if(insertData.length < 7 || insertData.length > 13  || isNaN(insertData)){  // length between 2-5
@@ -199,30 +210,25 @@ export default class AddNewCustomer extends React.Component {
                     this.changeStatus(e.target.id,false)
                    break;}    
                 this.changeStatus(e.target.id,true)
-                this.setState(prevState => {
-                    let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                    newCustomer.CRN = insertData;                     // update the name property, assign a new value                 
-                    return { newCustomer };                                 // return new object fieldValidatione object
-                    })
+                 selectedCustomerCopy.CRN = insertData;  // update the name property, assign a new value     
+                 this.setState({selectedCustomer:selectedCustomerCopy});   // setState to  object
+                
                     console.log(fieldValidation)
                    console.log(insertData.length)
                    console.log(e.target.id) 
-                   console.log(newCustomer) 
+                   console.log(selectedCustomer) 
                 break;
            case "company" :
                 if( insertData.length < 3 || !isNaN(insertData)){  // length between 2-5
                     this.changeStatus(e.target.id,false)
                     break;}
                 this.changeStatus(e.target.id,true)
-                this.setState(prevState => {
-                    let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                    newCustomer.Company = insertData;                     // update the name property, assign a new value                 
-                    return { newCustomer };                                 // return new object fieldValidatione object
-                    })
+                selectedCustomerCopy.Company = insertData;  // update the name property, assign a new value     
+                this.setState({selectedCustomer:selectedCustomerCopy});   // setState to  object
                    console.log(fieldValidation)
                    console.log(insertData.length)
                    console.log(e.target.id) 
-                   console.log(newCustomer) 
+                   console.log(selectedCustomer) 
                 break;
            case "name1" :
                    if( insertData.length < 3 || !isNaN(insertData)){  // length between 2-5
@@ -232,30 +238,27 @@ export default class AddNewCustomer extends React.Component {
                    insertData = insertData.toLowerCase()
                    insertData = insertData.charAt(0).toUpperCase() + insertData.slice(1);
                    e.target.value = insertData  // show in input in database format 
-                   this.setState(prevState => {
-                       let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                       newCustomer.ContactName = insertData;                     // update the name property, assign a new value                 
-                       return { newCustomer };                                 // return new object fieldValidatione object
-                       })
-                      console.log(fieldValidation)
-                      console.log(insertData.length)
-                      console.log(e.target.id) 
-                      console.log(newCustomer) 
+              
+                   selectedCustomerCopy.ContactName = insertData;  // update the name property, assign a new value     
+                     this.setState({selectedCustomer:selectedCustomerCopy});   // setState to  object
+                  
+                   console.log(fieldValidation)
+                   console.log(insertData.length)
+                   console.log(e.target.id) 
+                   console.log(selectedCustomer) 
                    break;     
           case "telephone1" :
-               if(insertData.length < 7 || insertData.length > 13  || isNaN(insertData)){  // length between 2-5
-                   this.changeStatus(e.target.id,false)
-                   break;}
-               this.changeStatus(e.target.id,true)
-               this.setState(prevState => {
-                   let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                   newCustomer.Telephone = insertData;                     // update the name property, assign a new value                 
-                   return { newCustomer };                                 // return new object fieldValidatione object
-                   })
-                   console.log(fieldValidation)
+                   if(insertData.length < 7 || insertData.length > 13  || isNaN(insertData)){  // length between 2-5
+                      this.changeStatus(e.target.id,false)
+                      break;}
+                   this.changeStatus(e.target.id,true)
+                   selectedCustomerCopy.Telephone = insertData;  // update the name property, assign a new value     
+                   this.setState({selectedCustomer:selectedCustomerCopy});   // setState to  object
+               
+                  console.log(fieldValidation)
                   console.log(insertData.length)
                   console.log(e.target.id) 
-                  console.log(newCustomer) 
+                  console.log(selectedCustomer) 
                break;
              case "name2" :
                     if( insertData.length < 3 || !isNaN(insertData)){  // length between 2-5
@@ -265,30 +268,24 @@ export default class AddNewCustomer extends React.Component {
                     insertData = insertData.toLowerCase()
                     insertData = insertData.charAt(0).toUpperCase() + insertData.slice(1);
                     e.target.value = insertData  // show in input in database format 
-                    this.setState(prevState => {
-                        let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                        newCustomer.ContactName2 = insertData;                     // update the name property, assign a new value                 
-                        return { newCustomer };                                 // return new object fieldValidatione object
-                        })
+                    selectedCustomerCopy.ContactName2 = insertData;  // update the name property, assign a new value     
+                        this.setState({selectedCustomer:selectedCustomerCopy});   // setState to  object
                        console.log(fieldValidation)
                        console.log(insertData.length)
                        console.log(e.target.id) 
-                       console.log(newCustomer) 
+                       console.log(selectedCustomer) 
                     break;     
            case "telephone2" :
                 if(insertData.length < 7 || insertData.length > 13  || isNaN(insertData)){  // length between 2-5
                     this.changeStatus(e.target.id,false)
                     break;}
                 this.changeStatus(e.target.id,true)
-                this.setState(prevState => {
-                    let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                    newCustomer.Telephone2 = insertData;                     // update the name property, assign a new value                 
-                    return { newCustomer };                                 // return new object fieldValidatione object
-                    })
+                selectedCustomerCopy.Telephone2 = insertData;  // update the name property, assign a new value     
+                     this.setState({selectedCustomer:selectedCustomerCopy});   // setState to  object
                     console.log(fieldValidation)
                    console.log(insertData.length)
                    console.log(e.target.id) 
-                   console.log(newCustomer) 
+                   console.log(selectedCustomer) 
                 break;
          case "city" :
                  if(insertData.length < 3 || insertData.length > 20  || !isNaN(insertData)){  // length between 2-5
@@ -298,15 +295,12 @@ export default class AddNewCustomer extends React.Component {
                  insertData = insertData.toLowerCase()
                  insertData = insertData.charAt(0).toUpperCase() + insertData.slice(1);
                  e.target.value = insertData  // show in input in database format 
-                 this.setState(prevState => {
-                     let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                     newCustomer.City = insertData;                     // update the name property, assign a new value                 
-                     return { newCustomer };                                 // return new object fieldValidatione object
-                     })
+                 selectedCustomerCopy.City = insertData;  // update the name property, assign a new value     
+                 this.setState({selectedCustomer:selectedCustomerCopy});   // setState to  object
                      console.log(fieldValidation)
                     console.log(insertData.length)
                     console.log(e.target.id) 
-                    console.log(newCustomer) 
+                    console.log(selectedCustomer) 
                  break;
          case "country" :
                  if(insertData.length < 3 || insertData.length > 20  || !isNaN(insertData)){  // length between 2-5
@@ -316,15 +310,12 @@ export default class AddNewCustomer extends React.Component {
                  insertData = insertData.toLowerCase()
                  insertData = insertData.charAt(0).toUpperCase() + insertData.slice(1);
                  e.target.value = insertData  // show in input in database format 
-                 this.setState(prevState => {
-                     let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                     newCustomer.Country = insertData;                     // update the name property, assign a new value                 
-                     return { newCustomer };                                 // return new object fieldValidatione object
-                     })
+                 selectedCustomerCopy.Country = insertData;  // update the name property, assign a new value     
+                    this.setState({selectedCustomer:selectedCustomerCopy});   // setState to  object
                      console.log(fieldValidation)
                     console.log(insertData.length)
                     console.log(e.target.id) 
-                    console.log(newCustomer) 
+                    console.log(selectedCustomer) 
                  break;        
          case "email" :
                 console.log("Email") 
@@ -334,15 +325,12 @@ export default class AddNewCustomer extends React.Component {
                      this.changeStatus(e.target.id,false)
                      break;}
                  this.changeStatus(e.target.id,true)
-                 this.setState(prevState => {
-                     let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                     newCustomer.Email = insertData;                     // update the name property, assign a new value                 
-                     return { newCustomer };                                 // return new object fieldValidatione object
-                     })
+                 selectedCustomerCopy.Email = insertData;  // update the name property, assign a new value     
+                        this.setState({selectedCustomer:selectedCustomerCopy});   // setState to  object
                     console.log(fieldValidation)
                     console.log(insertData.length)
                     console.log(e.target.id) 
-                    console.log(newCustomer) 
+                    console.log(selectedCustomer) 
                  break;   
                    default :  console.log("default")  ///^[^\s@]+@[^\s@]+\.[^\s@]+$/
        } 
@@ -357,18 +345,13 @@ export default class AddNewCustomer extends React.Component {
         
      
      handleSubmit(){
-        const { getDataCustomers, newCustomer} = this.state;
-        let customer  = newCustomer
-        let id = (parseInt(getDataCustomers[getDataCustomers.length-1].CustID) + 1 ).toString()
-        let employeeId = this.props.activeUser.EmployeeId
-        customer.CustID = id
-        customer.EmployeeID = employeeId
-        customer.PtmDelay = "30" // const be default 
+        const {selectedCustomer} = this.state;
+        let customer  = selectedCustomer
+        //let employeeId = this.props.activeUser.EmployeeId
         console.log(customer)
-        console.log(this.state.newCustomer)
-        this.setState({newCustomer:customer})
+       // this.setState({selectedCustomer:customer})
 
-        fetch('/insertNewCustomer',{ // send data to express server 
+        fetch('/editCustomer',{ // send data to express server 
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify(customer),
@@ -399,8 +382,8 @@ export default class AddNewCustomer extends React.Component {
             company:false,
             name1: false,
             telephone1: false,
-            name2: false,
-            telephone2: false,
+            name2: true,
+            telephone2: true,
             email: false,
             city: false,
             country: false
@@ -408,39 +391,53 @@ export default class AddNewCustomer extends React.Component {
         this.setState({fieldValidation:fieldValidation})
      }
      render() {
-        const { redirectToHome, validated , fieldValidation, isDisabled, isSuccess} = this.state;
+        const { redirectToHome, validated , fieldValidation, isDisabled, isSuccess, getDataCustomers, showForm, selectedCustomer} = this.state;
         // print this message after to get u success json from server 
         if (isSuccess) {
             return <Container>
                      <Row>
-                         <Col> <h2 className="text-success text-center">Adding new customer was successfull</h2> </Col>
+                         <Col> <h2 className="text-success text-center">Update was successfull</h2> </Col>
                      </Row>
                   </Container>
         }
         if (redirectToHome) {
             return <Redirect to="/dashboard"/>
         }
-        
-       
+        let count = 0 
+        let customerRows = getDataCustomers.map(cust =>   // generate list with customers
+            <option value={cust.CustID}>{++count} - {cust.WorkName} , {cust.Company} , {cust.Email} </option>
+            )
       // console.log( this.state.getData[0].City )
       // console.log(newCustomer.City ) 
       //  console.log( Object.keys(newCustomer) ) 
         return(
               <Container> 
                   <Row>
-                      <Col><h2 class="text-center"> Add new customer</h2></Col>
+                      <Col><h2 class="text-center"> Edit customers details </h2></Col>
                   </Row>
-               <Row>
+                  <Row>
+                            <Col xs={4} xl={3} >
+                            <Form.Label>  <h5> Choose Customer: </h5></Form.Label>
+                            </Col>
+                            <Col xs={8} xl={9} >
+                                     <Form.Control as="select" onChange={this.setCustomer} >
+                                        <option selected disabled>Select Customer:</option>
+                                        {customerRows}       
+                                     </Form.Control>
+                            </Col>
+                            
+                        </Row>
+               <Row className={showForm}>
                  <Col>
-                 <Form noValidate validated={validated} onSubmit={this.handleSubmit}>
+                 <Form noValidate validated={validated} onSubmit={this.handleSubmit} >
                   
                      <Form.Row>
                        <Form.Group as={Col} md="4" controlId="workName" onChange={this.validateFields} >
-                         <Form.Label >WorkName</Form.Label>
+                         <Form.Label>WorkName</Form.Label>
                          <Form.Control
                         //    required
                            type="text"
-                           placeholder="WorkName in format XXX or X-XXX"
+                           placeholder={selectedCustomer.WorkName}
                            isValid={fieldValidation.workName}
                            isInvalid={!fieldValidation.workName}
                          />
@@ -455,7 +452,7 @@ export default class AddNewCustomer extends React.Component {
                          <Form.Control
                            required
                            type="text"
-                           placeholder="CRN"
+                           placeholder={selectedCustomer.CRN}
                            isValid={fieldValidation.crn}
                            isInvalid={!fieldValidation.crn}
                            
@@ -470,7 +467,7 @@ export default class AddNewCustomer extends React.Component {
                          <Form.Label>Company Name</Form.Label>
                            <Form.Control
                              type="text"
-                             placeholder="Company Name"
+                             placeholder={selectedCustomer.Company}
                              required
                              isValid={fieldValidation.company}
                              isInvalid={!fieldValidation.company}
@@ -487,7 +484,7 @@ export default class AddNewCustomer extends React.Component {
                      <Form.Row>
                        <Form.Group as={Col} md="3" controlId="name1" onChange={this.validateFields}>
                          <Form.Label>Contact Name</Form.Label>
-                         <Form.Control type="text" placeholder="Contact Name 1" 
+                         <Form.Control type="text" placeholder={selectedCustomer.ContactName}
                          required 
                          isValid={fieldValidation.name1}
                              isInvalid={!fieldValidation.name1}
@@ -500,7 +497,7 @@ export default class AddNewCustomer extends React.Component {
                    
                        <Form.Group as={Col} md="3" controlId="telephone1" onChange={this.validateFields}>
                          <Form.Label>Telephone</Form.Label>
-                         <Form.Control type="text" placeholder="Telephone 1"
+                         <Form.Control type="text" placeholder={selectedCustomer.Telephone}
                           required 
                           isValid={fieldValidation.telephone1}
                              isInvalid={!fieldValidation.telephone1}
@@ -513,7 +510,7 @@ export default class AddNewCustomer extends React.Component {
                    
                        <Form.Group as={Col} md="3" controlId="name2" onChange={this.validateFields}>
                          <Form.Label>Contact Name 2</Form.Label>
-                         <Form.Control type="text" placeholder="Contact Name 1"  />
+                         <Form.Control type="text" placeholder={selectedCustomer.ContactName2} />
                          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                          <Form.Control.Feedback type="invalid">
                            Please provide a Contact Name
@@ -522,7 +519,7 @@ export default class AddNewCustomer extends React.Component {
                    
                        <Form.Group as={Col} md="3" controlId="telephone2" onChange={this.validateFields}>
                          <Form.Label>Telephone 2</Form.Label>
-                         <Form.Control type="text" placeholder="Telephone 2"  />
+                         <Form.Control type="text" placeholder={selectedCustomer.Telephone2} />
                          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                          <Form.Control.Feedback type="invalid">
                            Please provide a valid Telephone number.
@@ -533,7 +530,7 @@ export default class AddNewCustomer extends React.Component {
                       <Form.Row>
                        <Form.Group as={Col} md="8" controlId="address">
                          <Form.Label>Adrress</Form.Label>
-                         <Form.Control type="text" placeholder="Adrress"  />
+                         <Form.Control type="text" placeholder={selectedCustomer.Address}  />
                          <Form.Control.Feedback type="invalid">
                            Please provide a Contact Name
                          </Form.Control.Feedback>
@@ -541,7 +538,7 @@ export default class AddNewCustomer extends React.Component {
                    
                        <Form.Group as={Col} md="2" controlId="city" onChange={this.validateFields}>
                          <Form.Label>City</Form.Label>
-                         <Form.Control type="text" placeholder="City" required 
+                         <Form.Control type="text" placeholder={selectedCustomer.City} required 
                           isValid={fieldValidation.city}
                              isInvalid={!fieldValidation.city}
                              />
@@ -553,7 +550,7 @@ export default class AddNewCustomer extends React.Component {
                    
                        <Form.Group as={Col} md="2" controlId="country" onChange={this.validateFields}>
                          <Form.Label>Country</Form.Label>
-                         <Form.Control type="text" placeholder="Country" required 
+                         <Form.Control type="text" placeholder={selectedCustomer.Country} required 
                           isValid={fieldValidation.country}
                              isInvalid={!fieldValidation.country}
                              />
@@ -568,7 +565,9 @@ export default class AddNewCustomer extends React.Component {
                       <Form.Row>
                       <Form.Group as={Col} md="12" controlId="email" onChange={this.validateFields}>
                          <Form.Label>E-mail</Form.Label>
-                         <Form.Control type="email" placeholder="E-mail"
+                         <Form.Control type="email" 
+                          placeholder={selectedCustomer.Email} 
+                        //  value={selectedCustomer.Email} 
                           required 
                           isValid={fieldValidation.email}
                           isInvalid={!fieldValidation.email}
@@ -583,12 +582,12 @@ export default class AddNewCustomer extends React.Component {
                       <Form.Row>
                       <Col xs={6} >        
                                     <Button className="my-3 btn-block" variant="danger" type="reset" onClick={this.reset}>
-                                        <h5>Reset all fields</h5>
+                                        <h5>Clear all fields</h5>
                                     </Button>
                             </Col>
                           <Col xs={6} ml="auto">
                                     <Button className="my-3 btn-block"  variant="success" type="submit" disabled={isDisabled}>
-                                        <h5>Insert New Customer </h5>
+                                        <h5>Update Customer Details</h5>
                                     </Button>
                                     </Col>
                             
