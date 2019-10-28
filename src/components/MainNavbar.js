@@ -187,19 +187,25 @@ class MainNavbar extends React.Component {
             navAccounts = ""
         else {
             let createReciept = accountsEdit ?  <NavDropdown.Item id ="newReciept" onClick={this.getMenuItem}>New Reciept from Customer</NavDropdown.Item> : "" 
-            let createPayment = accountsEdit ?   <NavDropdown.Item id ="newPayment" onClick={this.getMenuItem}>New Payment to Supplier</NavDropdown.Item> : ""
             let customerBalance = accountsRead?   <NavDropdown.Item id ="custBalance" onClick={this.getMenuItem}>Customers balance</NavDropdown.Item> : ""
+            let createPayment = accountsEdit ?   <NavDropdown.Item id ="newPayment" onClick={this.getMenuItem}>New Payment to Supplier</NavDropdown.Item> : ""
             let SupplierBalance = accountsRead ?    <NavDropdown.Item id ="suppBalance" onClick={this.getMenuItem}>Supplier balance</NavDropdown.Item> : ""
+            let customerDocuments = accountsRead ?    <NavDropdown.Item id ="custDocs" onClick={this.getMenuItem}>All Customer documents</NavDropdown.Item> : ""
+            let SupplierDocuments = accountsRead ?    <NavDropdown.Item id ="suppDocs" onClick={this.getMenuItem}>All Supplier documents</NavDropdown.Item> : ""
+           
             let showSaldo = accountsEdit ?     <NavDropdown.Item id ="showSaldo" onClick={this.getMenuItem}>Show Final Saldo</NavDropdown.Item> : ""
            
            navAccounts = <Nav className="mr-auto">
                             <NavDropdown title="Accounts" id="navAccounts">
                                  {createReciept}
-                                {createPayment}
-                                {customerBalance}
-                                {SupplierBalance}
+                                 {customerBalance}
+                                 {customerDocuments}
                                  <NavDropdown.Divider />
-                                {showSaldo}
+                                 {createPayment}
+                                 {SupplierBalance}
+                                 {SupplierDocuments}
+                                 <NavDropdown.Divider />
+                                 {showSaldo}
                             </NavDropdown>
                             </Nav>  }
            let navEmployees 

@@ -86,8 +86,12 @@ class MainWindow extends React.Component {
                return(                         <div>newPayment</div>                    )  
         case "custBalance": 
              return(                         <div>custBalance</div>                    )  
+        case "customerDocuments": 
+             return(                         <div>customerDocuments</div>                    )  
         case "suppBalance": 
               return(                         <div>suppBalance</div>                    )  
+        case "supplierDocuments": 
+              return(                         <div>supplierDocuments</div>                    ) 
         case "showSaldo": 
              return(                            <div>showSaldo</div>                    )  
         case "addNewEmployee":    
