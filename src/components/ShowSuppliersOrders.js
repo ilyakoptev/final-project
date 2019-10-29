@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal} from 'react-bootstrap';
-//import customerorders from '../data/customerorders';
+import Loading from './Loading';
 
 export default class ShowSuppliersOrders extends React.Component {
     constructor(props) {
@@ -15,6 +15,7 @@ export default class ShowSuppliersOrders extends React.Component {
             getCustomer: {},
             redirectToHome: false,
             showModal: false,
+            isLoading: "",
           
         }
 
@@ -29,7 +30,7 @@ export default class ShowSuppliersOrders extends React.Component {
         // .then(getCustomersOrders => this.setState({getCustomersOrders}));
         fetch('/getSuppliersOrders')
         .then(res => res.json())
-        .then(getSuppliersOrders => this.setState({getSuppliersOrders}));
+        .then(getSuppliersOrders => this.setState({getSuppliersOrders,isLoading:"d-none"}));
        // console.log("componentDidMount" + this.state.getSuppliersOrders)
         this.viewstate()
     }
@@ -93,12 +94,14 @@ export default class ShowSuppliersOrders extends React.Component {
     
      render() {
        
-        const { redirectToHome, getSuppliersOrders , showModal, selectedOrder} = this.state;
+        const {isLoading, redirectToHome, getSuppliersOrders , showModal, selectedOrder} = this.state;
         
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
-        
+        if(isLoading == ""){
+            return <Loading isLoading={isLoading} />
+         }
         let sortedArray = getSuppliersOrders.slice();
        
         sortedArray.reverse()
@@ -115,9 +118,7 @@ export default class ShowSuppliersOrders extends React.Component {
                                
                                 
              </tr>)
-      // console.log( this.state.getData[0].City )
-      // console.log(selectedOrder.City ) 
-      //  console.log( Object.keys(selectedOrder) ) 
+  
         return(
               <Container> <h2>  Suppliers Order List</h2>
                         

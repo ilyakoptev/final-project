@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Table, Modal, Form, Row, Col, Image} from 'react-bootstrap';
+import { Container, Button , Table, Modal, Form, Row, Col, Image, } from 'react-bootstrap';
+import Loading from './Loading';
 
 export default class AddNewCustOrder extends React.Component {
     constructor(props) {
@@ -16,6 +17,7 @@ export default class AddNewCustOrder extends React.Component {
             selectedProducts: [], 
             selectedProduct: null,
             isDisabled: true,  // button Submit order status 
+            isLoading: "",
             ifProductSelected: false, 
             ifCustomerSelected: false,
             submitOrderArray:[],
@@ -49,7 +51,7 @@ export default class AddNewCustOrder extends React.Component {
         .then(getDataProducts => this.setState({getDataProducts}));
         fetch('/getCustomersOrders')
         .then(res => res.json())
-        .then(getCustomersOrders => this.setState({getCustomersOrders}));
+        .then(getCustomersOrders => this.setState({getCustomersOrders,isLoading:"d-none"}));
         //console.log(this.state.getData)
       }
       
@@ -255,7 +257,7 @@ export default class AddNewCustOrder extends React.Component {
       }   
     
       render() {
-        const { redirectToHome, getDataProducts, getDataCustomers , showModal, selectedCustomer, isDisabled, submitOrderArray,isSuccess} = this.state;
+        const {isLoading, redirectToHome, getDataProducts, getDataCustomers , showModal, selectedCustomer, isDisabled, submitOrderArray,isSuccess} = this.state;
         
         if (isSuccess) {
             return <Container>
@@ -267,6 +269,11 @@ export default class AddNewCustOrder extends React.Component {
         if (redirectToHome) {
             return <Redirect to="/dashboard"/>
         }
+        if(isLoading == ""){
+          return <Loading isLoading={isLoading} />
+       }
+        
+
 
         let count = 0 // row number in the table
         let Rows = getDataProducts.map(prod =>   // generate table with customers

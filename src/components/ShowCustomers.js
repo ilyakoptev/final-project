@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal, Row, Col, InputGroup, Form, FormControl} from 'react-bootstrap';
-
+import Loading from './Loading';
 
 export default class ShowCustomers extends React.Component {
     constructor(props) {
@@ -13,6 +13,7 @@ export default class ShowCustomers extends React.Component {
             getEmployee: {},
             redirectToHome: false,
             showModal: false,
+            isLoading: "",
             filteredData:[],
             filterCustomers: "",
             sortCustomers: "",
@@ -25,14 +26,14 @@ export default class ShowCustomers extends React.Component {
         this.sortBy = this.sortBy.bind(this);
         
     }
-    
+
     componentDidMount(){
         fetch('/getdataCustomers') // get promise
         .then(res => res.json())  //get json 
         .then(getData => this.setState({getData})); // get data from json and set on state
         fetch('/getdataEmployees')
         .then(res => res.json())
-        .then(getDataEmployees => this.setState({getDataEmployees}));
+        .then(getDataEmployees => this.setState({getDataEmployees,isLoading:"d-none"}));
         //console.log(this.state.getData)
       }
     
@@ -138,15 +139,14 @@ export default class ShowCustomers extends React.Component {
       }
     
       render() {
-        const { redirectToHome, getData , showModal, selectedCustomer} = this.state;
+        const { isLoading, redirectToHome, showModal} = this.state;
        
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
-       
-      // console.log( this.state.getData[0].City )
-      // console.log(selectedCustomer.City ) 
-      //  console.log( Object.keys(selectedCustomer) ) 
+        if(isLoading == ""){
+            return <Loading isLoading={isLoading} />
+         }
         return(
               <Container> 
                     <Row className="justify-content-md-center">
@@ -172,6 +172,7 @@ export default class ShowCustomers extends React.Component {
                         </Col>
                     </Row>   
                     <Row className="justify-content-md-center"> 
+                     <Col lg={12}>
                         <Table responsive="lg" >
                             <thead>
                             <tr>
@@ -188,6 +189,7 @@ export default class ShowCustomers extends React.Component {
                             {this.customerTable()}
                             </tbody>
                         </Table>
+                        </Col>
                       </Row>   
                         <Modal show={showModal} onHide={this.closeModal} size="">  
                                {this.detailsModalHeader()}

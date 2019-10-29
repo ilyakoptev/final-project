@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Table, Modal, Row, Col, InputGroup, Form, FormControl} from 'react-bootstrap';
-//import customerorders from '../data/customerorders';
+import { Container, Button , Table, Modal, Row, Col, InputGroup, Form, FormControl, Spinner} from 'react-bootstrap';
+import Loading from './Loading';
 
 export default class ShowCustomerOrders extends React.Component {
     constructor(props) {
@@ -16,6 +16,7 @@ export default class ShowCustomerOrders extends React.Component {
             filteredData:[],
             filterOrders: "",
             sortOrders: "",
+            isLoading: "",
      }
 
         this.openModal = this.openModal.bind(this);
@@ -29,7 +30,8 @@ export default class ShowCustomerOrders extends React.Component {
     componentDidMount(){
         fetch('/getCustomersOrders')
         .then(res => res.json())
-        .then(getCustomersOrders => this.setState({getCustomersOrders}));
+        .then(getCustomersOrders => this.setState({getCustomersOrders,isLoading:"d-none"}));
+        
        // console.log("componentDidMount" + this.state.getCustomersOrders)
         this.viewstate()
     }
@@ -45,16 +47,30 @@ export default class ShowCustomerOrders extends React.Component {
       }
 
     openModal(e) {
-        const index = e.target.getAttribute('data-key')
+               
+        const{getCustomersOrders} = this.state
+       // const index = e.target.getAttribute('id')
         this.setState({ showModal: true })
-        this.setState({ selectedOrder: this.state.getCustomersOrders[index-1] })
-        this.setState({ selectedOrderDetails: this.state.getCustomersOrders[index-1].OrderDetails })
-        
+        //console.log( e.target)
+        //console.log( getData[index-1].WorkName )
+        const order = getCustomersOrders.find((order)=>{if(order.CustOrderID == e.target.getAttribute('data-key')) return order})
+        console.log( order )
+        this.setState({ selectedOrder: order })
+        this.setState({ selectedOrderDetails: order.OrderDetails })
     }
     
     closeModal() {
         this.setState({ showModal: false })
     }
+
+    detailsModalHeader(){
+        const {selectedOrder} = this.state;
+        let header = <Modal.Header closeButton>
+                         <Modal.Title >Order Details - {selectedOrder.CustOrderID}</Modal.Title> 
+                    </Modal.Header>
+        return   header
+      }
+
     detailsModalWindow() {
        const {selectedOrderDetails } = this.state;
       
@@ -135,14 +151,15 @@ export default class ShowCustomerOrders extends React.Component {
      }
 
       render() {
-        const { redirectToHome, showModal, selectedOrder} = this.state;
+        const { redirectToHome, showModal, selectedOrder, isLoading} = this.state;
        
         if (redirectToHome) {
             return <Redirect to="/"/>
         } 
-      // console.log( this.state.getData[0].City )
-      // console.log(selectedOrder.City ) 
-      //  console.log( Object.keys(selectedOrder) ) 
+        if(isLoading == ""){
+            return <Loading isLoading={isLoading} />
+         }
+
         return(
               <Container> 
 
@@ -179,8 +196,6 @@ export default class ShowCustomerOrders extends React.Component {
                                 <th>Customer</th>
                                 <th>Order Date</th>
                                 <th>Shipping Date</th>
-                                
-                                
                             </tr>
                             </thead>
                             <tbody>
@@ -190,9 +205,7 @@ export default class ShowCustomerOrders extends React.Component {
                         </Col>
                       </Row>
                         <Modal show={showModal} onHide={this.closeModal} size="lg">  
-                            <Modal.Header  closeButton>
-                                <Modal.Title  >Order Details - {selectedOrder.CustOrderID}</Modal.Title>
-                            </Modal.Header>
+                                {this.detailsModalHeader()}  
                             <Modal.Body className="mx-auto">
                             <Table  responsive="sm" size="sm">
                                    <tbody>

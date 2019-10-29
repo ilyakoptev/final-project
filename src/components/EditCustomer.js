@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Row, Col, Form, InputGroup} from 'react-bootstrap';
-
+import { Container, Button , Row, Col, Form} from 'react-bootstrap';
+import Loading from './Loading';
 
 export default class EditCustomer extends React.Component {
     constructor(props) {
@@ -17,6 +17,7 @@ export default class EditCustomer extends React.Component {
             validated: false,
             isSuccess: false,
             showForm: "d-none",
+            isLoading: "",
             isDisabled: false,  // button Submit order status 
             fieldValidation:{ // insert all values as false for hiding submit button 
                 workName:true,
@@ -42,7 +43,7 @@ export default class EditCustomer extends React.Component {
     componentDidMount(){
         fetch('/getdataCustomers') // get promise
         .then(res => res.json())  //get json 
-        .then(getDataCustomers => this.setState({getDataCustomers})); // get data from json and set on state
+        .then(getDataCustomers => this.setState({getDataCustomers,isLoading:"d-none"})); // get data from json and set on state
         // fetch('/getdataEmployees')
         // .then(res => res.json())
         // .then(getDataEmployees => this.setState({getDataEmployees}));
@@ -391,7 +392,7 @@ export default class EditCustomer extends React.Component {
         this.setState({fieldValidation:fieldValidation})
      }
      render() {
-        const { redirectToHome, validated , fieldValidation, isDisabled, isSuccess, getDataCustomers, showForm, selectedCustomer} = this.state;
+        const {isLoading, redirectToHome, validated , fieldValidation, isDisabled, isSuccess, getDataCustomers, showForm, selectedCustomer} = this.state;
         // print this message after to get u success json from server 
         if (isSuccess) {
             return <Container>
@@ -403,6 +404,11 @@ export default class EditCustomer extends React.Component {
         if (redirectToHome) {
             return <Redirect to="/dashboard"/>
         }
+
+        if(isLoading == ""){
+            return <Loading isLoading={isLoading} />
+         }
+
         let count = 0 
         let customerRows = getDataCustomers.map(cust =>   // generate list with customers
             <option value={cust.CustID}>{++count} - {cust.WorkName} , {cust.Company} , {cust.Email} </option>

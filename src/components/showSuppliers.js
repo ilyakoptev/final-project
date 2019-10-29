@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal} from 'react-bootstrap';
-//import customerorders from '../data/customerorders';
+import Loading from './Loading';
 
 export default class ShowSuppliers extends React.Component {
     constructor(props) {
@@ -11,7 +11,7 @@ export default class ShowSuppliers extends React.Component {
             selectedSupplier: {},
             redirectToHome: false,
             showModal: false,
-          
+            isLoading: "",
         }
 
         //this.openCustomerDetails = this.openCustomerDetails.bind(this);
@@ -23,9 +23,7 @@ export default class ShowSuppliers extends React.Component {
     componentDidMount(){
          fetch('/getdataSuppliers')
         .then(res => res.json())
-        .then(getDataSuppliers => this.setState({getDataSuppliers}));
-        console.log(this.state.getDataSuppliers)
-        
+        .then(getDataSuppliers => this.setState({getDataSuppliers,isLoading:"d-none"}));
       }
          
     openModal(e) {
@@ -57,12 +55,18 @@ export default class ShowSuppliers extends React.Component {
        }
       return result
      }
-      render() {
-        const { redirectToHome, getDataSuppliers , showModal, selectedSupplier} = this.state;
+  
+  
+  
+     render() {
+        const { isLoading, redirectToHome, getDataSuppliers , showModal, selectedSupplier} = this.state;
         console.log(getDataSuppliers) 
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
+        if(isLoading == ""){
+            return <Loading isLoading={isLoading} />
+         }
         let count = 0 // row number in the table
         let Rows = getDataSuppliers.map(supp =>   // generate table with customers
             <tr data-key={++count} onClick={this.openModal}> 

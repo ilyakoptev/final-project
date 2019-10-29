@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal, Image} from 'react-bootstrap';
-//import customerorders from '../data/customerorders';
+import Loading from './Loading';
 
 export default class ShowProducts extends React.Component {
     constructor(props) {
@@ -13,10 +13,10 @@ export default class ShowProducts extends React.Component {
             getProduct: {},
             redirectToHome: false,
             showModal: false,
+            isLoading: "",
           
         }
 
-        //this.openCustomerDetails = this.openCustomerDetails.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.detailsModalWindow = this.detailsModalWindow.bind(this);
@@ -28,8 +28,7 @@ export default class ShowProducts extends React.Component {
         // .then(getData => this.setState({getData}));
         fetch('/getDataProducts')
         .then(res => res.json())
-        .then(getDataProducts => this.setState({getDataProducts}));
-        console.log(this.state.getDataProducts)
+        .then(getDataProducts => this.setState({getDataProducts,isLoading:"d-none"}));
         
       }
          
@@ -68,13 +67,17 @@ export default class ShowProducts extends React.Component {
        return result
      }
       render() {
-        const { redirectToHome, getDataProducts , showModal, selectedProduct} = this.state;
+        const { isLoading, redirectToHome, getDataProducts , showModal, selectedProduct} = this.state;
        let image = "images/" + selectedProduct.ProductID + ".jpg"
        
         console.log(getDataProducts) 
         if (redirectToHome) {
             return <Redirect to="/"/>
         }
+        if(isLoading == ""){
+            return <Loading isLoading={isLoading} />
+         }
+         
         let count = 0 // row number in the table
         let Rows = getDataProducts.map(prod =>   // generate table with customers
             <tr data-key={++count} onClick={this.openModal}> 

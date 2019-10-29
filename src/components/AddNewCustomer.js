@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Row, Col, Form} from 'react-bootstrap';
-
+import { Container, Button , Row, Col, Form,} from 'react-bootstrap';
+import Loading from './Loading';
 
 export default class AddNewCustomer extends React.Component {
     constructor(props) {
@@ -15,6 +15,7 @@ export default class AddNewCustomer extends React.Component {
             isDisabled: true,  // button Submit order status 
             validated: false,
             isSuccess: false,
+            isLoading: "",
             fieldValidation:{ // insert all values as false for hiding submit button 
                 workName:false,
                 crn: false,
@@ -32,105 +33,26 @@ export default class AddNewCustomer extends React.Component {
         this.validateFields = this.validateFields.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.reset = this.reset.bind(this);
-       // this.detailsModalWindow = this.detailsModalWindow.bind(this);
-        
+      
     }
     componentDidMount(){
         fetch('/getdataCustomers') // get promise
         .then(res => res.json())  //get json 
-        .then(getDataCustomers => this.setState({getDataCustomers})); // get data from json and set on state
+        .then(getDataCustomers => this.setState({getDataCustomers,isLoading:"d-none"})); // get data from json and set on state
         // fetch('/getdataEmployees')
         // .then(res => res.json())
         // .then(getDataEmployees => this.setState({getDataEmployees}));
         //console.log(this.state.getData)
       }
+      
    changeStatus(key,status){
-    const { isDisabled , fieldValidation} = this.state;
-        switch (key){
-            case "workName":
-                      this.setState(prevState => {
-                      let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
-                      //fieldValidation = {[key] : status};         
-                      fieldValidation.workName = status;                     // update the name property, assign a new value                 
-                      return { fieldValidation };                                 // return new object fieldValidatione object
-                     }) 
-                     break;
-            case "crn":
-                    this.setState(prevState => {
-                    let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
-                    //fieldValidation = {[key] : status};         
-                    fieldValidation.crn = status;                     // update the name property, assign a new value                 
-                    return { fieldValidation };                                 // return new object fieldValidatione object
-                   }) 
-                   break;
-            case "company":
-                  this.setState(prevState => {
-                  let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
-                  //fieldValidation = {[key] : status};         
-                  fieldValidation.company = status;                     // update the name property, assign a new value                 
-                  return { fieldValidation };                                 // return new object fieldValidatione object
-                }) 
-                break; 
-            case "name1":
-                    this.setState(prevState => {
-                    let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
-                    //fieldValidation = {[key] : status};         
-                    fieldValidation.name1 = status;                     // update the name property, assign a new value                 
-                    return { fieldValidation };                                 // return new object fieldValidatione object
-                  }) 
-                  break;                
-           case "telephone1":
-                 this.setState(prevState => {
-                 let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
-                 //fieldValidation = {[key] : status};         
-                 fieldValidation.telephone1 = status;                     // update the name property, assign a new value                 
-                 return { fieldValidation };                                 // return new object fieldValidatione object
-                }) 
-                break; 
-           case "name2":
-                   this.setState(prevState => {
-                   let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
-                   //fieldValidation = {[key] : status};         
-                   fieldValidation.name2 = status;                     // update the name property, assign a new value                 
-                   return { fieldValidation };                                 // return new object fieldValidatione object
-                 }) 
-                 break;                
-          case "telephone2":
-                this.setState(prevState => {
-                let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
-                //fieldValidation = {[key] : status};         
-                fieldValidation.telephone2 = status;                     // update the name property, assign a new value                 
-                return { fieldValidation };                                 // return new object fieldValidatione object
-               }) 
-               break;
-         case "email":
-              this.setState(prevState => {
-              let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
-              //fieldValidation = {[key] : status};         
-              fieldValidation.email = status;                     // update the name property, assign a new value                 
-              return { fieldValidation };                                 // return new object fieldValidatione object
-             }) 
-             break;             
-         case "city":
-                this.setState(prevState => {
-                let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
-                //fieldValidation = {[key] : status};         
-                fieldValidation.city = status;                     // update the name property, assign a new value                 
-                return { fieldValidation };                                 // return new object fieldValidatione object
-               }) 
-               break;             
-         case "country":
-              this.setState(prevState => {
-              let fieldValidation = Object.assign({}, prevState.fieldValidation);  // creating copy of state variable fieldValidatione
-              //fieldValidation = {[key] : status};         
-              fieldValidation.country = status;                     // update the name property, assign a new value                 
-              return { fieldValidation };                                 // return new object fieldValidatione object
-             }) 
-             break;             
-             default: break; 
-        } 
-        
-        
+    const { isDisabled } = this.state;
+    //change validation status by key
+    let fieldValidation = Object.assign({}, this.state.fieldValidation)
+    fieldValidation[key] = status;                     // update the name property, assign a new value                 
+    this.setState({fieldValidation}) 
+   
+              
       // check of all field are ok and visible to submit button 
       
        let fieldValidationValues = Object.values(fieldValidation)
@@ -161,35 +83,27 @@ export default class AddNewCustomer extends React.Component {
        var insertData = e.target.value
        switch (e.target.id){
            case "workName" :  
-                        if(insertData.length<3||insertData.length>5 || !isNaN(insertData)){  // length between 2-5
-                           this.changeStatus(e.target.id,false)
-
-                            // // copy object
-                            // let fieldValidation = Object.assign({}, this.state.fieldValidation);
-                            // fieldValidation[e.target.id] = false;
-                            // this.setState({fieldValidation});
-
-
-                           break;}
-                       
-                        if(insertData.length<4 && insertData.includes("-",2) ){  // if length > 4 so format must be X-XXX
-                            this.changeStatus(e.target.id,false)
-                           break;}
-                        // custName = getDataCustomers.find((cust) => { if(cust.CustID==1000) return cust})
-                        insertData = insertData.toUpperCase() 
-                        let custName = getDataCustomers.find((cust) => { if(cust.WorkName==insertData) return cust}) //check if already exist customer with same WorkName
-                        console.log("WorkName : " + custName, e.target.value.toUpperCase())   
-                        if(custName!==undefined){
-                            this.changeStatus(e.target.id,false)
-                           break;}
-                        
-                        this.changeStatus(e.target.id,true)
-                        e.target.value = insertData  // show in input in database format 
-                        this.setState(prevState => {
-                        let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                        newCustomer.WorkName = insertData;                     // update the name property, assign a new value                 
-                        return { newCustomer };                                 // return new object fieldValidatione object
-                        })
+                   if(insertData.length<3||insertData.length>5 || !isNaN(insertData)){  // length between 2-5
+                      this.changeStatus(e.target.id,false)
+                      break;}
+                                      if(insertData.length<4 && insertData.includes("-",2) ){  // if length > 4 so format must be X-XXX
+                       this.changeStatus(e.target.id,false)
+                      break;}
+                   // custName = getDataCustomers.find((cust) => { if(cust.CustID==1000) return cust})
+                   insertData = insertData.toUpperCase() 
+                   let custName = getDataCustomers.find((cust) => { if(cust.WorkName==insertData) return cust}) //check if already exist customer with same WorkName
+                   console.log("WorkName : " + custName, e.target.value.toUpperCase())   
+                   if(custName!==undefined){
+                       this.changeStatus(e.target.id,false)
+                      break;}
+                   
+                   this.changeStatus(e.target.id,true)
+                   e.target.value = insertData  // show in input in database format 
+                   this.setState(prevState => {
+                   let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
+                   newCustomer.WorkName = insertData;                     // update the name property, assign a new value                 
+                   return { newCustomer };                                 // return new object fieldValidatione object
+                   })
                    
                    console.log(fieldValidation)
                    console.log(insertData.length)
@@ -255,16 +169,16 @@ export default class AddNewCustomer extends React.Component {
                    break;}
                this.changeStatus(e.target.id,true)
                this.setState(prevState => {
-                   let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
-                   newCustomer.Telephone = insertData;                     // update the name property, assign a new value                 
-                   return { newCustomer };                                 // return new object fieldValidatione object
+                    let newCustomer = Object.assign({}, prevState.newCustomer);  // creating copy of state variable fieldValidatione
+                    newCustomer.Telephone = insertData;                     // update the name property, assign a new value                 
+                    return { newCustomer };                                 // return new object fieldValidatione object
                    })
-                   console.log(fieldValidation)
-                  console.log(insertData.length)
-                  console.log(e.target.id) 
-                  console.log(newCustomer) 
+               console.log(fieldValidation)
+               console.log(insertData.length)
+               console.log(e.target.id) 
+               console.log(newCustomer) 
                break;
-             case "name2" :
+          case "name2" :
                     if( insertData.length < 3 || !isNaN(insertData)){  // length between 2-5
                         this.changeStatus(e.target.id,false)
                         break;}
@@ -277,10 +191,10 @@ export default class AddNewCustomer extends React.Component {
                         newCustomer.ContactName2 = insertData;                     // update the name property, assign a new value                 
                         return { newCustomer };                                 // return new object fieldValidatione object
                         })
-                       console.log(fieldValidation)
-                       console.log(insertData.length)
-                       console.log(e.target.id) 
-                       console.log(newCustomer) 
+                    console.log(fieldValidation)
+                    console.log(insertData.length)
+                    console.log(e.target.id) 
+                    console.log(newCustomer) 
                     break;     
            case "telephone2" :
                 if(insertData.length < 7 || insertData.length > 13  || isNaN(insertData)){  // length between 2-5
@@ -292,10 +206,10 @@ export default class AddNewCustomer extends React.Component {
                     newCustomer.Telephone2 = insertData;                     // update the name property, assign a new value                 
                     return { newCustomer };                                 // return new object fieldValidatione object
                     })
-                    console.log(fieldValidation)
-                   console.log(insertData.length)
-                   console.log(e.target.id) 
-                   console.log(newCustomer) 
+                 console.log(fieldValidation)
+                 console.log(insertData.length)
+                 console.log(e.target.id) 
+                 console.log(newCustomer) 
                 break;
          case "city" :
                  if(insertData.length < 3 || insertData.length > 20  || !isNaN(insertData)){  // length between 2-5
@@ -416,7 +330,7 @@ export default class AddNewCustomer extends React.Component {
         this.setState({fieldValidation:fieldValidation})
      }
      render() {
-        const { redirectToHome, validated , fieldValidation, isDisabled, isSuccess} = this.state;
+        const {isLoading, redirectToHome, validated , fieldValidation, isDisabled, isSuccess} = this.state;
         // print this message after to get u success json from server 
         if (isSuccess) {
             return <Container>
@@ -428,11 +342,9 @@ export default class AddNewCustomer extends React.Component {
         if (redirectToHome) {
             return <Redirect to="/dashboard"/>
         }
-        
-       
-      // console.log( this.state.getData[0].City )
-      // console.log(newCustomer.City ) 
-      //  console.log( Object.keys(newCustomer) ) 
+        if(isLoading == ""){
+            return <Loading isLoading={isLoading} />
+         }
         return(
               <Container> 
                   <Row>

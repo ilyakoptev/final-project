@@ -2,7 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal, Form, Row, Col, Image} from 'react-bootstrap';
 import {supplierOrder} from '../objects/supplierOrder';
-
+import Loading from './Loading';
 
 export default class AddNewSuppOrder extends React.Component {
     constructor(props) {
@@ -19,6 +19,7 @@ export default class AddNewSuppOrder extends React.Component {
             unorderedCustOrders:[], // get from data base unordered orders 
             getEmployee: {},
             redirectToHome: false,
+            isLoading: "",
             showModal: false,
             selectedProducts: [], 
             selectedProduct: null,
@@ -36,15 +37,8 @@ export default class AddNewSuppOrder extends React.Component {
         this.closeModal = this.closeModal.bind(this);
         this.detailsModalWindow = this.detailsModalWindow.bind(this);
         this.createOrder = this.createOrder.bind(this);
-        //this.setCustomer = this.setCustomer.bind(this);
-       // this.confirmOrder = this.confirmOrder.bind(this);
-       // this.insertProdQuantity = this.insertProdQuantity.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-      //  this.setQuantity = this.setQuantity.bind(this);
-      //  this.reset = this.reset.bind(this); 
-       
-        
-             
+         this.handleSubmit = this.handleSubmit.bind(this);
+   
     }
 
 
@@ -63,7 +57,7 @@ export default class AddNewSuppOrder extends React.Component {
         .then(getSuppliersOrders => this.setState({getSuppliersOrders}));
         fetch('/getUnorderedCustOrders')
         .then(res => res.json())
-        .then(unorderedCustOrders => this.setState({unorderedCustOrders}));
+        .then(unorderedCustOrders => this.setState({unorderedCustOrders,isLoading:"d-none"}));
         fetch('/getSuppPriceList')
         .then(res => res.json())
         .then(getSuppPriceList => this.setState({getSuppPriceList}));
@@ -301,7 +295,7 @@ export default class AddNewSuppOrder extends React.Component {
       }   
     
       render() {
-        const { redirectToHome, showModal, selectedOrder, isSuccess, unorderedCustOrders} = this.state;
+        const {isLoading, redirectToHome, showModal, selectedOrder, isSuccess, unorderedCustOrders} = this.state;
         
         if (isSuccess) {
             return <Container>
@@ -313,7 +307,9 @@ export default class AddNewSuppOrder extends React.Component {
         if (redirectToHome) {
              return <Redirect to="/dashboard"/>
            }
-
+           if(isLoading == ""){
+            return <Loading isLoading={isLoading} />
+         }
        
 
         let count = 0 // row number in the table

@@ -14,6 +14,7 @@ class HomePage extends React.Component {
             inputPassword: null,
             getDataEmployees: [],
             getEmployee: {},
+            isLoaded: true,
 
         }
 
@@ -27,7 +28,7 @@ class HomePage extends React.Component {
     componentDidMount() {
         fetch('/getdataEmployees')
             .then(res => res.json())
-            .then(getDataEmployees => this.setState({ getDataEmployees }));
+            .then(getDataEmployees => this.setState({ getDataEmployees, isLoaded: false }));
         //console.log(this.state.getDataEmployees)
     }
 
@@ -65,7 +66,7 @@ class HomePage extends React.Component {
         }
        }
     render() {
-
+        const {isLoaded} = this.state
         if (this.state.successLogin) {
             return <Redirect to = "/dashboard"/>
         }
@@ -106,7 +107,7 @@ class HomePage extends React.Component {
             </Form> </Modal.Body>
 
             <Modal.Footer>
-            <Button variant = "info"  type = "button"   onClick = { this.login } >  Login </Button> 
+            <Button disabled={isLoaded} variant = "info"  type = "button"   onClick = { this.login } >  Login </Button> 
             <Button variant = "secondary"    onClick = { this.closeModal } >      Close          </Button>
            </Modal.Footer>    </Modal>
 

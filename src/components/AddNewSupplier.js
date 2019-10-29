@@ -2,6 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button , Row, Col, Form} from 'react-bootstrap';
 import {supplier} from '../objects/supplier';
+import Loading from './Loading';
 
 export default class AddNewSupplier extends React.Component {
     constructor(props) {
@@ -15,6 +16,7 @@ export default class AddNewSupplier extends React.Component {
             isDisabled: true,  // button Submit order status 
             validated: false,
             isSuccess: false,
+            isLoading: "",
             fieldValidation:{ // insert all values as false for hiding submit button 
                 SuppName:false,
                 ContactName: false,
@@ -36,7 +38,7 @@ export default class AddNewSupplier extends React.Component {
     componentDidMount(){
         fetch('/getdataSuppliers')
         .then(res => res.json())
-        .then(getDataSuppliers => this.setState({getDataSuppliers}));
+        .then(getDataSuppliers => this.setState({getDataSuppliers,isLoading:"d-none"}));
        
         // fetch('/getdataEmployees')
         // .then(res => res.json())
@@ -275,7 +277,7 @@ export default class AddNewSupplier extends React.Component {
        this.setState({fieldValidation})
      }
      render() {
-        const { redirectToHome, validated , fieldValidation, isDisabled, isSuccess} = this.state;
+        const {isLoading, redirectToHome, validated , fieldValidation, isDisabled, isSuccess} = this.state;
         // print this message after to get u success json from server 
         if (isSuccess) {
             return <Container>
@@ -287,7 +289,9 @@ export default class AddNewSupplier extends React.Component {
         if (redirectToHome) {
             return <Redirect to="/dashboard"/>
         }
-   
+        if(isLoading == ""){
+            return <Loading isLoading={isLoading} />
+         }
         return(
               <Container> 
                   <Row>
