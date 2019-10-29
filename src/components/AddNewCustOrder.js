@@ -62,7 +62,7 @@ export default class AddNewCustOrder extends React.Component {
 
 
     detailsModalWindow() {
-           const {submitOrderArray,getDataProducts } = this.state;
+           const {submitOrderArray} = this.state;
            let result = []
            if (submitOrderArray.length===0){
                result[0] = <tr><td>No items selected</td></tr>

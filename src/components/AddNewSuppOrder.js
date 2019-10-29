@@ -138,7 +138,7 @@ export default class AddNewSuppOrder extends React.Component {
 
       createOrder(e){ // save it to array with all customer orders 
        // this.setState({redirectToHome:true})
-       const {getSuppliersOrders, getCustomersOrders,submitOrderArray,getDataProducts,unorderedCustOrders, getSuppPriceList} = this.state
+       const {getSuppliersOrders,unorderedCustOrders, getSuppPriceList} = this.state
        var date = new Date();
        var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
        var shipDate = new Date();
@@ -150,7 +150,6 @@ export default class AddNewSuppOrder extends React.Component {
        paymentDate.setDate(paymentDate.getDate() + numberOfDaysToAdd1); 
        paymentDate = paymentDate.getFullYear() + "-" + (paymentDate.getMonth()+1) + "-" + paymentDate.getDate()
 
-       var arrayOfOrdersPerSupplier = []
        var currentOrder = unorderedCustOrders.find((order) => {if( e.target.getAttribute('data-key')==order.CustOrderID) return order}) // current custOrder
        var arrayOfOrders = []      
        
@@ -262,9 +261,7 @@ export default class AddNewSuppOrder extends React.Component {
                   }
                           
                 } 
-          
-         //  arrayOfOrdersPerSupplier.push({productId: prodId , quantity:quantity, suppId: randomSupplier }) // array with all products per supplier
-           // console.log(prodId)
+        
        }
        console.log(arrayOfOrders)
       
@@ -304,7 +301,7 @@ export default class AddNewSuppOrder extends React.Component {
       }   
     
       render() {
-        const { redirectToHome, getDataProducts, getDataCustomers , showModal, selectedOrder, isDisabled, submitOrderArray,isSuccess, unorderedCustOrders} = this.state;
+        const { redirectToHome, showModal, selectedOrder, isSuccess, unorderedCustOrders} = this.state;
         
         if (isSuccess) {
             return <Container>
