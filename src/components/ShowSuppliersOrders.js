@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Table, Modal} from 'react-bootstrap';
+import { Container, Button , Table, Modal, Row, Col, InputGroup, Form, FormControl} from 'react-bootstrap';
 import Loading from './Loading';
 
 export default class ShowSuppliersOrders extends React.Component {
@@ -16,12 +16,17 @@ export default class ShowSuppliersOrders extends React.Component {
             redirectToHome: false,
             showModal: false,
             isLoading: "",
+            filteredData:[],
+            filterOrders: "",
+            sortOrders: "",
           
         }
 
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.detailsModalWindow = this.detailsModalWindow.bind(this);
+        this.getFilterText = this.getFilterText.bind(this);
+        this.sortBy = this.sortBy.bind(this);
         
     }
     componentDidMount(){
@@ -37,7 +42,14 @@ export default class ShowSuppliersOrders extends React.Component {
     viewstate(){
         console.log(this.state.getSuppliersOrders)
     }
-          
+    
+    getFilterText(e){
+        this.setState({filterOrders:e.target.value})
+       }
+      sortBy(e){
+        this.setState({sortOrders:e.target.value})
+      }
+
     openModal(e) {
         const{getSuppliersOrders}=this.state
         const dataKey = e.target.getAttribute('data-key')
@@ -45,14 +57,23 @@ export default class ShowSuppliersOrders extends React.Component {
         let order = getSuppliersOrders.find((order)=>{ if(order.SuppOrderID===dataKey) return order })
         this.setState({ selectedOrder: order })
         this.setState({ selectedOrderDetails: order.OrderDetails })
-        
     }
     
     closeModal() {
         this.setState({ showModal: false })
     }
+   
+    detailsModalHeader(){
+        const {selectedOrder} = this.state;
+        let header = <Modal.Header closeButton>
+                         <Modal.Title >Order Details - {selectedOrder.SuppOrderID}</Modal.Title> 
+                    </Modal.Header>
+        return   header
+      }
+
+
     detailsModalWindow() {
-       const {selectedOrder, selectedOrderDetails } = this.state;
+       const { selectedOrderDetails } = this.state;
       
        let obj = {}
      //   selectedOrder.Customer = getCustomer.WorkName // add property "Customer"  to order modal 
@@ -69,11 +90,7 @@ export default class ShowSuppliersOrders extends React.Component {
                 detailsKeys.shift()
                 detailsValues.shift()
             }
-            
-            //console.log(detailsKeys) 
-            //console.log(detailsValues)      
-                        
-            if(z===0){   // make header for table in modal 
+          if(z===0){   // make header for table in modal 
                 header =  detailsKeys.map((key, index) => {
                     return <th key={index}>{key.toUpperCase()}</th>
             })}
@@ -81,20 +98,63 @@ export default class ShowSuppliersOrders extends React.Component {
                     return <td key={index}>{key}</td>
                     })
             result[z]= <tr>{rowdata}</tr>
-            
-          // resultArr.push(result)
-        }
-              
-     //   obj  = selectedOrderDetails[0]
-      //header = <tr>{header}</tr>
-      //  console.log(header)       
-      resultArr = <tbody><tr>{header}</tr> {result} </tbody>  // build table for modal window 
+         }
+           resultArr = <tbody><tr>{header}</tr> {result} </tbody>  // build table for modal window 
       return resultArr
      }
+     
+     ordersTable(){
+        const { getSuppliersOrders , filterOrders, sortOrders} = this.state;
+        const {activeUser} = this.props;
+                
+        let count = 0 // row number in the table
+        let filter = filterOrders
+        let sort = sortOrders
+        let filteredData =[]
+        for (let i=0;i<getSuppliersOrders.length;i++) {
+           let cust = getSuppliersOrders[i].SuppName+getSuppliersOrders[i].CustomerOrderID+getSuppliersOrders[i].SuppOrderID // get full name in one string
+           if (cust.toLowerCase().includes(filter.toLowerCase()) ){ // fullname and filter to lowCase to find all names 
+               filteredData = filteredData.concat(getSuppliersOrders[i])
+              }        
+        }
+        if(sort==="SuppName"){
+            filteredData.sort((a, b) => (a.SuppName > b.SuppName) ? 1 : -1)
+            filteredData.reverse()
+         }
+         if(sort==="CustOrderID"){
+            filteredData.sort((a, b) => (a.CustomerOrderID > b.CustomerOrderID) ? 1 : -1)
+            filteredData.reverse()
+         }
+         if(sort==="SuppOrderID"){
+            filteredData.sort((a, b) => (a.SuppOrderID > b.SuppOrderID) ? 1 : -1)
+            filteredData.reverse()
+         }
+             
+       
+       
+        if (activeUser.Position == 2 || activeUser.Position == 4){   // if user sales manager or driver as can see only his orders
+            filteredData = filteredData.filter(x => x.EmployeeID.includes(activeUser.EmployeeId));
+            } //else  sortedArray = getCustomersOrders
     
+        filteredData.reverse()
+        count = 0 // row number in the table
+        let orderRows = filteredData.map(order =>   // generate table with customers
+            <tr data-key={++count} onClick={this.openModal}> 
+                        <td data-key={order.SuppOrderID}>{count}</td>
+                        <td data-key={order.SuppOrderID}>{order.SuppOrderID}</td>
+                        <td data-key={order.SuppOrderID}>{order.SuppName}</td>
+                        <td data-key={order.SuppOrderID}>{order.CustomerOrderID}</td>
+                        <td data-key={order.SuppOrderID}>{order.OrderDate}</td>
+                        <td data-key={order.SuppOrderID}>{order.ShippingDate}</td>
+            </tr>)
+
+        return orderRows
+     }
+
+
      render() {
        
-        const {isLoading, redirectToHome, getSuppliersOrders , showModal, selectedOrder} = this.state;
+        const {isLoading, redirectToHome, showModal } = this.state;
         
         if (redirectToHome) {
             return <Redirect to="/"/>
@@ -102,26 +162,34 @@ export default class ShowSuppliersOrders extends React.Component {
         if(isLoading == ""){
             return <Loading isLoading={isLoading} />
          }
-        let sortedArray = getSuppliersOrders.slice();
-       
-        sortedArray.reverse()
-        let count = 0 // row number in the table
-        let Rows = sortedArray.map(order =>   // generate table with customers
-            <tr data-key={++count} onClick={this.openModal}> 
-                                <td data-key={order.SuppOrderID}>{count}</td>
-                                <td data-key={order.SuppOrderID}>{order.SuppOrderID}</td>
-                                <td data-key={order.SuppOrderID}>{order.SuppName}</td>
-                                <td data-key={order.SuppOrderID}>{order.CustomerOrderID}</td>
-                                <td data-key={order.SuppOrderID}>{order.OrderDate}</td>
-                                <td data-key={order.SuppOrderID}>{order.ShippingDate}</td>
-                                
-                               
-                                
-             </tr>)
-  
+        
         return(
-              <Container> <h2>  Suppliers Order List</h2>
-                        
+              <Container> 
+                    <Row className="justify-content-md-center">
+                    <h2>  Suppliers Order List</h2>
+                    </Row>
+                    <Row>
+                        <Col lg={12}>
+                         <InputGroup size="sm" className="mb-3">
+                            <InputGroup.Prepend>
+                                   <InputGroup.Text id="inputGroup-sizing-sm">Filter by:</InputGroup.Text>
+                           </InputGroup.Prepend>
+                           <FormControl onChange={this.getFilterText} aria-label="Small" aria-describedby="inputGroup-sizing-sm" 
+                               placeholder="Supplier Name / Supp orderID / Cust orderID "/>
+                           <InputGroup.Prepend>
+                                   <InputGroup.Text id="inputGroup-sizing-sm">Sort By:</InputGroup.Text>
+                           </InputGroup.Prepend>
+                           <Form.Control as="select" onChange={this.sortBy}>
+                                    <option value="">Choose...</option>
+                                    <option value="SuppName">Supplier</option>
+                                    <option value="SuppOrderID">Supplier OrderID</option>
+                                    <option value="CustomerOrderID">Customer OrderID</option>
+                                    </Form.Control>
+                         </InputGroup>
+                        </Col>
+                    </Row>        
+                    <Row className="justify-content-md-center" > 
+                    <Col lg={12}> 
                         <Table responsive="lg">
                             <thead>
                             <tr>
@@ -136,14 +204,13 @@ export default class ShowSuppliersOrders extends React.Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {Rows}
+                            {this.ordersTable()}
                             </tbody>
                         </Table>
-
+                        </Col>
+                      </Row>
                         <Modal show={showModal} onHide={this.closeModal} size="lg">  
-                            <Modal.Header  closeButton>
-                                <Modal.Title  >Order Details - {selectedOrder.SuppOrderID}</Modal.Title>
-                            </Modal.Header>
+                                   {this.detailsModalHeader()}  
                             <Modal.Body className="mx-auto">
                             <Table  responsive="sm" size="sm">
                                    <tbody>
