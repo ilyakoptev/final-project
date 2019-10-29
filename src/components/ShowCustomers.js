@@ -18,15 +18,14 @@ export default class ShowCustomers extends React.Component {
             sortCustomers: "",
         }
 
-        //this.openCustomerDetails = this.openCustomerDetails.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.detailsModalWindow = this.detailsModalWindow.bind(this);
         this.getFilterText = this.getFilterText.bind(this);
         this.sortBy = this.sortBy.bind(this);
         
-        
     }
+    
     componentDidMount(){
         fetch('/getdataCustomers') // get promise
         .then(res => res.json())  //get json 

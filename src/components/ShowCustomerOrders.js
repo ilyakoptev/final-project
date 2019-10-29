@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Table, Modal} from 'react-bootstrap';
+import { Container, Button , Table, Modal, Row, Col, InputGroup, Form, FormControl} from 'react-bootstrap';
 //import customerorders from '../data/customerorders';
 
 export default class ShowCustomerOrders extends React.Component {
@@ -13,14 +13,19 @@ export default class ShowCustomerOrders extends React.Component {
             getCustomer: {},
             redirectToHome: false,
             showModal: false,
-          
-        }
+            filteredData:[],
+            filterOrders: "",
+            sortOrders: "",
+     }
 
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.detailsModalWindow = this.detailsModalWindow.bind(this);
+        this.getFilterText = this.getFilterText.bind(this);
+        this.sortBy = this.sortBy.bind(this);
         
     }
+
     componentDidMount(){
         fetch('/getCustomersOrders')
         .then(res => res.json())
@@ -31,7 +36,14 @@ export default class ShowCustomerOrders extends React.Component {
     viewstate(){
         console.log(this.state.getCustomersOrders)
     }
-          
+    
+    getFilterText(e){
+        this.setState({filterOrders:e.target.value})
+       }
+      sortBy(e){
+        this.setState({sortOrders:e.target.value})
+      }
+
     openModal(e) {
         const index = e.target.getAttribute('data-key')
         this.setState({ showModal: true })
@@ -44,7 +56,7 @@ export default class ShowCustomerOrders extends React.Component {
         this.setState({ showModal: false })
     }
     detailsModalWindow() {
-       const {selectedOrder, selectedOrderDetails } = this.state;
+       const {selectedOrderDetails } = this.state;
       
        let obj = {}
      //   selectedOrder.Customer = getCustomer.WorkName // add property "Customer"  to order modal 
@@ -74,44 +86,91 @@ export default class ShowCustomerOrders extends React.Component {
             
           // resultArr.push(result)
         }
-              
-     //   obj  = selectedOrderDetails[0]
-      //header = <tr>{header}</tr>
-      //  console.log(header)       
+     
       resultArr = <tbody><tr>{header}</tr> {result} </tbody>  // build table for modal window 
       return resultArr
      }
-      render() {
-        const { redirectToHome, getCustomersOrders , showModal, selectedOrder} = this.state;
+
+     ordersTable(){
+        const { getCustomersOrders , filterOrders, sortOrders} = this.state;
         const {activeUser} = this.props;
-        
-        
-        console.log(getCustomersOrders.EmployeeID, activeUser.EmployeeId) 
-        var sortedArray = getCustomersOrders.slice();
+                
+        let count = 0 // row number in the table
+        let filter = filterOrders
+        let sort = sortOrders
+        let filteredData =[]
+        for (let i=0;i<getCustomersOrders.length;i++) {
+           let cust = getCustomersOrders[i].Customer // get full name in one string
+           if (cust.toLowerCase().includes(filter.toLowerCase()) ){ // fullname and filter to lowCase to find all names 
+               filteredData = filteredData.concat(getCustomersOrders[i])
+               
+            }        
+        }
+        if(sort==="Customer"){
+            filteredData.sort((a, b) => (a.Customer > b.Customer) ? 1 : -1)
+            filteredData.reverse()
+         }
+         if(sort==="CustOrderID"){
+            filteredData.sort((a, b) => (a.CustOrderID > b.CustOrderID) ? 1 : -1)
+            filteredData.reverse()
+         }
+             
+       
        
         if (activeUser.Position == 2 || activeUser.Position == 4){   // if user sales manager or driver as can see only his orders
-             sortedArray = getCustomersOrders.filter(x => x.EmployeeID.includes(activeUser.EmployeeId));
+            filteredData = filteredData.filter(x => x.EmployeeID.includes(activeUser.EmployeeId));
             } //else  sortedArray = getCustomersOrders
     
+        filteredData.reverse()
+        count = 0 // row number in the table
+        let orderRows = filteredData.map(order =>   // generate table with customers
+            <tr data-key={++count} onClick={this.openModal}> 
+                                <td data-key={order.CustOrderID}>{count}</td>
+                                <td data-key={order.CustOrderID}>{order.CustOrderID}</td>
+                                <td data-key={order.CustOrderID}>{order.Customer}</td>
+                                <td data-key={order.CustOrderID}>{order.OrderIncomeDate}</td>
+                                <td data-key={order.CustOrderID}>{order.OrderShippingDate}</td>
+               </tr>)
+        return orderRows
+     }
+
+      render() {
+        const { redirectToHome, showModal, selectedOrder} = this.state;
+       
         if (redirectToHome) {
             return <Redirect to="/"/>
-        }
-        sortedArray.reverse()
-        let count = 0 // row number in the table
-        let Rows = sortedArray.map(order =>   // generate table with customers
-            <tr data-key={++count} onClick={this.openModal}> 
-                                <td data-key={count}>{count}</td>
-                                <td data-key={count}>{order.CustOrderID}</td>
-                                <td data-key={count}>{order.Customer}</td>
-                                <td data-key={count}>{order.OrderIncomeDate}</td>
-                                <td data-key={count}>{order.OrderShippingDate}</td>
-               </tr>)
+        } 
       // console.log( this.state.getData[0].City )
       // console.log(selectedOrder.City ) 
       //  console.log( Object.keys(selectedOrder) ) 
         return(
-              <Container> <h2>  Customers Order List</h2>
-                        
+              <Container> 
+
+                    <Row className="justify-content-md-center">
+                    <h2>  Customers Order List</h2>
+                    </Row>
+                    <Row>
+                        <Col lg={12}>
+                         <InputGroup size="sm" className="mb-3">
+                            <InputGroup.Prepend>
+                                   <InputGroup.Text id="inputGroup-sizing-sm">Filter by:</InputGroup.Text>
+                           </InputGroup.Prepend>
+                           <FormControl onChange={this.getFilterText} aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Customer name "/>
+                           <InputGroup.Prepend>
+                                   <InputGroup.Text id="inputGroup-sizing-sm">Sort By:</InputGroup.Text>
+                           </InputGroup.Prepend>
+                           <Form.Control as="select" onChange={this.sortBy}>
+                                    <option value="">Choose...</option>
+                                    <option value="Customer">Customer</option>
+                                    <option value="CustOrderID">Order ID</option>
+                                   
+                                    </Form.Control>
+                         </InputGroup>
+                        </Col>
+                    </Row>   
+                    
+                    <Row className="justify-content-md-center" > 
+                    <Col lg={12}>
                         <Table responsive="lg">
                             <thead>
                             <tr>
@@ -125,10 +184,11 @@ export default class ShowCustomerOrders extends React.Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {Rows}
+                            {this.ordersTable()}
                             </tbody>
                         </Table>
-
+                        </Col>
+                      </Row>
                         <Modal show={showModal} onHide={this.closeModal} size="lg">  
                             <Modal.Header  closeButton>
                                 <Modal.Title  >Order Details - {selectedOrder.CustOrderID}</Modal.Title>
