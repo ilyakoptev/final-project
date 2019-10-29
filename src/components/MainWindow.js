@@ -12,7 +12,7 @@ import ShowSuppliersOrders from './ShowSuppliersOrders';
 import AddNewSuppOrder from './AddNewSuppOrder';
 import EditCustomer from './EditCustomer';
 import AddNewSupplier from './AddNewSupplier';
-
+import ShowEmployees from './ShowEmployees';
 
 class MainWindow extends React.Component {
     constructor(props) {
@@ -25,23 +25,7 @@ class MainWindow extends React.Component {
 
         //this.logout = this.logout.bind(this);
     }
-    componentDidMount(){
-        // fetch('/getdata')
-        // .then(res => res.json())
-        // .then(getData => this.setState({getData}));
-      
-        //console.log(this.state.getData)
-      }
-    
-    // // this function in onvoked after every render (but not the first)
-    // componentDidUpdate() {
-    //     if (this.state.redirectToHome) {
-    //         this.setState({redirectToHome: false})
-    //     }
-    // }
-
-    
-
+ 
     render() {
         const { activeUser,  menuChoose } = this.props;
         const { redirectToHome } = this.state;
@@ -71,7 +55,7 @@ class MainWindow extends React.Component {
         case "editSupplier": 
                  return(                            <div>editSupplier</div>                       )  
         case "showSuppliers": 
-                 return(                     <ShowSuppliers/>                       )  
+                 return(                     <ShowSuppliers activeUser={activeUser}/>                       )  
         case "addNewProduct": 
                  return(                            <div>addNewProduct</div>                        )  
         case "editProduct": 
@@ -79,7 +63,7 @@ class MainWindow extends React.Component {
         case "deleteProduct": 
                  return(                             <div>deleteProduct</div>                          )  
         case "showProducts": 
-                 return(                      <ShowProducts/>                       )  
+                 return(                      <ShowProducts activeUser={activeUser}/>                       )  
         case "newReciept": 
                return(                            <div>newReciept</div>                       )  
         case "newPayment": 
@@ -101,7 +85,7 @@ class MainWindow extends React.Component {
         case "deleteEmployeer": 
                 return(                         <div>deleteEmployeer</div>                    )  
         case "showEmployees": 
-               return(                         <div>showEmployees</div>                    )  
+               return(                         <ShowEmployees activeUser={activeUser}/>                    )  
         // case null:
         //         return (
         //             <Container>

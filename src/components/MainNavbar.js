@@ -24,7 +24,8 @@ class MainNavbar extends React.Component {
 
         this.logout = this.logout.bind(this);
         this.getMenuItem = this.getMenuItem.bind(this);
-        
+        this.goToHomePage = this.goToHomePage.bind(this);
+
     }
 
     logout() {
@@ -32,13 +33,6 @@ class MainNavbar extends React.Component {
         this.setState({redirectToHome: true})
         
     }
-
-    // // this function in onvoked after every render (but not the first)
-    // componentDidUpdate() {
-    //     if (this.state.redirectToHome) {
-    //         this.setState({redirectToHome: false})
-    //     }
-    // }
 
     componentDidMount(){
       // const {activeUser} = this.props;
@@ -120,8 +114,12 @@ class MainNavbar extends React.Component {
         this.props.setMenuChooseState(e.target.id) //id of menu item
         console.log(e.target.id)
     }
+
+    goToHomePage(){
+        return <Redirect to="/"/>
+    }
     render() {
-        const { activeUser , employees } = this.props;
+       
         const {createNewOrder,redirectToHome, customersEdit, customersRead, suppliersEdit, suppliersRead, productsEdit, productsRead, accountsEdit,accountsRead,adminAccess} = this.state;
 
         if (redirectToHome) {
@@ -225,7 +223,7 @@ class MainNavbar extends React.Component {
         
        return (
                <Navbar bg="light" expand="lg">
-               <Navbar.Brand href="#home">Flower Company</Navbar.Brand>
+               <Navbar.Brand  onClick={this.goToHomePage}>Flowers LTD</Navbar.Brand>
                <Navbar.Toggle aria-controls="basic-navbar-nav" />
                <Navbar.Collapse id="basic-navbar-nav">
                        {navCustomers}
