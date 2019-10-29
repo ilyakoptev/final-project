@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal, Row, Col, InputGroup, Form, FormControl} from 'react-bootstrap';
-import customerorders from '../data/customerorders';
+
 
 export default class ShowCustomers extends React.Component {
     constructor(props) {

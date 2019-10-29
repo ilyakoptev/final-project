@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { Container, Button , Row, Col, Form, InputGroup} from 'react-bootstrap';
+import { Container, Button , Row, Col, Form} from 'react-bootstrap';
 
 
 export default class AddNewCustomer extends React.Component {
@@ -13,7 +13,6 @@ export default class AddNewCustomer extends React.Component {
             getEmployee: {},
             redirectToHome: false,
             isDisabled: true,  // button Submit order status 
-            customerRowNum: null, 
             validated: false,
             isSuccess: false,
             fieldValidation:{ // insert all values as false for hiding submit button 
@@ -156,6 +155,7 @@ export default class AddNewCustomer extends React.Component {
        console.log("on start") 
        console.log(e.target.value.toUpperCase(),e.target.value.length, e.target.id )  
        console.log(fieldValidation) 
+       console.log(getDataCustomers) 
        console.log(newCustomer) 
        console.log("****************") 
        var insertData = e.target.value
@@ -436,7 +436,7 @@ export default class AddNewCustomer extends React.Component {
         return(
               <Container> 
                   <Row>
-                      <Col><h2 class="text-center"> Add new customer</h2></Col>
+                      <Col><h2 className="text-center"> Add new customer</h2></Col>
                   </Row>
                <Row>
                  <Col>

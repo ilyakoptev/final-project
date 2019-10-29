@@ -186,12 +186,12 @@ class MainNavbar extends React.Component {
         if (!accountsEdit&&!accountsRead)  
             navAccounts = ""
         else {
-            let createReciept = accountsEdit ?  <NavDropdown.Item id ="newReciept" onClick={this.getMenuItem}>New Reciept from Customer</NavDropdown.Item> : "" 
-            let customerBalance = accountsRead?   <NavDropdown.Item id ="custBalance" onClick={this.getMenuItem}>Customers balance</NavDropdown.Item> : ""
-            let createPayment = accountsEdit ?   <NavDropdown.Item id ="newPayment" onClick={this.getMenuItem}>New Payment to Supplier</NavDropdown.Item> : ""
-            let SupplierBalance = accountsRead ?    <NavDropdown.Item id ="suppBalance" onClick={this.getMenuItem}>Supplier balance</NavDropdown.Item> : ""
-            let customerDocuments = accountsRead ?    <NavDropdown.Item id ="custDocs" onClick={this.getMenuItem}>All Customer documents</NavDropdown.Item> : ""
-            let SupplierDocuments = accountsRead ?    <NavDropdown.Item id ="suppDocs" onClick={this.getMenuItem}>All Supplier documents</NavDropdown.Item> : ""
+            let createReciept = accountsEdit ?  <NavDropdown.Item id ="newReciept" className="text-success" onClick={this.getMenuItem}>New Reciept from Customer</NavDropdown.Item> : "" 
+            let customerBalance = accountsRead?   <NavDropdown.Item id ="custBalance" className="text-warning" onClick={this.getMenuItem}>Customers balance</NavDropdown.Item> : ""
+            let createPayment = accountsEdit ?   <NavDropdown.Item id ="newPayment" className="text-success" onClick={this.getMenuItem}>New Payment to Supplier</NavDropdown.Item> : ""
+            let SupplierBalance = accountsRead ?    <NavDropdown.Item id ="suppBalance" className="text-warning" onClick={this.getMenuItem}>Supplier balance</NavDropdown.Item> : ""
+            let customerDocuments = accountsRead ?    <NavDropdown.Item id ="custDocs" className="text-info" onClick={this.getMenuItem}>All Customer documents</NavDropdown.Item> : ""
+            let SupplierDocuments = accountsRead ?    <NavDropdown.Item id ="suppDocs" className="text-info" onClick={this.getMenuItem}>All Supplier documents</NavDropdown.Item> : ""
            
             let showSaldo = accountsEdit ?     <NavDropdown.Item id ="showSaldo" onClick={this.getMenuItem}>Show Final Saldo</NavDropdown.Item> : ""
            

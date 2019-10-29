@@ -18,7 +18,7 @@ var getUnorderedCustOrders = require('./routes/getUnorderedCustOrders');
 var getSuppPriceList = require('./routes/getSuppPriceList');
 var insertSupplierOrder = require('./routes/insertSupplierOrder');
 var editCustomer = require('./routes/editCustomer');
-
+var insertNewSupplier = require('./routes/insertNewSupplier');
 
 var app = express();
 //----------------------------------------------
@@ -55,6 +55,7 @@ app.use('/getUnorderedCustOrders', getUnorderedCustOrders);
 app.use('/getSuppPriceList', getSuppPriceList);
 app.use('/insertSupplierOrder', insertSupplierOrder);
 app.use('/editCustomer', editCustomer);
+app.use('/insertNewSupplier', insertNewSupplier);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
