@@ -64,20 +64,24 @@ export default class AddNewCustOrder extends React.Component {
 
 
     detailsModalWindow() {
-           const {submitOrderArray} = this.state;
+           const {submitOrderArray,getDataProducts} = this.state;
            let result = []
            if (submitOrderArray.length===0){
                result[0] = <tr><td>No items selected</td></tr>
            }
-           else
-           for(let i=0;i<submitOrderArray.length;i++){
-                result[i]=
+           else{
+            for(let i=0;i<submitOrderArray.length;i++){
+              let item = getDataProducts.find((item=>{if(item.ProductID==submitOrderArray[i].id) return item}))
+              result[i]=
                             <tr>
                                 <td>{submitOrderArray[i].id}</td>
+                                <td>{item.ProductName}</td>
+                                <td>{item.Description}</td>
                                 <td>{submitOrderArray[i].quantity}</td>
+                                
                             </tr>
+           }
           }
-       
     //   // console.log( result)
     //     // console.log(this.state.selectedCustomer)
         return result
@@ -85,19 +89,20 @@ export default class AddNewCustOrder extends React.Component {
 
 
      insertProdQuantity(e){ // read input 
-        const {selectedProducts,selectedProductQuantity, ifCustomerSelected, ifProductSelected} = this.state
-        if(e.target.value == 0){
-           return
+        const {selectedProducts, getQuantity} = this.state
+        let productArr = getQuantity
+        if(e.target.value == 0 || e.target.value == "" || e.target.value == undefined ){
+             return
         }
         // if(e.target.value.lenght > 0)
         //     this.setState({ifProductSelected:true})  // set property of selected product true
         // else 
         //     this.setState({ifProductSelected:false})  // set property of selected product false if field is empty 
         let product = {}
-        let productArr = []
+       // let productArr = []
         product.id = e.target.id
         product.quantity = e.target.value
-        productArr.unshift(product) 
+        productArr.unshift(product) //insert in the first place 
         this.setState({getQuantity:productArr})
         console.log("insertProdQuantity" )
         console.log(e.target.id, e.target.value, e.target.value.length )
@@ -132,7 +137,7 @@ export default class AddNewCustOrder extends React.Component {
         if(submitProduct!==undefined){
                    // insert to product array
             if(submitOrder.length===0){
-                 submitOrder.push(submitProduct)    
+              submitOrder = submitOrder.concat(submitProduct)    
                  console.log("if lenght = 0 ")
                  console.log(submitProduct)
                  console.log(submitOrder)}

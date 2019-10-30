@@ -44,15 +44,14 @@ export default class AddNewCustomer extends React.Component {
         // .then(getDataEmployees => this.setState({getDataEmployees}));
         //console.log(this.state.getData)
       }
-      
+
    changeStatus(key,status){
     const { isDisabled } = this.state;
     //change validation status by key
     let fieldValidation = Object.assign({}, this.state.fieldValidation)
     fieldValidation[key] = status;                     // update the name property, assign a new value                 
     this.setState({fieldValidation}) 
-   
-              
+                
       // check of all field are ok and visible to submit button 
       
        let fieldValidationValues = Object.values(fieldValidation)
@@ -67,13 +66,11 @@ export default class AddNewCustomer extends React.Component {
               submit = true
        }
        this.setState({isDisabled:submit})
-       console.log(submit , isDisabled ) 
        console.log(fieldValidation)
-      //   this.setState({workName:"valid"})
-      //  alert(this.state.fieldValidation.workName)
       }
+
       validateFields(e){
-       const { getDataCustomers, isDisabled , fieldValidation, newCustomer} = this.state;
+       const { getDataCustomers, fieldValidation, newCustomer} = this.state;
        console.log("on start") 
        console.log(e.target.value.toUpperCase(),e.target.value.length, e.target.id )  
        console.log(fieldValidation) 
@@ -86,7 +83,7 @@ export default class AddNewCustomer extends React.Component {
                    if(insertData.length<3||insertData.length>5 || !isNaN(insertData)){  // length between 2-5
                       this.changeStatus(e.target.id,false)
                       break;}
-                                      if(insertData.length<4 && insertData.includes("-",2) ){  // if length > 4 so format must be X-XXX
+                   if(insertData.length<4 && insertData.includes("-",2) ){  // if length > 4 so format must be X-XXX
                        this.changeStatus(e.target.id,false)
                       break;}
                    // custName = getDataCustomers.find((cust) => { if(cust.CustID==1000) return cust})
@@ -104,12 +101,7 @@ export default class AddNewCustomer extends React.Component {
                    newCustomer.WorkName = insertData;                     // update the name property, assign a new value                 
                    return { newCustomer };                                 // return new object fieldValidatione object
                    })
-                   
-                   console.log(fieldValidation)
-                   console.log(insertData.length)
-                   console.log(e.target.id) 
-                   console.log(newCustomer) 
-                   break ;
+                 break ;
            case "crn" :
                 if(insertData.length < 7 || insertData.length > 13  || isNaN(insertData)){  // length between 2-5
                     this.changeStatus(e.target.id,false)
@@ -125,11 +117,7 @@ export default class AddNewCustomer extends React.Component {
                     newCustomer.CRN = insertData;                     // update the name property, assign a new value                 
                     return { newCustomer };                                 // return new object fieldValidatione object
                     })
-                    console.log(fieldValidation)
-                   console.log(insertData.length)
-                   console.log(e.target.id) 
-                   console.log(newCustomer) 
-                break;
+                 break;
            case "company" :
                 if( insertData.length < 3 || !isNaN(insertData)){  // length between 2-5
                     this.changeStatus(e.target.id,false)
@@ -140,11 +128,7 @@ export default class AddNewCustomer extends React.Component {
                     newCustomer.Company = insertData;                     // update the name property, assign a new value                 
                     return { newCustomer };                                 // return new object fieldValidatione object
                     })
-                   console.log(fieldValidation)
-                   console.log(insertData.length)
-                   console.log(e.target.id) 
-                   console.log(newCustomer) 
-                break;
+                  break;
            case "name1" :
                    if( insertData.length < 3 || !isNaN(insertData)){  // length between 2-5
                        this.changeStatus(e.target.id,false)
@@ -158,11 +142,7 @@ export default class AddNewCustomer extends React.Component {
                        newCustomer.ContactName = insertData;                     // update the name property, assign a new value                 
                        return { newCustomer };                                 // return new object fieldValidatione object
                        })
-                      console.log(fieldValidation)
-                      console.log(insertData.length)
-                      console.log(e.target.id) 
-                      console.log(newCustomer) 
-                   break;     
+                  break;     
           case "telephone1" :
                if(insertData.length < 7 || insertData.length > 13  || isNaN(insertData)){  // length between 2-5
                    this.changeStatus(e.target.id,false)
@@ -173,11 +153,7 @@ export default class AddNewCustomer extends React.Component {
                     newCustomer.Telephone = insertData;                     // update the name property, assign a new value                 
                     return { newCustomer };                                 // return new object fieldValidatione object
                    })
-               console.log(fieldValidation)
-               console.log(insertData.length)
-               console.log(e.target.id) 
-               console.log(newCustomer) 
-               break;
+                break;
           case "name2" :
                     if( insertData.length < 3 || !isNaN(insertData)){  // length between 2-5
                         this.changeStatus(e.target.id,false)
@@ -191,10 +167,6 @@ export default class AddNewCustomer extends React.Component {
                         newCustomer.ContactName2 = insertData;                     // update the name property, assign a new value                 
                         return { newCustomer };                                 // return new object fieldValidatione object
                         })
-                    console.log(fieldValidation)
-                    console.log(insertData.length)
-                    console.log(e.target.id) 
-                    console.log(newCustomer) 
                     break;     
            case "telephone2" :
                 if(insertData.length < 7 || insertData.length > 13  || isNaN(insertData)){  // length between 2-5
@@ -206,11 +178,7 @@ export default class AddNewCustomer extends React.Component {
                     newCustomer.Telephone2 = insertData;                     // update the name property, assign a new value                 
                     return { newCustomer };                                 // return new object fieldValidatione object
                     })
-                 console.log(fieldValidation)
-                 console.log(insertData.length)
-                 console.log(e.target.id) 
-                 console.log(newCustomer) 
-                break;
+                 break;
          case "city" :
                  if(insertData.length < 3 || insertData.length > 20  || !isNaN(insertData)){  // length between 2-5
                      this.changeStatus(e.target.id,false)
@@ -224,11 +192,7 @@ export default class AddNewCustomer extends React.Component {
                      newCustomer.City = insertData;                     // update the name property, assign a new value                 
                      return { newCustomer };                                 // return new object fieldValidatione object
                      })
-                     console.log(fieldValidation)
-                    console.log(insertData.length)
-                    console.log(e.target.id) 
-                    console.log(newCustomer) 
-                 break;
+                  break;
          case "country" :
                  if(insertData.length < 3 || insertData.length > 20  || !isNaN(insertData)){  // length between 2-5
                      this.changeStatus(e.target.id,false)
@@ -242,11 +206,7 @@ export default class AddNewCustomer extends React.Component {
                      newCustomer.Country = insertData;                     // update the name property, assign a new value                 
                      return { newCustomer };                                 // return new object fieldValidatione object
                      })
-                     console.log(fieldValidation)
-                    console.log(insertData.length)
-                    console.log(e.target.id) 
-                    console.log(newCustomer) 
-                 break;        
+                  break;        
          case "email" :
                 console.log("Email") 
                  console.log(this.validateEmail(insertData)) 
@@ -260,14 +220,14 @@ export default class AddNewCustomer extends React.Component {
                      newCustomer.Email = insertData;                     // update the name property, assign a new value                 
                      return { newCustomer };                                 // return new object fieldValidatione object
                      })
-                    console.log(fieldValidation)
-                    console.log(insertData.length)
-                    console.log(e.target.id) 
-                    console.log(newCustomer) 
+                    
                  break;   
-                   default :  console.log("default")  ///^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                   default :  console.log("default")  
        } 
-
+       console.log(fieldValidation)
+       console.log(insertData.length)
+       console.log(e.target.id) 
+       console.log(newCustomer) 
     
      }    
    
@@ -285,9 +245,10 @@ export default class AddNewCustomer extends React.Component {
         customer._id = id
         customer.CustID = id
         customer.EmployeeID = employeeId
+        customer.CategoryID = "1"  // 
         customer.PtmDelay = "30" // const be default 
-        console.log(customer)
-        console.log(this.state.newCustomer)
+        // console.log(customer)
+        // console.log(this.state.newCustomer)
         this.setState({newCustomer:customer})
 
         fetch('/insertNewCustomer',{ // send data to express server 
@@ -369,6 +330,7 @@ export default class AddNewCustomer extends React.Component {
                            Please provide a valid WorkName.
                          </Form.Control.Feedback>
                      
+                    
                        </Form.Group>
                        <Form.Group as={Col} md="4" controlId="crn" onChange={this.validateFields}>
                          <Form.Label>CRN</Form.Label>
