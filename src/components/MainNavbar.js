@@ -212,11 +212,11 @@ class MainNavbar extends React.Component {
            else {
                navEmployees = <Nav className="mr-auto">
                              <NavDropdown title="Employees" id="basic-nav-dropdown">
-                                      <NavDropdown.Item id ="addNewEmployee" onClick={this.getMenuItem}>Add new Employee</NavDropdown.Item>
-                                      <NavDropdown.Item id ="editEmployee" onClick={this.getMenuItem}>Edit exists Employee</NavDropdown.Item>
-                                      <NavDropdown.Item id ="deleteEmployeer" onClick={this.getMenuItem}>Delete Employee</NavDropdown.Item>
+                                      <NavDropdown.Item id ="addNewEmployee" className="text-success" onClick={this.getMenuItem}>Add new Employee</NavDropdown.Item>
+                                      <NavDropdown.Item id ="editEmployee" className="text-warning" onClick={this.getMenuItem}>Edit exists Employee</NavDropdown.Item>
+                                      <NavDropdown.Item id ="deleteEmployeer" className="text-danger" onClick={this.getMenuItem}>Delete Employee</NavDropdown.Item>
                                       <NavDropdown.Divider />
-                                      <NavDropdown.Item id ="showEmployees" onClick={this.getMenuItem}>Show All Employees</NavDropdown.Item>
+                                      <NavDropdown.Item id ="showEmployees" className="text-info" onClick={this.getMenuItem}>Show All Employees</NavDropdown.Item>
                                  </NavDropdown>
                               </Nav>
            }    

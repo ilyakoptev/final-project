@@ -13,6 +13,8 @@ import AddNewSuppOrder from './AddNewSuppOrder';
 import EditCustomer from './EditCustomer';
 import AddNewSupplier from './AddNewSupplier';
 import ShowEmployees from './ShowEmployees';
+import EditSupplier from './EditSupplier';
+
 
 class MainWindow extends React.Component {
     constructor(props) {
@@ -53,7 +55,7 @@ class MainWindow extends React.Component {
         case "addNewSupplier": 
                 return(                       <AddNewSupplier activeUser={activeUser}/>                         ) 
         case "editSupplier": 
-                 return(                            <div>editSupplier</div>                       )  
+                 return(                           <EditSupplier activeUser={activeUser}/>                    )  
         case "showSuppliers": 
                  return(                     <ShowSuppliers activeUser={activeUser}/>                       )  
         case "addNewProduct": 

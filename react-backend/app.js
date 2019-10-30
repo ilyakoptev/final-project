@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+//var usersRouter = require('./routes/users');
 var getDataCustomers = require('./routes/getdataCustomers');
 var getDataEmployees = require('./routes/getdataEmployees');
 var getDataSuppliers = require('./routes/getdataSuppliers');
@@ -19,6 +19,8 @@ var getSuppPriceList = require('./routes/getSuppPriceList');
 var insertSupplierOrder = require('./routes/insertSupplierOrder');
 var editCustomer = require('./routes/editCustomer');
 var insertNewSupplier = require('./routes/insertNewSupplier');
+var editSupplier = require('./routes/editSupplier');
+
 
 var app = express();
 //----------------------------------------------
@@ -41,7 +43,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//app.use('/users', usersRouter);
 
 app.use('/getdataSuppliers', getDataSuppliers);
 app.use('/getdataCustomers', getDataCustomers);
@@ -56,6 +58,8 @@ app.use('/getSuppPriceList', getSuppPriceList);
 app.use('/insertSupplierOrder', insertSupplierOrder);
 app.use('/editCustomer', editCustomer);
 app.use('/insertNewSupplier', insertNewSupplier);
+app.use('/editSupplier', editSupplier);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -72,24 +76,6 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-///*************************************************** */
-// const MongoClient = require("mongodb").MongoClient;
 
-// const url = "mongodb://localhost:27017/";
-// //const url = "mongodb+srv://admin:admin@koptevilya-wdc68.mongodb.net/admin?retryWrites=true&w=majority";
-// const mongoClient = new MongoClient(url, { useUnifiedTopology: true }); //{ useNewUrlParser: true }
-
-
-// /* GET users listing. */
-
-// var db
-// mongoClient.connect(function(err, client) {
-
-//     const dbc = client.db("PAG_Flowers");
-//     db = dbc
-//     if (err) return console.log(err);
-// });
-
-// //module.exports = bdConnect;
 
 module.exports = app;

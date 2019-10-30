@@ -15,7 +15,7 @@ export class supplierOrder {
         this.DriverID = "10";
         this.Summ = Summ;
         this.TotalSumm = this.Summ * (this.VAT / 100 + 1);
-        this.PmtID = "5";
+        this.PmtID = "None";
         this.OrderDetails = [];
 
 
