@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 router.post('/', async(req, res) => {
-    console.log('you posted to /EditSupplier'); //appears in console as expected
+    console.log('you posted to /insertCustInvoice'); //appears in console as expected
     console.log(req.body); // {} -- always empty? cant figre out why
     console.log(typeof req.body); //"object"
     console.log(req.method); // "POST"
@@ -25,17 +25,19 @@ router.post('/', async(req, res) => {
     mongoClient.connect(function(err, db) {
         if (err) throw err;
         var dbo = db.db("PAG_Flowers");
-        var myquery = { SuppId: dataFromClient.SuppId };
-        var newvalue = { $set: dataFromClient };
-        dbo.collection("Suppliers").updateOne(myquery, newvalue, function(err, res) {
+        // var myobj = { name: "Company Inc", address: "Highway 37" }; 
+
+        //*********** original insert one order  */
+        dbo.collection("Custinvoices").insertOne(dataFromClient, function(err, res) {
             if (err) throw err;
-            console.log("Success editing supplier in DB");
+            console.log("Success inserting new invoice to DB");
             db.close();
         });
-    });
-    res.json({ greeting: "Callback Supplier Edit " }); //this is sent back to the browser and i can access it
-});
+        //******************************* */
 
+    });
+    res.json({ greeting: "callback from insert New customer invoice" }); //this is sent back to the browser and i can access it
+});
 
 
 module.exports = router;

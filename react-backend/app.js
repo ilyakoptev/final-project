@@ -20,7 +20,8 @@ var insertSupplierOrder = require('./routes/insertSupplierOrder');
 var editCustomer = require('./routes/editCustomer');
 var insertNewSupplier = require('./routes/insertNewSupplier');
 var editSupplier = require('./routes/editSupplier');
-
+var insertCustInvoice = require('./routes/insertCustInvoice');
+var getCustInvoices = require('./routes/getCustInvoices');
 
 var app = express();
 //----------------------------------------------
@@ -59,7 +60,8 @@ app.use('/insertSupplierOrder', insertSupplierOrder);
 app.use('/editCustomer', editCustomer);
 app.use('/insertNewSupplier', insertNewSupplier);
 app.use('/editSupplier', editSupplier);
-
+app.use('/insertCustInvoice', insertCustInvoice);
+app.use('/getCustInvoices', getCustInvoices);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

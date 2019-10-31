@@ -18,8 +18,8 @@ router.post('/', async(req, res) => {
     dataFromClient = req.body
 
     const MongoClient = require("mongodb").MongoClient;
-    const url = "mongodb://localhost:27017/";
-    //const url = "mongodb+srv://admin:admin@koptevilya-wdc68.mongodb.net/admin?retryWrites=true&w=majority";
+    // const url = "mongodb://localhost:27017/";
+    const url = "mongodb+srv://admin:admin@koptevilya-wdc68.mongodb.net/admin?retryWrites=true&w=majority";
     const mongoClient = new MongoClient(url, { useNewUrlParser: true }); //{ useNewUrlParser: true }
 
     mongoClient.connect(function(err, db) {

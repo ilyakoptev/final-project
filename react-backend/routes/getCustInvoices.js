@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
     mongoClient.connect(function(err, client) {
 
         const db = client.db("PAG_Flowers");
-        const collection = db.collection("Suppliers");
+        const collection = db.collection("Custinvoices");
 
         if (err) return console.log(err);
         collection.find().toArray(function(err, results) {
@@ -20,7 +20,7 @@ router.get('/', function(req, res, next) {
             res.json(result)
             if (result.length > 0)
             //  console.log(result[0]);
-                console.log("GetDataSuppliers loaded successfully");
+                console.log("GetCustInvoices loaded successfully");
         });
 
     });

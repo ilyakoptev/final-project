@@ -3,8 +3,8 @@ var router = express.Router();
 
 router.get('/', async function(req, res, next) {
     const MongoClient = require("mongodb").MongoClient;
-    const url = "mongodb://localhost:27017/";
-    //const url = "mongodb+srv://admin:admin@koptevilya-wdc68.mongodb.net/admin?retryWrites=true&w=majority";
+    //const url = "mongodb://localhost:27017/";
+    const url = "mongodb+srv://admin:admin@koptevilya-wdc68.mongodb.net/admin?retryWrites=true&w=majority";
     const mongoClient = new MongoClient(url, { useUnifiedTopology: true }); //{ useNewUrlParser: true }
 
     var resultSuppliersOrders = [];

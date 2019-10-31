@@ -2,6 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal, Form, Row, Col, Image} from 'react-bootstrap';
 import {supplierOrder} from '../objects/supplierOrder';
+import {customerInvoice} from '../objects/customerInvoice';
 import Loading from './Loading';
 
 export default class AddNewSuppOrder extends React.Component {
@@ -14,6 +15,7 @@ export default class AddNewSuppOrder extends React.Component {
             getCustomersOrders: [], // all customers orders data
             getSuppliersOrders: [], // all suppliers orders data
             getSuppPriceList: [],
+            getCustInvoices:[],
             selectedOrder: {},
             selectedOrderDetails:[],
             unorderedCustOrders:[], // get from data base unordered orders 
@@ -55,6 +57,9 @@ export default class AddNewSuppOrder extends React.Component {
         fetch('/getSuppliersOrders')
         .then(res => res.json())
         .then(getSuppliersOrders => this.setState({getSuppliersOrders}));
+        fetch('/getCustInvoices')
+        .then(res => res.json())
+        .then(getCustInvoices => this.setState({getCustInvoices}));
         fetch('/getUnorderedCustOrders')
         .then(res => res.json())
         .then(unorderedCustOrders => this.setState({unorderedCustOrders,isLoading:"d-none"}));
@@ -134,13 +139,13 @@ export default class AddNewSuppOrder extends React.Component {
        // this.setState({redirectToHome:true})
        const {getSuppliersOrders,unorderedCustOrders, getSuppPriceList} = this.state
        var date = new Date();
-       var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
-       var shipDate = new Date();
-       var numberOfDaysToAdd = 3; // const of shiping dates from suppliers
+       let currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+       let shipDate = new Date();
+       let numberOfDaysToAdd = 3; // const of shiping dates from suppliers
        shipDate.setDate(shipDate.getDate() + numberOfDaysToAdd); 
        shipDate = shipDate.getFullYear() + "-" + (shipDate.getMonth()+1) + "-" + shipDate.getDate()
        var paymentDate = new Date();
-       var numberOfDaysToAdd1 = 60; // const of shiping dates from suppliers
+       let numberOfDaysToAdd1 = 60; // const of shiping dates from suppliers
        paymentDate.setDate(paymentDate.getDate() + numberOfDaysToAdd1); 
        paymentDate = paymentDate.getFullYear() + "-" + (paymentDate.getMonth()+1) + "-" + paymentDate.getDate()
 
@@ -258,7 +263,7 @@ export default class AddNewSuppOrder extends React.Component {
         
        }
        console.log(arrayOfOrders)
-      
+       let custInvoice = this.createCustInvoice(currentOrder) - //add customer invoice when making orders from suppliers for this order
        fetch('/insertSupplierOrder',{ // send data to express server 
                 method: 'POST',
                 mode: 'cors',
@@ -278,11 +283,46 @@ export default class AddNewSuppOrder extends React.Component {
                     console.log(json);
                     this.setState({isSuccess:true})
                   })
-      
+      // fetch('/insertCustInvoice',{ // send data to express server 
+      //   method: 'POST',
+      //   mode: 'cors',
+      //   body: JSON.stringify(custInvoice), //customerOrder
+      //   headers: {
+      //       'Accept': 'application/json',
+      //       'Content-Type': 'application/json'
+      //     },
+      //   })
+      //      .then((res) => {
+      //          if (res.ok){
+      //            return res.json();
+      //          } else {
+      //            throw new Error ('Something went wrong with your fetch');
+      //          }
+      //        }).then((json) => {
+      //          console.log(json);
+      //          this.setState({isSuccess:true})
+      //        })
+          
+                 
         this.setState({redirectToHome:true})    // redirect to mainwindow   
         e.target.style.visibility = 'hidden'
     }
-
+    createCustInvoice(currentOrder){
+      const{getCustInvoices} = this.state
+      
+      let id = (parseInt(getCustInvoices[getCustInvoices.length-1].InvoiceID) + 1 ).toString()
+      let custOrderId = currentOrder.CustOrderID
+      let date = new Date();
+      let currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+      let expPayDate = new Date();
+      let numberOfDaysToAdd = 30; // const of shiping dates from suppliers
+      expPayDate.setDate(expPayDate.getDate() + numberOfDaysToAdd); 
+      expPayDate = expPayDate.getFullYear() + "-" + (expPayDate.getMonth()+1) + "-" + expPayDate.getDate()
+      
+      let newInvoice = new customerInvoice(id,custOrderId,currentDate,expPayDate)
+      console.log(newInvoice)
+      return newInvoice
+    }
 
      handleSubmit(event) {
         //alert(event.target.length)
