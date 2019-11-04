@@ -1,13 +1,13 @@
-Sign in users:
-users admin: Admin 
-users with sales permissions : Olga, Sergey, Andrey
-user with office permissions: Office, Alena, Vasya
-password for all users: 123
-
-mongoDB is hosting in mongoDB Atlas 
-
-project uses frontend react app and express server side app 
-
+Sign in users:<br />
+users admin: Admin <br />
+users with sales permissions : Olga, Sergey, Andrey<br />
+user with office permissions: Office, Alena, Vasya<br />
+password for all users: 123<br />
+<br />
+mongoDB is hosting in mongoDB Atlas <br />
+<br />
+project uses frontend react app and express server side app <br />
+<br />
 ****************************************************************************
 
 
