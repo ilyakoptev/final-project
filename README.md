@@ -8,6 +8,7 @@ mongoDB is hosting in mongoDB Atlas <br />
 <br />
 project uses frontend react app and express server side app <br />
 <br />
+Needs to install NodeJS, Node Express Server<br />
 ****************************************************************************
 
 
