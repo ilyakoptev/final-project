@@ -25,14 +25,29 @@ router.post('/', async(req, res) => {
     mongoClient.connect(function(err, db) {
         if (err) throw err;
         var dbo = db.db("PAG_Flowers");
-        // var myobj = { name: "Company Inc", address: "Highway 37" }; 
 
-        //*********** original insert one order  */
-        dbo.collection("Supporders").insertMany(dataFromClient, function(err, res) {
+        // testing area 
+        let dataSuppOrder = dataFromClient.dataSuppOrder
+        let custInvoice = dataFromClient.custInvoice
+        dbo.collection("Supporders").insertMany(dataSuppOrder, function(err, res) {
             if (err) throw err;
             console.log("Success inserting new customer order to DB");
-            db.close();
+            //db.close();
+            dbo.collection("Custinvoices").insertOne(custInvoice, function(err, res) {
+                if (err) throw err;
+                console.log("Success inserting new customer invoice");
+                db.close();
+            });
         });
+        // end of testing area 
+
+
+        //*********** original insert one order  */
+        // dbo.collection("Supporders").insertMany(dataFromClient, function(err, res) {
+        //     if (err) throw err;
+        //     console.log("Success inserting new customer order to DB");
+        //     db.close();
+        // });
 
     });
     res.json({ greeting: "callback from insert suppliers orders" }); //this is sent back to the browser and i can access it

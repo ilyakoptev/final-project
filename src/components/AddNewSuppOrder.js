@@ -271,68 +271,54 @@ export default class AddNewSuppOrder extends React.Component {
         
        }
        console.log(arrayOfOrders)
-       let custInvoice = this.createCustInvoice(currentOrder) - //add customer invoice when making orders from suppliers for this order
-      //  fetch('/insertSupplierOrder',{ // send data to express server 
-      //           method: 'POST',
-      //           mode: 'cors',
-      //           body: JSON.stringify(arrayOfOrders), //customerOrder
-      //           headers: {
-      //               'Accept': 'application/json',
-      //               'Content-Type': 'application/json'
-      //             },
-      //           })
-      //           .then((res) => {
-      //               if (res.ok){
-      //                 return res.json();
-      //               } else {
-      //                 throw new Error ('Something went wrong with your fetch');
-      //               }
-      //             }).then((json) => {
-      //               console.log(json);
-      //               this.setState({isSuccess:true})
-      //             })
-      
-                 
-        this.setState({redirectToHome:true})    // redirect to mainwindow   
+       this.createCustInvoice(currentOrder, arrayOfOrders)  //add customer invoice when making orders from suppliers for this order
+     
+       this.setState({redirectToHome:true})    // redirect to mainwindow   
         e.target.style.visibility = 'hidden'
     }
 
-    createCustInvoice(currentOrder){ // create new object with customer invoice 
-      const{getCustInvoices} = this.state
+    createCustInvoice(currentOrder, arrayOfOrders){ // create new object with customer invoice 
+      const{getCustInvoices, getCustomersOrders,getDataCustomers} = this.state
       
       let id = (parseInt(getCustInvoices[getCustInvoices.length-1].InvoiceID) + 1 ).toString()
       let custOrderId = currentOrder.CustOrderID
       let date = new Date();
-      let currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
       let expPayDate = new Date();
-      let numberOfDaysToAdd = 30; // const of shiping dates from suppliers
-      expPayDate.setDate(expPayDate.getDate() + numberOfDaysToAdd); 
+      let currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+     // get payment consdition from customer data 
+      let customerID = getCustomersOrders.find((order)=>{if(order.CustOrderID==custOrderId)return order}).CustomerID
+     // console.log(customerID)
+      let custPaymentDelay = parseInt(getDataCustomers.find((cust)=>{if(cust.CustID==customerID) return cust}).PtmDelay)
+      expPayDate.setDate(expPayDate.getDate() + custPaymentDelay); 
       expPayDate = expPayDate.getFullYear() + "-" + (expPayDate.getMonth()+1) + "-" + expPayDate.getDate()
       
-      let newInvoice = new customerInvoice(id,custOrderId,currentDate,expPayDate)
+      let newInvoice = new customerInvoice(id,custOrderId,currentDate,custPaymentDelay,expPayDate)
       console.log(newInvoice)
-
-      // fetch('/insertCustInvoice',{ // send data to express server 
-      //   method: 'POST',
-      //   mode: 'cors',
-      //   body: JSON.stringify(newInvoice), //customerOrder
-      //   headers: {
-      //       'Accept': 'application/json',
-      //       'Content-Type': 'application/json'
-      //     },
-      //   })
-      //      .then((res) => {
-      //          if (res.ok){
-      //            return res.json();
-      //          } else {
-      //            throw new Error ('Something went wrong with your fetch');
-      //          }
-      //        }).then((json) => {
-      //          console.log(json);
-      //          this.setState({isSuccess:true})
-      //        })
-          
-      return newInvoice
+     
+      let sendingData = {} // object with all data to send to server 
+      sendingData.dataSuppOrder = arrayOfOrders
+      sendingData.custInvoice = newInvoice
+     
+        fetch('/insertSupplierOrder',{ // send data to express server 
+                method: 'POST',
+                mode: 'cors',
+                body: JSON.stringify(sendingData), //customerOrder
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  },
+                })
+                .then((res) => {
+                    if (res.ok){
+                      return res.json();
+                    } else {
+                      throw new Error ('Something went wrong with your fetch');
+                    }
+                  }).then((json) => {
+                    console.log(json);
+                    this.setState({isSuccess:true})
+                  })
+ 
     }
 
      handleSubmit(event) {
