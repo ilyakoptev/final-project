@@ -1,3 +1,17 @@
+Sign in users:<br />
+users admin: Admin <br />
+users with sales permissions : Olga, Sergey, Andrey<br />
+user with office permissions: Office, Alena, Vasya<br />
+password for all users: 123<br />
+<br />
+mongoDB is hosting in mongoDB Atlas <br />
+<br />
+project uses frontend react app and express server side app <br />
+<br />
+Needs to install NodeJS, Node Express Server<br />
+****************************************************************************
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
