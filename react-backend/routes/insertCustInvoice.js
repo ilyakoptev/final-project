@@ -25,8 +25,6 @@ router.post('/', async(req, res) => {
     mongoClient.connect(function(err, db) {
         if (err) throw err;
         var dbo = db.db("PAG_Flowers");
-        // var myobj = { name: "Company Inc", address: "Highway 37" }; 
-
         //*********** original insert one order  */
         dbo.collection("Custinvoices").insertOne(dataFromClient, function(err, res) {
             if (err) throw err;

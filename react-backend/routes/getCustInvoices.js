@@ -6,7 +6,7 @@ const MongoClient = require("mongodb").MongoClient;
 //const url = "mongodb://localhost:27017/";
 const url = "mongodb+srv://admin:admin@koptevilya-wdc68.mongodb.net/admin?retryWrites=true&w=majority";
 const mongoClient = new MongoClient(url, { useUnifiedTopology: true }); //{ useNewUrlParser: true }
-var result; //array of all tables
+var result = []; //array of all tables
 
 router.get('/', function(req, res, next) {
     mongoClient.connect(function(err, client) {

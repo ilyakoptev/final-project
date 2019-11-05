@@ -11,6 +11,7 @@ export default class AddNewSuppOrder extends React.Component {
         this.trRef = React.createRef();
         this.state = {
             getDataCustomers: [], // all customers data 
+            getDataSuppliers: [], // all customers data 
             getDataProducts:[], // all products data
             getCustomersOrders: [], // all customers orders data
             getSuppliersOrders: [], // all suppliers orders data
@@ -60,6 +61,9 @@ export default class AddNewSuppOrder extends React.Component {
         fetch('/getCustInvoices')
         .then(res => res.json())
         .then(getCustInvoices => this.setState({getCustInvoices}));
+        fetch('/getdataSuppliers')
+        .then(res => res.json())
+        .then(getDataSuppliers => this.setState({getDataSuppliers}));
         fetch('/getUnorderedCustOrders')
         .then(res => res.json())
         .then(unorderedCustOrders => this.setState({unorderedCustOrders,isLoading:"d-none"}));
@@ -137,18 +141,16 @@ export default class AddNewSuppOrder extends React.Component {
 
       createOrder(e){ // save it to array with all customer orders 
        // this.setState({redirectToHome:true})
-       const {getSuppliersOrders,unorderedCustOrders, getSuppPriceList} = this.state
+       const {getSuppliersOrders,unorderedCustOrders, getSuppPriceList, getDataSuppliers} = this.state
        var date = new Date();
+       var paymentDate = new Date();
        let currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
        let shipDate = new Date();
        let numberOfDaysToAdd = 3; // const of shiping dates from suppliers
        shipDate.setDate(shipDate.getDate() + numberOfDaysToAdd); 
        shipDate = shipDate.getFullYear() + "-" + (shipDate.getMonth()+1) + "-" + shipDate.getDate()
-       var paymentDate = new Date();
-       let numberOfDaysToAdd1 = 60; // const of shiping dates from suppliers
-       paymentDate.setDate(paymentDate.getDate() + numberOfDaysToAdd1); 
-       paymentDate = paymentDate.getFullYear() + "-" + (paymentDate.getMonth()+1) + "-" + paymentDate.getDate()
-
+       
+      
        var currentOrder = unorderedCustOrders.find((order) => {if( e.target.getAttribute('data-key')==order.CustOrderID) return order}) // current custOrder
        var arrayOfOrders = []      
        
@@ -173,6 +175,12 @@ export default class AddNewSuppOrder extends React.Component {
            let x = Math.floor((Math.random() * count) + 1);
            console.log("x: " + x)
            let randomSupplier = suppliersPerProduct[x-1] // random supplier for current prodId 
+           //get payment delay from suppliers table 
+           let suppPaymentDelay = parseInt(getDataSuppliers.find((supp)=>{if(supp.SuppId==randomSupplier)return supp})["Payment Delay"])
+           paymentDate.setDate(paymentDate.getDate() + suppPaymentDelay); 
+           paymentDate = paymentDate.getFullYear() + "-" + (paymentDate.getMonth()+1) + "-" + paymentDate.getDate()
+           console.log("suppPaymentDelay:  " + suppPaymentDelay)    
+           
            // if array still empty 
            console.log("arrayOfOrders.length: " + arrayOfOrders.length)
           
@@ -196,7 +204,7 @@ export default class AddNewSuppOrder extends React.Component {
                orderDetails.ProductId = prodId
                orderDetails.Qty=quantity
                
-               var suppOrder = new supplierOrder (id,id,randomSupplier,currentDate,shipDate,paymentDate, currentOrder.CustOrderID,summ,parseInt(summ*(1.17)))
+               var suppOrder = new supplierOrder (id,id,randomSupplier,currentDate,shipDate,paymentDate, currentOrder.CustOrderID,suppPaymentDelay,summ,parseInt(summ*(1.17)))
                suppOrder.OrderDetails.push(orderDetails)
                console.log("Create first order")
                //console.log(suppOrder)
@@ -251,7 +259,7 @@ export default class AddNewSuppOrder extends React.Component {
                          orderDetails.ProductId = prodId
                          orderDetails.Qty=quantity
                          
-                         suppOrder = new supplierOrder (id,id,randomSupplier,currentDate,shipDate,paymentDate, currentOrder.CustOrderID,summ,parseInt(summ*(1.17)))
+                         suppOrder = new supplierOrder (id,id,randomSupplier,currentDate,shipDate,paymentDate, currentOrder.CustOrderID,suppPaymentDelay,summ,parseInt(summ*(1.17)))
                          suppOrder.OrderDetails.push(orderDetails)
                          console.log("Create first order")
                          //console.log(suppOrder)
@@ -264,29 +272,50 @@ export default class AddNewSuppOrder extends React.Component {
        }
        console.log(arrayOfOrders)
        let custInvoice = this.createCustInvoice(currentOrder) - //add customer invoice when making orders from suppliers for this order
-       fetch('/insertSupplierOrder',{ // send data to express server 
-                method: 'POST',
-                mode: 'cors',
-                body: JSON.stringify(arrayOfOrders), //customerOrder
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                  },
-                })
-                .then((res) => {
-                    if (res.ok){
-                      return res.json();
-                    } else {
-                      throw new Error ('Something went wrong with your fetch');
-                    }
-                  }).then((json) => {
-                    console.log(json);
-                    this.setState({isSuccess:true})
-                  })
+      //  fetch('/insertSupplierOrder',{ // send data to express server 
+      //           method: 'POST',
+      //           mode: 'cors',
+      //           body: JSON.stringify(arrayOfOrders), //customerOrder
+      //           headers: {
+      //               'Accept': 'application/json',
+      //               'Content-Type': 'application/json'
+      //             },
+      //           })
+      //           .then((res) => {
+      //               if (res.ok){
+      //                 return res.json();
+      //               } else {
+      //                 throw new Error ('Something went wrong with your fetch');
+      //               }
+      //             }).then((json) => {
+      //               console.log(json);
+      //               this.setState({isSuccess:true})
+      //             })
+      
+                 
+        this.setState({redirectToHome:true})    // redirect to mainwindow   
+        e.target.style.visibility = 'hidden'
+    }
+
+    createCustInvoice(currentOrder){ // create new object with customer invoice 
+      const{getCustInvoices} = this.state
+      
+      let id = (parseInt(getCustInvoices[getCustInvoices.length-1].InvoiceID) + 1 ).toString()
+      let custOrderId = currentOrder.CustOrderID
+      let date = new Date();
+      let currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+      let expPayDate = new Date();
+      let numberOfDaysToAdd = 30; // const of shiping dates from suppliers
+      expPayDate.setDate(expPayDate.getDate() + numberOfDaysToAdd); 
+      expPayDate = expPayDate.getFullYear() + "-" + (expPayDate.getMonth()+1) + "-" + expPayDate.getDate()
+      
+      let newInvoice = new customerInvoice(id,custOrderId,currentDate,expPayDate)
+      console.log(newInvoice)
+
       // fetch('/insertCustInvoice',{ // send data to express server 
       //   method: 'POST',
       //   mode: 'cors',
-      //   body: JSON.stringify(custInvoice), //customerOrder
+      //   body: JSON.stringify(newInvoice), //customerOrder
       //   headers: {
       //       'Accept': 'application/json',
       //       'Content-Type': 'application/json'
@@ -303,24 +332,6 @@ export default class AddNewSuppOrder extends React.Component {
       //          this.setState({isSuccess:true})
       //        })
           
-                 
-        this.setState({redirectToHome:true})    // redirect to mainwindow   
-        e.target.style.visibility = 'hidden'
-    }
-    createCustInvoice(currentOrder){
-      const{getCustInvoices} = this.state
-      
-      let id = (parseInt(getCustInvoices[getCustInvoices.length-1].InvoiceID) + 1 ).toString()
-      let custOrderId = currentOrder.CustOrderID
-      let date = new Date();
-      let currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
-      let expPayDate = new Date();
-      let numberOfDaysToAdd = 30; // const of shiping dates from suppliers
-      expPayDate.setDate(expPayDate.getDate() + numberOfDaysToAdd); 
-      expPayDate = expPayDate.getFullYear() + "-" + (expPayDate.getMonth()+1) + "-" + expPayDate.getDate()
-      
-      let newInvoice = new customerInvoice(id,custOrderId,currentDate,expPayDate)
-      console.log(newInvoice)
       return newInvoice
     }
 
